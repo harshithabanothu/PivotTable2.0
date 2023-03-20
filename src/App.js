@@ -221,7 +221,7 @@ function App() {
         <span>{semester}</span>
         {subjectArray.map((subval) => (
           <th>
-            <div>{subval.value}</div>
+            <div className="subjects-container">{subval.value}</div>
             <div className="sub-column-heading">
               <div>Written</div>
               <div className="border-none">Practical</div>
@@ -283,8 +283,8 @@ function App() {
   return (
     <div className="App">
       <h1>Pivot Table</h1>
-      <div className="table-container">
-        <table>
+      <div>
+        <table className="table-container">
           <thead>
             <tr>
               <th></th>
@@ -320,7 +320,7 @@ function App() {
                 <>
                   <tr>
                     <td>
-                      <div className="flex-freeze">
+                      <div>
                         {expandedDepartments.includes(record) ? (
                           <ArrowDropDownIcon
                             onClick={() => {
