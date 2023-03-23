@@ -291,9 +291,9 @@ function App() {
         {dataFetchRef.current ? (
           <div className="table-container">
             <table>
-              <thead>
+              <thead style={{zIndex:"50",top:"0",position:"sticky"}}>
                 <tr>
-                  <th style={{zIndex:"50"}}></th>
+                  <th></th>
                   {columndata?.map((coldata) => {
                     return (
                       <>
@@ -320,7 +320,7 @@ function App() {
                   })}
                 </tr>
               </thead>
-              <tbody style={{overflowX:"scroll",width:"100%",height:"100%",overflowY:"scroll"}}>
+              <tbody style={{overflowX:"auto",width:"100%",height:"100%",overflowY:"scroll"}}>
                 {rowdata?.map((record) => {
                   return (
                     <>
