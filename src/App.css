@@ -15,7 +15,7 @@ table,
 tr {
   padding: 2px;
 }
-th {
+th,.sub-column-th {
   background-color: #e8ebe4;
   text-align: left;
   color: #3b4252;
@@ -28,34 +28,34 @@ td {
   min-width: 200px;
   border: 0.5px solid rgb(137, 131, 131);
 }
+th:first-child,
 td:first-child{
   position: sticky;
         left: 0;
         background-color: #f2f2f2;
-        z-index: 1;
+        z-index: 3;
 }
-th:first-child{
-  position: sticky;
-        left: 0;
-        background-color: #f2f2f2;
-        z-index: 1;
-
+thead{
+  position:sticky;
+  top:0;
+  z-index:1
 }
 tr {
   background-color: white;
 }
 
-table {
+/* table {
   table-layout: fixed;
+  height:100%;
   border: 0.5px solid rgb(137, 131, 131);
-}
+} */
 .table-container{
-  overflow-y: scroll;
+  overflow: scroll;
+  height:100%;
   margin:auto !important;
 }
-.position-fix{
-  position:sticky;
-  left:0;
+.display-flex{
+  display: flex;
 }
 
 .sub-column-heading {
@@ -63,6 +63,7 @@ table {
   font-size: 13px;
   text-align: right;
   color: rgba(0, 0, 0, 0.6);
+  background-color: #ffffff;
 }
 .columns-container {
   display: flex;
@@ -85,6 +86,7 @@ table {
   margin-left: -1px;
   margin-right: -1px;
   margin-bottom: -1px;
+  border:1px solid grey;
 }
 .columns-flex{
   display: flex;
@@ -122,6 +124,14 @@ table {
   
   font-size: 13px;
   font-weight: 600;
+}
+.sub-columns-data{
+  display: flex;
+  background-color: #e8ebe4;
+  border-right: 1px solid rgb(137, 131, 131);
+  width: calc(100% / 2);
+  padding: 7px;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .sub-column-heading div {

@@ -2,7 +2,6 @@
 export  function myFunction() {
     // Your task goes here
     //code for generating the array of objects
-    debugger;
     let department = [
       "Department 1",
       "Department 2",

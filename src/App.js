@@ -214,23 +214,25 @@ function App() {
     const subjectArray = semesterData.Subject;
     const semester = semesterData.value;
     return (
-      <th colSpan={subjectArray.length}>
+      <div colSpan={subjectArray.length} className="sub-column-th">
         <ArrowDropDownIcon
           onClick={() => {
             handleSemesterClick(semesterData);
           }}
         />
         <span>{semester}</span>
-        {subjectArray.map((subval) => (
-          <th>
+        <div className="display-flex">
+            {subjectArray.map((subval) => (
+          <div className="sub-column-th">
             <div className="subjects-container">{subval.value}</div>
             <div className="sub-column-heading">
               <div>Written</div>
               <div className="border-none">Practical</div>
             </div>
-          </th>
-        ))}
-      </th>
+          </div>
+             ))}
+        </div>
+      </div>
     );
   };
   const renderSemesterColumns = (yearData) => {
@@ -260,7 +262,7 @@ function App() {
               {expandedSemesters.includes(semval) &&
                 renderSubjectsColumns(semval)}
               {expandedSemesters.includes(semval) ? null : (
-                <th>
+                <div className="sub-column-th">
                   <div className="columns-flex">
                     <ArrowRightIcon
                       onClick={() => {
@@ -273,7 +275,7 @@ function App() {
                     <div>Written</div>
                     <div className="border-none">Practical</div>
                   </div>
-                </th>
+                </div>
               )}
             </>
           ))}
@@ -291,7 +293,7 @@ function App() {
             <table>
               <thead>
                 <tr>
-                  <th></th>
+                  <th style={{zIndex:"50"}}></th>
                   {columndata?.map((coldata) => {
                     return (
                       <>
@@ -318,7 +320,7 @@ function App() {
                   })}
                 </tr>
               </thead>
-              <tbody style={{overflowX:"auto",width:"100%"}}>
+              <tbody style={{overflowX:"scroll",width:"100%",height:"100%",overflowY:"scroll"}}>
                 {rowdata?.map((record) => {
                   return (
                     <>
