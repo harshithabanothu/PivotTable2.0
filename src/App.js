@@ -291,9 +291,9 @@ function App() {
         {dataFetchRef.current ? (
           <div className="table-container">
             <table>
-              <thead style={{zIndex:"50",top:"0",position:"sticky"}}>
+              <thead style={{zIndex:"50",top:"0"}}>
                 <tr>
-                  <th></th>
+                  <th style={{zIndex:"50",top:"0",position:"sticky"}}></th>
                   {columndata?.map((coldata) => {
                     return (
                       <>
@@ -320,13 +320,13 @@ function App() {
                   })}
                 </tr>
               </thead>
-              <tbody style={{overflowX:"auto",width:"100%",height:"100%",overflowY:"scroll"}}>
+              <tbody >
                 {rowdata?.map((record) => {
                   return (
                     <>
                       <tr>
-                        <td>
-                          <div>
+                        <td >
+                          <div >
                             {expandedDepartments.includes(record) ? (
                               <ArrowDropDownIcon
                                 onClick={() => {
