@@ -301,6 +301,7 @@ function App() {
         <h1>Pivot Table</h1>
         {dataFetchRef.current ? (
           <div className="table-container">
+            <div className="table-scrollbar-container">
             <table>
               <thead style={{ zIndex: "50", top: "0" }}>
                 <tr>
@@ -380,6 +381,7 @@ function App() {
                 })}
               </tbody>
             </table>
+          </div>
           </div>
         ) : (
           <div className="spinner-container">
