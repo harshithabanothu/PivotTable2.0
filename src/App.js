@@ -193,6 +193,7 @@ function App() {
       );
     });
   };
+
   //onclicks for columns section
   const handleYearClick = (columnyear) => {
     if (expandedYears.includes(columnyear)) {
@@ -210,27 +211,31 @@ function App() {
       setexpandedSemesters(expandedSemesters.concat(columnSemester));
     }
   };
+
+  //render functions for columns section
   const renderSubjectsColumns = (semesterData) => {
     const subjectArray = semesterData.Subject;
     const semester = semesterData.value;
     return (
       <div colSpan={subjectArray.length} className="sub-column-th">
-        <ArrowDropDownIcon
-          onClick={() => {
-            handleSemesterClick(semesterData);
-          }}
-        />
-        <span>{semester}</span>
         <div className="display-flex">
-            {subjectArray.map((subval) => (
-          <div className="sub-column-th">
-            <div className="subjects-container">{subval.value}</div>
-            <div className="sub-column-heading">
-              <div>Written</div>
-              <div className="border-none">Practical</div>
+          <ArrowDropDownIcon
+            onClick={() => {
+              handleSemesterClick(semesterData);
+            }}
+          />
+          <span style={{ marginTop: "5px" }}>{semester}</span>
+        </div>
+        <div className="display-flex">
+          {subjectArray.map((subval) => (
+            <div className="sub-column-th">
+              <div className="subjects-container">{subval.value}</div>
+              <div className="sub-column-heading">
+                <div>Written</div>
+                <div className="border-none">Practical</div>
+              </div>
             </div>
-          </div>
-             ))}
+          ))}
         </div>
       </div>
     );
@@ -249,12 +254,14 @@ function App() {
         colSpan={
           semesterArray.length + filteredArray.length * 3 - filteredArray.length
         }>
-        <ArrowDropDownIcon
-          onClick={() => {
-            handleYearClick(yearData);
-          }}
-        />
-        <span>{year}</span>
+        <div className="display-flex">
+          <ArrowDropDownIcon
+            onClick={() => {
+              handleYearClick(yearData);
+            }}
+          />
+          <span style={{ marginTop: "4px" }}>{year}</span>
+        </div>
 
         <div className="flex">
           {semesterArray.map((semval) => (
@@ -264,12 +271,16 @@ function App() {
               {expandedSemesters.includes(semval) ? null : (
                 <div className="sub-column-th">
                   <div className="columns-flex">
-                    <ArrowRightIcon
-                      onClick={() => {
-                        handleSemesterClick(semval);
-                      }}
-                    />
-                    <span>{semval.value}</span>
+                    <div className="display-flex">
+                      <ArrowRightIcon
+                        onClick={() => {
+                          handleSemesterClick(semval);
+                        }}
+                      />
+                      <span style={{ marginTop: "4px", marginLeft: "5px" }}>
+                        {semval.value}
+                      </span>
+                    </div>
                   </div>
                   <div className="sub-column-heading">
                     <div>Written</div>
@@ -291,9 +302,10 @@ function App() {
         {dataFetchRef.current ? (
           <div className="table-container">
             <table>
-              <thead style={{zIndex:"50",top:"0"}}>
+              <thead style={{ zIndex: "50", top: "0" }}>
                 <tr>
-                  <th style={{zIndex:"50",top:"0",position:"sticky"}}></th>
+                  <th
+                    style={{ zIndex: "30", top: "0", position: "sticky",border:"1px solid red" }}></th>
                   {columndata?.map((coldata) => {
                     return (
                       <>
@@ -320,13 +332,13 @@ function App() {
                   })}
                 </tr>
               </thead>
-              <tbody >
+              <tbody>
                 {rowdata?.map((record) => {
                   return (
                     <>
                       <tr>
-                        <td >
-                          <div >
+                        <td>
+                          <div className="display-flex">
                             {expandedDepartments.includes(record) ? (
                               <ArrowDropDownIcon
                                 onClick={() => {
@@ -367,7 +379,6 @@ function App() {
                   );
                 })}
               </tbody>
-             
             </table>
           </div>
         ) : (

@@ -4,29 +4,31 @@ th,
 td {
   border-collapse: collapse;
 }
-.frozen-left-columns{
+/* .frozen-left-columns{
   border-collapse: collapse;
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
 
-}
+} */
 table,
 tr {
   padding: 2px;
 }
 th,.sub-column-th {
   background-color: #e8ebe4;
-  text-align: left;
+  text-align:center;
   color: #3b4252;
   font-size: 12px;
   min-width: 200px;
-  border: 0.5px solid rgb(137, 131, 131);
+  border: 1px solid rgb(137, 131, 131);
+  border-width: 1px;
 }
 td {
   /* background-color: #e8e8e8; */
   min-width: 200px;
-  border: 0.5px solid rgb(137, 131, 131);
+  border: 1px solid rgb(137, 131, 131);
+  border-width: 1px;
 }
 th:first-child,
 td:first-child{
@@ -43,37 +45,42 @@ thead{
 }
 tr {
   /* background-color: white; */
-  border:1px solid grey;
+  border:1px solid rgb(9, 8, 8);
+  border-width:1px;
 }
 
 table {
   table-layout: fixed;
-  border: 0.5px solid rgb(137, 131, 131);
+  border: 1px solid rgb(9, 8, 8);
+  border-width:1px;
 }
 .table-container{
   overflow:scroll;
-  height:47vh;
-  width:80vw;
+  height:61vh;
+  width:81vw;
 }
 .display-flex{
   display: flex;
+  
+  
 }
 .department-td{
   background-color:#e8ebe4;
   display:flex
 }
 
+
 .sub-column-heading {
   display: flex;
   font-size: 13px;
-  text-align: right;
+  text-align: center;
   color: rgba(0, 0, 0, 0.6);
   /* background-color: #ffffff; */
 }
 .columns-container {
   display: flex;
   justify-content: space-between;
-  border: 0.5px solid grey;
+  border: 1px solid grey;
   padding: 1px;
 }
 .flex-column {
@@ -134,15 +141,16 @@ table {
   display: flex;
   background-color: #e8ebe4;
   border-right: 1px solid rgb(137, 131, 131);
+  border-width:1px;
   width: calc(100% / 2);
   padding: 7px;
   color: rgba(0, 0, 0, 0.6);
 }
 
 .sub-column-heading div {
-  border-right: 1px solid rgb(137, 131, 131);
+  border-right: 1px solid rgb(126, 123, 123);
   width: calc(100% / 2);
-  padding: 9px;
+  padding: 8px;
   color: rgba(0, 0, 0, 0.6);
 }
 .border-none {
@@ -150,6 +158,8 @@ table {
 }
 .subjects-container{
   border-bottom:1px solid grey;
+  height:18px;
+  font-family:sans-serif;
 }
 
 .flex-freeze{
@@ -186,7 +196,7 @@ table {
 }
 ::-webkit-scrollbar-thumb {
   background-color: #ccc;
-  border-radius: 10px;
+  /* border-radius: 6px; */
  
 }
 
