@@ -56,10 +56,19 @@ function App() {
       </div>
     );
   };
+  const renderMarksHeadings=()=>{
+    return(
+      <div className="sub-column-heading">
+        <div>Written</div>
+        <div className="border-none">Practical</div>
+      </div>
+    )
+
+  }
 
   //render functions for expanded rows display
   const renderSubjectRows = (subjects) => {
-    return subjects.map((subject) => <td>{renderValues(subject.values)}</td>);
+    return subjects.map((subject) => <td className="td">{renderValues(subject.values)}</td>);
   };
 
   const checkSubjectCondition = (semester, year) => {
@@ -79,7 +88,7 @@ function App() {
         {checkSubjectCondition(semester, year.value) &&
           renderSubjectRows(semester.Subject)}
         {checkSubjectCondition(semester, year.value) ? null : (
-          <td>{renderValues(semester.values)}</td>
+          <td className="td">{renderValues(semester.values)}</td>
         )}
       </>
     ));
@@ -88,8 +97,8 @@ function App() {
     return studentArray?.map((record) => {
       return (
         <>
-          <tr>
-            <td>
+          <tr className="row-tr">
+            <td className="td">
               <div className="student-items-flex">{record.value}</div>
             </td>
             {record.columns.Year.map((colYear) => (
@@ -100,7 +109,7 @@ function App() {
                 {expandedYears
                   .map((col) => col.value)
                   .includes(colYear.value) ? null : (
-                  <td>{renderValues(colYear.values)}</td>
+                  <td className="td">{renderValues(colYear.values)}</td>
                 )}
               </>
             ))}
@@ -113,8 +122,8 @@ function App() {
     return batchArray?.map((record) => {
       return (
         <>
-          <tr>
-            <td>
+          <tr className="row-tr">
+            <td className="td">
               <div className="batch-items-flex">
                 {expandedBatches.includes(record) ? (
                   <ArrowDropDownIcon
@@ -140,7 +149,7 @@ function App() {
                 {expandedYears
                   .map((col) => col.value)
                   .includes(colYear.value) ? null : (
-                  <td>{renderValues(colYear.values)}</td>
+                  <td className="td">{renderValues(colYear.values)}</td>
                 )}
               </>
             ))}
@@ -156,8 +165,8 @@ function App() {
     return classArray.map((record) => {
       return (
         <>
-          <tr>
-            <td>
+          <tr className="row-tr">
+            <td className="td">
               <div className="class-items-flex">
                 {expandedClasses.includes(record) ? (
                   <ArrowDropDownIcon
@@ -183,7 +192,7 @@ function App() {
                 {expandedYears
                   .map((col) => col.value)
                   .includes(colYear.value) ? null : (
-                  <td>{renderValues(colYear.values)}</td>
+                  <td className="td">{renderValues(colYear.values)}</td>
                 )}
               </>
             ))}
@@ -230,10 +239,7 @@ function App() {
           {subjectArray.map((subval) => (
             <div className="sub-column-th">
               <div className="subjects-container">{subval.value}</div>
-              <div className="sub-column-heading">
-                <div>Written</div>
-                <div className="border-none">Practical</div>
-              </div>
+              {renderMarksHeadings()}
             </div>
           ))}
         </div>
@@ -253,14 +259,14 @@ function App() {
       <th
         colSpan={
           semesterArray.length + filteredArray.length * 3 - filteredArray.length
-        }>
+        } className="th-colspan">
         <div className="display-flex">
           <ArrowDropDownIcon
             onClick={() => {
               handleYearClick(yearData);
             }}
           />
-          <span style={{ marginTop: "4px" }}>{year}</span>
+          <span>{year}</span>
         </div>
 
         <div className="flex">
@@ -277,15 +283,12 @@ function App() {
                           handleSemesterClick(semval);
                         }}
                       />
-                      <span style={{ marginTop: "4px", marginLeft: "5px" }}>
+                      <span>
                         {semval.value}
                       </span>
                     </div>
                   </div>
-                  <div className="sub-column-heading">
-                    <div>Written</div>
-                    <div className="border-none">Practical</div>
-                  </div>
+                  {renderMarksHeadings()}
                 </div>
               )}
             </>
@@ -304,16 +307,15 @@ function App() {
             <div className="table-scrollbar-container">
             <table>
               <thead style={{ zIndex: "50", top: "0" }}>
-                <tr>
-                  <th
-                    style={{ zIndex: "30", top: "0", position: "sticky",border:"1px solid red" }}></th>
+                <tr className="row-tr">
+                  <th className="first-heading"></th>
                   {columndata?.map((coldata) => {
                     return (
                       <>
                         {expandedYears.includes(coldata) &&
                           renderSemesterColumns(coldata)}
                         {expandedYears.includes(coldata) ? null : (
-                          <th>
+                          <th className="heading-th">
                             <div className="columns-flex">
                               <ArrowRightIcon
                                 onClick={() => {
@@ -322,10 +324,7 @@ function App() {
                               />
                               <span>{coldata.value}</span>
                             </div>
-                            <div className="sub-column-heading">
-                              <div>Written</div>
-                              <div className="border-none">Practical</div>
-                            </div>
+                            {renderMarksHeadings()}
                           </th>
                         )}
                       </>
@@ -337,9 +336,9 @@ function App() {
                 {rowdata?.map((record) => {
                   return (
                     <>
-                      <tr>
-                        <td>
-                          <div className="display-flex">
+                      <tr className="row-tr">
+                        <td className="td">
+                          <div className="department-td">
                             {expandedDepartments.includes(record) ? (
                               <ArrowDropDownIcon
                                 onClick={() => {
@@ -368,7 +367,7 @@ function App() {
                               {expandedYears
                                 .map((col) => col.value)
                                 .includes(colYear.value) ? null : (
-                                <td>{renderValues(colYear.values)}</td>
+                                <td className="td">{renderValues(colYear.values)}</td>
                               )}
                             </>
                           );
