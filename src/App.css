@@ -66,12 +66,13 @@ thead{
 }
 .flex {
   display: flex;
-  align-items:center;
+  /* align-items:center; */
 }
 .columns-flex{
   display: flex;
   align-items:center;
   border-bottom:1px solid grey;
+  height:50%;
   /* margin-top:18px; */
 }
 .expanded-year{
@@ -124,13 +125,14 @@ thead{
   font-size: 13px;
   font-weight:bold;
   color: rgba(0, 0, 0, 0.6);
+  height:50%;
   /* background-color: #ffffff; */
 }
 .sub-column-heading div {
   border-right: 1px solid rgb(126, 123, 123);
   width: calc(100% / 2);
   padding: 4px;
-  height:20px;
+  /* height:20px; */
   display: flex;
     justify-content: end;
     align-items: center;
@@ -171,6 +173,7 @@ thead{
 }
 
 .heading-th{
+  height:74px;
 
 }
 .th-colspan{
