@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -22,9 +23,9 @@ function App() {
     setData(myFunction());
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     // yearColref.current.
-  },[]);
+  }, []);
   const rowdata = data.Department;
   const columndata = data.Year;
 
@@ -65,7 +66,7 @@ function App() {
   };
   const renderMarksHeadings = () => {
     return (
-      <div className="sub-column-heading">
+      <div className="sub-column-heading ">
         <div className="border-right">Written</div>
         <div className="border-none">Practical</div>
       </div>
@@ -229,23 +230,19 @@ function App() {
   };
 
   //render functions for columns section
-  const renderSubjectsColumns = (semesterData) => {
-    const subjectArray = semesterData.Subject;
-    const semester = semesterData.value;
+  const renderSubjectsColumns = (semesterData,i) => {
+    const subjectArray = semesterData[i].Subject;
+    const semester = semesterData[i].value;
     return (
-      <div colSpan={subjectArray.length} className="sub-column-th">
-        <div className="display-flex">
-          <ArrowDropDownIcon
-            onClick={() => {
-              handleSemesterClick(semesterData);
-            }}
-          />
-          <span style={{ marginTop: "5px" }}>{semester}</span>
+      <div colSpan={subjectArray.length} className={`sub-column-th ${i == (semesterData.length - 1) ? '' : 'border-right'}`} style={{ minWidth: "484px" }}>
+        <div className="display-flex border-bottom height-30">
+          <ArrowDropDownIcon onClick={() => { handleSemesterClick(semesterData[i]) }} />
+          <span>{semester}</span>
         </div>
         <div className="display-flex">
-          {subjectArray.map((subval) => (
-            <div className="sub-column-th">
-              <div className="subjects-container">{subval.value}</div>
+          {subjectArray.map((subval, i) => (
+            <div className={`sub-column-th height-60 ${i == (subjectArray.length - 1) ? '' : 'border-right'}`}>
+              <div className='border-bottom height-30' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{subval.value}</div>
               {renderMarksHeadings()}
             </div>
           ))}
@@ -259,31 +256,21 @@ function App() {
     const semestersInCurrentYear = expandedYears.filter((year) => year.value === yearData.value)[0].Semester;
     const filteredArray = expandedSemesters.filter((value) => semestersInCurrentYear.includes(value));
     return (
-      <th
-        colSpan={semesterArray.length + filteredArray.length * 3 - filteredArray.length} className="th-colspan">
-        <div className="display-flex">
+      <th colSpan={semesterArray.length + filteredArray.length * 3 - filteredArray.length} className="th-colspan">
+        <div className="display-flex height-30 border-bottom">
           <ArrowDropDownIcon onClick={() => { handleYearClick(yearData) }} />
           <span className="expanded-year">{year}</span>
         </div>
 
         <div className="flex">
-          {semesterArray.map((semval) => (
+          {semesterArray.map((semval, i) => (
             <>
-              {expandedSemesters.includes(semval) &&
-                renderSubjectsColumns(semval)}
-              {expandedSemesters.includes(semval) ? null : (
-                <div className="sub-column-th">
-                  <div className="columns-flex">
-                    <div className="display-flex">
-                      <ArrowRightIcon
-                        onClick={() => {
-                          handleSemesterClick(semval);
-                        }}
-                      />
-                      <span className="expanded-year">
-                        {semval.value}
-                      </span>
-                    </div>
+              {/* {expandedSemesters.includes(semval) &&renderSubjectsColumns(semval)} */}
+              {expandedSemesters.includes(semval) ? renderSubjectsColumns(semesterArray,i) : (
+                <div className={`sub-column-th ${i == semesterArray.length - 1 ? '' : 'border-right'}`}>
+                  <div className={`columns-flex ${expandedSemesters.length != 0 && !expandedSemesters.includes(semval) ? 'height-60' : 'height-30'}`}>
+                    <ArrowRightIcon onClick={() => { handleSemesterClick(semval) }} />
+                    <span className="expanded-year">{semval.value}</span>
                   </div>
                   {renderMarksHeadings()}
                 </div>
@@ -303,15 +290,15 @@ function App() {
           <div className="table-container">
             <div className="table-scrollbar-container">
               <table>
-                <thead style={{ zIndex: "50", top: "0" }}>
-                  <tr className="row-tr">
-                    <th className="first-heading"></th>
+                <thead>
+                  <tr>
+                    <th className="freezeTh"></th>
                     {columndata?.map((coldata) => {
                       return (
                         <>
                           {expandedYears.includes(coldata) ? renderSemesterColumns(coldata) : (
-                            <th className="heading-th">
-                              <div ref={yearColref} className={`columns-flex ${expandedYears.includes(coldata) ? 'height-60' : 'height-30'}`} >
+                            <th>
+                              <div ref={yearColref} className={`columns-flex ${expandedYears.length != 0 && !expandedYears.includes(coldata) ? expandedSemesters.length != 0 ? 'height-90' :'height-60' : 'height-30'}`} >
                                 <ArrowRightIcon onClick={() => { handleYearClick(coldata) }} />
                                 <span>{coldata.value}</span>
                               </div>
