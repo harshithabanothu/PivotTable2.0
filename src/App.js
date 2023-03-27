@@ -50,7 +50,7 @@ function App() {
 
   const renderValues = (values) => {
     return (
-      <div className="sub-column-heading">
+      <div className="data-value-cells">
         <div>{values?.Written || 0}</div>
         <div className="border-none">{values?.Practical || 0}</div>
       </div>
@@ -266,7 +266,7 @@ function App() {
               handleYearClick(yearData);
             }}
           />
-          <span>{year}</span>
+          <span className="expanded-year">{year}</span>
         </div>
 
         <div className="flex">
@@ -283,7 +283,7 @@ function App() {
                           handleSemesterClick(semval);
                         }}
                       />
-                      <span>
+                      <span className="expanded-year">
                         {semval.value}
                       </span>
                     </div>
