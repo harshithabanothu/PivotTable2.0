@@ -14,17 +14,12 @@ function App() {
   const [expandedSemesters, setexpandedSemesters] = useState([]);
   const [data, setData] = useState({});
   const dataFetchRef = useRef(false);
-  const yearColref = useRef();
 
 
   useEffect(() => {
     if (dataFetchRef.current) return;
     dataFetchRef.current = true;
     setData(myFunction());
-  }, []);
-
-  useEffect(() => {
-    // yearColref.current.
   }, []);
   const rowdata = data.Department;
   const columndata = data.Year;
@@ -55,12 +50,17 @@ function App() {
       setexpandedBatches(expandedBatches.concat(batchData));
     }
   };
+  const handleNumFormater=(num)=>{
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return num_parts.join(".");
+  }
 
   const renderValues = (values) => {
     return (
       <div className="data-value-cells">
-        <div>{values?.Written || 0}</div>
-        <div className="border-none">{values?.Practical || 0}</div>
+        <div>{handleNumFormater(values?.Written) || 0}</div>
+        <div className="border-none">{handleNumFormater(values?.Practical) || 0}</div>
       </div>
     );
   };
@@ -298,7 +298,7 @@ function App() {
                         <>
                           {expandedYears.includes(coldata) ? renderSemesterColumns(coldata) : (
                             <th>
-                              <div ref={yearColref} className={`columns-flex ${expandedYears.length != 0 && !expandedYears.includes(coldata) ? expandedSemesters.length != 0 ? 'height-90' :'height-60' : 'height-30'}`} >
+                              <div  className={`columns-flex ${expandedYears.length != 0 && !expandedYears.includes(coldata) ? (expandedSemesters.length != 0 ? 'height-90' :'height-60') : 'height-30'}`} >
                                 <ArrowRightIcon onClick={() => { handleYearClick(coldata) }} />
                                 <span>{coldata.value}</span>
                               </div>
