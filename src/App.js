@@ -31,6 +31,9 @@ function App() {
       setExpandedDeparments(
         expandedDepartments.filter((item) => item !== departmentData)
       );
+      setexpandedClasses(
+        expandedClasses.filter((item)=> !departmentData.Class.includes(item))
+      )
     } else {
       setExpandedDeparments(expandedDepartments.concat(departmentData));
     }
@@ -39,6 +42,7 @@ function App() {
   const handleClassClick = (classData) => {
     if (expandedClasses.includes(classData)) {
       setexpandedClasses(expandedClasses.filter((item) => item !== classData));
+      setexpandedBatches(expandedBatches.filter((item)=> !classData.Batch.includes((item))))
     } else {
       setexpandedClasses(expandedClasses.concat(classData));
     }
@@ -216,6 +220,8 @@ function App() {
   const handleYearClick = (columnyear) => {
     if (expandedYears.includes(columnyear)) {
       setexpandedYears(expandedYears.filter((item) => item !== columnyear));
+      setexpandedSemesters(expandedSemesters.filter((item)=> !columnyear.Semester.includes(item)))
+
     } else {
       setexpandedYears(expandedYears.concat(columnyear));
     }
