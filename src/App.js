@@ -6,6 +6,7 @@ import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import "./App.css";
 import { myFunction } from "./script";
 
+
 function App() {
   const [expandedDepartments, setExpandedDeparments] = useState([]);
   const [expandedClasses, setexpandedClasses] = useState([]);

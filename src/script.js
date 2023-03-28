@@ -8,41 +8,64 @@ export  function myFunction() {
       "Department 3",
       "Department 4",
       "Department 5"
-      // "Department 6",
-      // "Department 7",
-      // "Department 8",
-      // "Department 9",
-      // "Department 10",
-    ];
+    ]
     let classes = ["Class A","Class B"];
     let subjects = ["Subject 1", "Subject 2", "Subject 3"];
     let batches = [
-      "Batch 1",
-      "Batch 2",
-      "Batch 3",
-      "Batch 4"
+      "Batch 1", // 1 to 15
+      "Batch 2", // 16 to 30
+      "Batch 3", // 31 to 45
+      "Batch 4" // 46 to 60
     ];
     let Semester = ["Summer" , "Winter"];
     let dataArray = [];          
-    for (let i = 0; i < 100000; i++) {
-      let bIndex = Math.floor(Math.random() * batches.length);
-      let batch = batches[bIndex];
-      let studentID = "Student " + (Math.floor(Math.random() * 14) + 1 + 15 * bIndex);
+    // for (let i = 0; i < 100000; i++) {
+    //   let bIndex = Math.floor(Math.random() * batches.length);
+    //   let batch = batches[bIndex];
+    //   let studentID ="Student " + (Math.floor(Math.random() * 14) + 1 + 15 * bIndex);
 
-      let newObj = {
-        Student: studentID,
-        Department:
-          department[Math.floor(Math.random() * department.length)],
-        Year: Math.floor(Math.random() * 4) + 2000,
-        Semester: Semester[Math.floor(Math.random() * Semester.length)],
-        Class: classes[Math.floor(Math.random() * classes.length)],
-        Batch: batch,
-        Subject: subjects[Math.floor(Math.random() * subjects.length)],
-        Written: Math.floor(Math.random() * 40) + 10,
-        Practical: Math.floor(Math.random() * 40) + 10,
-        Oral: Math.floor(Math.random() * 40) + 10,
-      };
-      dataArray.push(newObj);
+    //   let newObj = {
+    //     Student: studentID,
+    //     Department:
+    //       department[Math.floor(Math.random() * department.length)],
+    //     Year: Math.floor(Math.random() * 4) + 2000,
+    //     Semester: Semester[Math.floor(Math.random() * Semester.length)],
+    //     Class: classes[Math.floor(Math.random() * classes.length)],
+    //     Batch: batch,
+    //     Subject: subjects[Math.floor(Math.random() * subjects.length)],
+    //     Written: Math.floor(Math.random() * 40) + 10,
+    //     Practical: Math.floor(Math.random() * 40) + 10,
+    //     Oral: Math.floor(Math.random() * 40) + 10,
+    //   };
+    //   dataArray.push(newObj);
+    // }
+    for (var dp = 0; dp < department.length; dp++) {
+      for (var c = 0; c < classes.length; c++) {
+        for (var b = 0; b < batches.length; b++) {
+          for (var s = 1; s < 16; s++) {
+            for (var year = 2000; year < 2005; year++) {
+              for (var sm = 0; sm < Semester.length; sm++) {
+                for (var sb = 0; sb < subjects.length; sb++) {
+                  let studentID = "Student " + (s + 15 * b);
+                  let newObj = {
+                    Student: studentID,
+                    Department: department[dp],
+                    Year: year,
+                    Semester: Semester[sm],
+                    Class: classes[c],
+                    Batch: batches[b],
+                    Subject: subjects[sb],
+                    Written: Math.floor(Math.random() * 40) + 10,
+                    Practical: Math.floor(Math.random() * 40) + 10,
+                    // Oral: Math.floor(Math.random() * 40) + 10,
+                  };
+                  dataArray.push(newObj);
+                }
+              }
+            }
+          }
+        }
+      }
     }
     // dataArray.sort((a,b)=>{return a.Year-b.Year});
     const pivotDataRow = {};
