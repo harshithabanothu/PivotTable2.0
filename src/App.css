@@ -22,7 +22,8 @@ table {
 thead {
   position: sticky;
   top: 0;
-  z-index: 50
+  z-index: 50;
+  outline: 1px solid rgba(137, 131, 131,0.4);
 }
 
 .row-tr {
@@ -59,6 +60,9 @@ td:first-child {
 }
 
 .freezeTh {
+  outline: 0.2px solid rgba(137, 131, 131,0.4);
+}
+.freezeTr {
   outline: 0.2px solid rgba(137, 131, 131,0.4);
 }
 

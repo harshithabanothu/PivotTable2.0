@@ -293,7 +293,7 @@ function App() {
               <div className="table-scrollbar-container">
                 <table>
                   <thead>
-                    <tr>
+                    <tr className="freezeTr">
                       <th className="freezeTh"></th>
                       {columndata?.map((coldata) => {
                         return (
