@@ -22,7 +22,8 @@ table {
 thead {
   position: sticky;
   top: 0;
-  z-index: 50
+  z-index: 50;
+  outline: 1px solid rgba(137, 131, 131,0.4);
 }
 
 .row-tr {
@@ -50,9 +51,21 @@ td:first-child {
   position: sticky;
   left: 0;
   background-color: #f5f5f5;
-  /* border: 1px solid grey; */
+  /* outline: 0.5px solid rgb(137, 131, 131); */
   z-index: 3;
 }
+
+.td:first-child {
+  outline: 0.5px solid rgba(137, 131, 131,0.4);
+}
+
+.freezeTh {
+  outline: 0.2px solid rgba(137, 131, 131,0.4);
+}
+.freezeTr {
+  outline: 0.2px solid rgba(137, 131, 131,0.4);
+}
+
 .sub-column-heading {
   display: flex;
   font-family: sans-serif;
@@ -122,6 +135,7 @@ td:first-child {
 .height-60 {
   height: 60px !important;
 }
+
 .height-90 {
   height: 90px !important;
 }
@@ -180,9 +194,11 @@ td:first-child {
 .border-right {
   border-right: 1px solid gray;
 }
+
 .border-left {
   border-left: 1px solid gray;
 }
+
 .border-bottom {
   border-bottom: 1px solid gray;
 }
@@ -209,15 +225,25 @@ td:first-child {
 .loading-spinner {
   width: 50px;
   height: 50px;
-  border: 10px solid #f3f3f3;
+  /* border: 10px solid #f3f3f3; */
   /* Light grey */
-  border-top: 10px solid #383636;
+  /* border-top: 10px solid #383636; */
   /* Black */
-  border-radius: 50%;
+  /* border-radius: 50%; */
   animation: spinner 1.5s linear infinite;
 }
+
 .td {
   min-width: 160px;
+  height: 30px;
   border: 1px solid rgb(137, 131, 131);
   padding: 0;
+}
+
+.spinner-container {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }

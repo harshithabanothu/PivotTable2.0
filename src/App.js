@@ -51,10 +51,10 @@ function App() {
       setexpandedBatches(expandedBatches.concat(batchData));
     }
   };
-  const handleNumFormater=(num)=>{
-            var num_parts = num.toString().split(".");
-            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            return num_parts.join(".");
+  const handleNumFormater = (num) => {
+    var num_parts = num.toString().split(".");
+    num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return num_parts.join(".");
   }
 
   const renderValues = (values) => {
@@ -231,7 +231,7 @@ function App() {
   };
 
   //render functions for columns section
-  const renderSubjectsColumns = (semesterData,i) => {
+  const renderSubjectsColumns = (semesterData, i) => {
     const subjectArray = semesterData[i].Subject;
     const semester = semesterData[i].value;
     return (
@@ -267,7 +267,7 @@ function App() {
           {semesterArray.map((semval, i) => (
             <>
               {/* {expandedSemesters.includes(semval) &&renderSubjectsColumns(semval)} */}
-              {expandedSemesters.includes(semval) ? renderSubjectsColumns(semesterArray,i) : (
+              {expandedSemesters.includes(semval) ? renderSubjectsColumns(semesterArray, i) : (
                 <div className={`sub-column-th ${i == semesterArray.length - 1 ? '' : 'border-right'}`}>
                   <div className={`columns-flex ${expandedSemesters.length != 0 && !expandedSemesters.includes(semval) ? 'height-60' : 'height-30'}`}>
                     <ArrowRightIcon onClick={() => { handleSemesterClick(semval) }} />
@@ -286,84 +286,76 @@ function App() {
   return (
     <>
       <div className="App">
-        <h1>Pivot Table</h1>
+
         {dataFetchRef.current ? (
-          <div className="table-container">
-            <div className="table-scrollbar-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="freezeTh"></th>
-                    {columndata?.map((coldata) => {
+          <>
+            <h1>Pivot Table</h1>
+            <div className="table-container">
+              <div className="table-scrollbar-container">
+                <table>
+                  <thead>
+                    <tr className="freezeTr">
+                      <th className="freezeTh"></th>
+                      {columndata?.map((coldata) => {
+                        return (
+                          <>
+                            {expandedYears.includes(coldata) ? renderSemesterColumns(coldata) : (
+                              <th>
+                                <div className={`columns-flex ${expandedYears.length != 0 && !expandedYears.includes(coldata) ? (expandedSemesters.length != 0 ? 'height-90' : 'height-60') : 'height-30'}`} >
+                                  <ArrowRightIcon onClick={() => { handleYearClick(coldata) }} />
+                                  <span>{coldata.value}</span>
+                                </div>
+                                {renderMarksHeadings()}
+                              </th>
+                            )}
+                          </>
+                        );
+                      })}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rowdata?.map((record, i) => {
                       return (
                         <>
-                          {expandedYears.includes(coldata) ? renderSemesterColumns(coldata) : (
-                            <th>
-                              <div  className={`columns-flex ${expandedYears.length != 0 && !expandedYears.includes(coldata) ? (expandedSemesters.length != 0 ? 'height-90' :'height-60') : 'height-30'}`} >
-                                <ArrowRightIcon onClick={() => { handleYearClick(coldata) }} />
-                                <span>{coldata.value}</span>
+                          <tr className="row-tr">
+                            <td className="td">
+                              <div className="department-td">
+                                {expandedDepartments.includes(record) ? (<ArrowDropDownIcon onClick={() => { handleDepartmentClick(record) }} />)
+                                  : (<ArrowRightIcon onClick={() => { handleDepartmentClick(record) }} />)}
+                                <span>{record.value}</span>
                               </div>
-                              {renderMarksHeadings()}
-                            </th>
-                          )}
+                            </td>
+                            {record.columns.Year.map((colYear) => {
+                              // condition that we clicked the correct year
+                              return (
+                                <>
+                                  {expandedYears
+                                    .map((col) => col.value)
+                                    .includes(colYear.value) &&
+                                    renderSemesterRows(colYear)}
+
+                                  {expandedYears
+                                    .map((col) => col.value)
+                                    .includes(colYear.value) ? null : (
+                                    <td className="td">{renderValues(colYear.values)}</td>
+                                  )}
+                                </>
+                              );
+                            })}
+                          </tr>
+                          {expandedDepartments.includes(record) &&
+                            renderClassRows(record.Class)}
                         </>
                       );
                     })}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rowdata?.map((record) => {
-                    return (
-                      <>
-                        <tr className="row-tr">
-                          <td className="td">
-                            <div className="department-td">
-                              {expandedDepartments.includes(record) ? (
-                                <ArrowDropDownIcon
-                                  onClick={() => {
-                                    handleDepartmentClick(record);
-                                  }}
-                                />
-                              ) : (
-                                <ArrowRightIcon
-                                  onClick={() => {
-                                    handleDepartmentClick(record);
-                                  }}
-                                />
-                              )}
-                              <span>{record.value}</span>
-                            </div>
-                          </td>
-                          {record.columns.Year.map((colYear) => {
-                            // condition that we clicked the correct year
-                            return (
-                              <>
-                                {expandedYears
-                                  .map((col) => col.value)
-                                  .includes(colYear.value) &&
-                                  renderSemesterRows(colYear)}
-
-                                {expandedYears
-                                  .map((col) => col.value)
-                                  .includes(colYear.value) ? null : (
-                                  <td className="td">{renderValues(colYear.values)}</td>
-                                )}
-                              </>
-                            );
-                          })}
-                        </tr>
-                        {expandedDepartments.includes(record) &&
-                          renderClassRows(record.Class)}
-                      </>
-                    );
-                  })}
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <div className="spinner-container">
-            <div className="loading-spinner"></div>
+            <HourglassFullIcon className="loading-spinner" />
           </div>
         )}
       </div>
