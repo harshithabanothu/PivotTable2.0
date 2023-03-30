@@ -13,7 +13,7 @@ table {
   font-family: sans-serif;
   border-collapse: collapse;
   table-layout: fixed;
-  border: 1px solid rgb(9, 8, 8);
+  border: 0.5px solid rgb(9, 8, 8);
   color: rgba(0, 0, 0, 0.6);
   font-size: 13px;
   font-weight: 600;
@@ -23,18 +23,18 @@ thead {
   position: sticky;
   top: 0;
   z-index: 50;
-  outline: 1px solid rgba(137, 131, 131,0.4);
+  outline: 0.5px solid rgba(137, 131, 131,0.4);
 }
 
 .row-tr {
-  border: 1px solid rgb(9, 8, 8);
+  border: 0.5px solid rgb(9, 8, 8);
   border-collapse: collapse;
   height: 20px;
 }
 
 th {
   padding: unset;
-  border-right: 1px solid gray;
+  border-right: 0.5px solid gray;
 }
 
 th,
@@ -106,7 +106,7 @@ td:first-child {
 .columns-container {
   display: flex;
   justify-content: space-between;
-  border: 1px solid grey;
+  border: 0.5px solid grey;
   padding: 1px;
 }
 
@@ -123,7 +123,7 @@ td:first-child {
 .columns-flex {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid grey;
+  border-bottom: 0.5px solid grey;
   height: 30px;
   /* margin-top:18px; */
 }
@@ -133,11 +133,11 @@ td:first-child {
 }
 
 .height-60 {
-  height: 60px !important;
+  height: 60.5px !important;
 }
 
 .height-90 {
-  height: 90px !important;
+  height: 90.5px !important;
 }
 
 .expanded-year {
@@ -165,8 +165,8 @@ td:first-child {
 .sub-columns-data {
   display: flex;
   background-color: #f5f5f5;
-  border-right: 1px solid rgb(137, 131, 131);
-  border-width: 1px;
+  border-right: 0.5px solid rgb(137, 131, 131);
+  border-width: 0.5px;
   width: calc(100% / 2);
   padding: 7px;
 }
@@ -178,7 +178,7 @@ td:first-child {
 }
 
 .data-value-cells div {
-  border-right: 1px solid rgb(126, 123, 123);
+  border-right: 0.5px solid rgb(126, 123, 123);
   width: calc(100% / 2);
   padding: 4px;
   height: 20px;
@@ -192,15 +192,15 @@ td:first-child {
 
 
 .border-right {
-  border-right: 1px solid gray;
+  border-right: 0.5px solid gray;
 }
 
 .border-left {
-  border-left: 1px solid gray;
+  border-left: 0.5px solid gray;
 }
 
 .border-bottom {
-  border-bottom: 1px solid gray;
+  border-bottom: 0.5px solid gray;
 }
 
 .border-none {
@@ -208,7 +208,7 @@ td:first-child {
 }
 
 .subjects-container {
-  border-bottom: 1px solid grey;
+  border-bottom: 0.5px solid grey;
   height: 18px;
 }
 
@@ -235,8 +235,8 @@ td:first-child {
 
 .td {
   min-width: 160px;
-  height: 30px;
-  border: 1px solid rgb(137, 131, 131);
+  height: 20px;
+  border: 0.5px solid rgb(137, 131, 131);
   padding: 0;
 }
 
