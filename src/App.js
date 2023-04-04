@@ -60,12 +60,14 @@ function App() {
     num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return num_parts.join(".");
   }
-
+  
   const renderValues = (values) => {
+    let total=values.Written+values.Practical;
     return (
       <div className="data-value-cells">
         <div>{handleNumFormater(values?.Written) || 0}</div>
-        <div className="border-none">{handleNumFormater(values?.Practical) || 0}</div>
+        <div >{handleNumFormater(values?.Practical) || 0}</div>
+        <div className="border-none">{handleNumFormater(total) || 0}</div>
       </div>
     );
   };
@@ -73,7 +75,9 @@ function App() {
     return (
       <div className="sub-column-heading ">
         <div className="border-right">Written</div>
-        <div className="border-none">Practical</div>
+        <div className="border-right">Practical</div>
+        <div className="border-none">Total</div>
+        
       </div>
     )
 
@@ -333,6 +337,8 @@ function App() {
                             </td>
                             {record.columns.Year.map((colYear) => {
                               // condition that we clicked the correct year
+                              console.log(colYear)
+                             
                               return (
                                 <>
                                   {expandedYears
