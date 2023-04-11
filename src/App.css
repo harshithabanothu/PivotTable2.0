@@ -76,7 +76,7 @@ td:first-child {
 }
 
 .sub-column-heading div {
-  width: calc(100% / 3);
+  width: calc(100% / 2);
   /* padding-right: 4px; */
   display: flex;
   justify-content:center;
@@ -126,6 +126,9 @@ td:first-child {
   border-bottom: 0.5px solid grey;
   height: 30px;
   /* margin-top:18px; */
+}
+.empty-span{
+  padding:8px;
 }
 
 .height-30 {
@@ -179,7 +182,7 @@ td:first-child {
 
 .data-value-cells div {
   border-right: 0.5px solid rgb(126, 123, 123);
-  width: calc(100% / 3);
+  width: calc(100% / 2);
   padding: 4px;
   height: 20px;
   display: flex;
