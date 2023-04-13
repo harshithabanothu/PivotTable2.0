@@ -8,11 +8,11 @@ import "./App.css";
 import { myFunction } from "./script";
 
 function App() {
-  const [expandedDepartments, setExpandedDeparments] = useState([]);
-  const [expandedClasses, setexpandedClasses] = useState([]);
-  const [expandedBatches, setexpandedBatches] = useState([]);
-  const [expandedYears, setexpandedYears] = useState([]);
-  const [expandedSemesters, setexpandedSemesters] = useState([]);
+  const [expandedRows1, setExpandedRows1] = useState([]);
+  const [expandedRows2, setExpandedRows2] = useState([]);
+  const [expandedRows3, setExpandedRows3] = useState([]);
+  const [expandedColumns1, setExpandedColumns1] = useState([]);
+  const [expandedColumns2, setExpandedColumns2] = useState([]);
   const [data, setData] = useState({});
   const dataFetchRef = useRef(false);
 
@@ -30,35 +30,35 @@ function App() {
   const columndata = data.COLUMNS;
 
   //onclick functions for rows display
-  const handleDepartmentClick = (departmentData) => {
-    if (expandedDepartments.includes(departmentData)) {
-      setExpandedDeparments(
-        expandedDepartments.filter((item) => item !== departmentData)
+  const handleRow1Click = (row1Data) => {
+    if (expandedRows1.includes(row1Data)) {
+      setExpandedRows1(
+        expandedRows1.filter((item) => item !== row1Data)
       );
-      setexpandedClasses(
-        expandedClasses.filter((item) => !departmentData.CLASS.includes(item))
+      setExpandedRows2(
+        expandedRows2.filter((item) => !row1Data.CLASS.includes(item))
       );
     } else {
-      setExpandedDeparments(expandedDepartments.concat(departmentData));
+      setExpandedRows1(expandedRows1.concat(row1Data));
     }
   };
 
-  const handleClassClick = (classData) => {
-    if (expandedClasses.includes(classData)) {
-      setexpandedClasses(expandedClasses.filter((item) => item !== classData));
-      setexpandedBatches(
-        expandedBatches.filter((item) => !classData.BATCH.includes(item))
+  const handleRow2Click = (row2Data) => {
+    if (expandedRows2.includes(row2Data)) {
+      setExpandedRows2(expandedRows2.filter((item) => item !== row2Data));
+      setExpandedRows2(
+        expandedRows3.filter((item) => !row2Data.BATCH.includes(item))
       );
     } else {
-      setexpandedClasses(expandedClasses.concat(classData));
+      setExpandedRows2(expandedRows2.concat(row2Data));
     }
   };
 
-  const handleBatchClick = (batchData) => {
-    if (expandedBatches.includes(batchData)) {
-      setexpandedBatches(expandedBatches.filter((item) => item !== batchData));
+  const handleRow3Click = (row3Data) => {
+    if (expandedRows3.includes(row3Data)) {
+      setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
     } else {
-      setexpandedBatches(expandedBatches.concat(batchData));
+      setExpandedRows3(expandedRows3.concat(row3Data));
     }
   };
   const handleNumFormater = (num) => {
@@ -87,51 +87,51 @@ function App() {
   };
 
   //render functions for expanded rows display
-  const renderSubjectRows = (subjects) => {
-    return subjects.map((subject) => (
-      <td className="td">{renderValues(subject.VALUES)}</td>
+  const renderColumn3Rows = (column3) => {
+    return column3.map((col3) => (
+      <td className="td">{renderValues(col3.VALUES)}</td>
     ));
   };
 
-  const checkSubjectCondition = (semester, year) => {
-    const filteredYear = expandedYears.filter(
-      (yearData) => yearData.VALUE === year
+  const checkColumn3Condition = (column2, column1) => {
+    const filteredYear = expandedColumns1.filter(
+      (col1) => col1.VALUE === column1
     )[0].SEMESTER;
-    const filteredArray = expandedSemesters.filter((value) =>
+    const filteredArray = expandedColumns2.filter((value) =>
       filteredYear.includes(value)
     );
-    return filteredArray.map((sem) => sem.VALUE).includes(semester.VALUE);
+    return filteredArray.map((col2val) => col2val.VALUE).includes(column2.VALUE);
   };
 
-  const renderSemesterRows = (year) => {
-    const semesters = year.SEMESTER;
-    return semesters.map((semester) => (
+  const renderColumn2Rows = (column1) => {
+    const columns2 = column1.SEMESTER;
+    return columns2.map((column2) => (
       <>
-        {checkSubjectCondition(semester, year.VALUE) &&
-          renderSubjectRows(semester.SUBJECT)}
-        {checkSubjectCondition(semester, year.VALUE) ? null : (
-          <td className="td">{renderValues(semester.VALUES)}</td>
+        {checkColumn3Condition(column2, column1.VALUE) &&
+          renderColumn3Rows(column2.SUBJECT)}
+        {checkColumn3Condition(column2, column1.VALUE) ? null : (
+          <td className="td">{renderValues(column2.VALUES)}</td>
         )}
       </>
     ));
   };
-  const renderStudentRows = (studentArray) => {
-    return studentArray?.map((record) => {
+  const renderRow4 = (row4Array) => {
+    return row4Array?.map((record) => {
       return (
         <>
           <tr className="row-tr">
             <td className="td">
               <div className="student-items-flex">{record.VALUE}</div>
             </td>
-            {record.COLUMNS.YEAR.map((colYear) => (
+            {record.COLUMNS.YEAR.map((col1) => (
               <>
-                {expandedYears
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) && renderSemesterRows(colYear)}
-                {expandedYears
+                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) ? null : (
-                  <td className="td">{renderValues(colYear.VALUES)}</td>
+                  .includes(col1.VALUE) ? null : (
+                  <td className="td">{renderValues(col1.VALUES)}</td>
                 )}
               </>
             ))}
@@ -140,137 +140,137 @@ function App() {
       );
     });
   };
-  const renderBatchRows = (batchArray) => {
-    return batchArray?.map((record) => {
+  const renderRow3 = (row3Array) => {
+    return row3Array?.map((record) => {
       return (
         <>
           <tr className="row-tr">
             <td className="td">
               <div className="batch-items-flex">
-                {expandedBatches.includes(record) ? (
+                {expandedRows3.includes(record) ? (
                   <ArrowDropDownIcon
                     onClick={() => {
-                      handleBatchClick(record);
+                      handleRow3Click(record);
                     }}
                   />
                 ) : (
                   <ArrowRightIcon
                     onClick={() => {
-                      handleBatchClick(record);
+                      handleRow3Click(record);
                     }}
                   />
                 )}
                 <span>{record.VALUE}</span>
               </div>
             </td>
-            {record.COLUMNS.YEAR.map((colYear) => (
+            {record.COLUMNS.YEAR.map((col1) => (
               <>
-                {expandedYears
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) && renderSemesterRows(colYear)}
-                {expandedYears
+                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) ? null : (
-                  <td className="td">{renderValues(colYear.VALUES)}</td>
+                  .includes(col1.VALUE) ? null : (
+                  <td className="td">{renderValues(col1.VALUES)}</td>
                 )}
               </>
             ))}
           </tr>
-          {expandedBatches.includes(record) &&
-            renderStudentRows(record.STUDENT)}
+          {expandedRows3.includes(record) &&
+            renderRow4(record.STUDENT)}
         </>
       );
     });
   };
 
-  const renderClassRows = (classArray) => {
-    return classArray.map((record) => {
+  const renderRow2 = (row2Array) => {
+    return row2Array.map((record) => {
       return (
         <>
           <tr className="row-tr">
             <td className="td">
               <div className="class-items-flex">
-                {expandedClasses.includes(record) ? (
+                {expandedRows2.includes(record) ? (
                   <ArrowDropDownIcon
                     onClick={() => {
-                      handleClassClick(record);
+                      handleRow2Click(record);
                     }}
                   />
                 ) : (
                   <ArrowRightIcon
                     onClick={() => {
-                      handleClassClick(record);
+                      handleRow2Click(record);
                     }}
                   />
                 )}
                 <span>{record.VALUE}</span>
               </div>
             </td>
-            {record.COLUMNS.YEAR.map((colYear) => (
+            {record.COLUMNS.YEAR.map((col1) => (
               <>
-                {expandedYears
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) && renderSemesterRows(colYear)}
-                {expandedYears
+                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                {expandedColumns1
                   .map((col) => col.VALUE)
-                  .includes(colYear.VALUE) ? null : (
-                  <td className="td">{renderValues(colYear.VALUES)}</td>
+                  .includes(col1.VALUE) ? null : (
+                  <td className="td">{renderValues(col1.VALUES)}</td>
                 )}
               </>
             ))}
           </tr>
-          {expandedClasses.includes(record) && renderBatchRows(record.BATCH)}
+          {expandedRows2.includes(record) && renderRow3(record.BATCH)}
         </>
       );
     });
   };
 
   //onclicks for columns section
-  const handleYearClick = (columnyear) => {
-    if (expandedYears.includes(columnyear)) {
-      setexpandedYears(expandedYears.filter((item) => item !== columnyear));
-      setexpandedSemesters(
-        expandedSemesters.filter((item) => !columnyear.SEMESTER.includes(item))
+  const handleColumn1Click = (column1Value) => {
+    if (expandedColumns1.includes(column1Value)) {
+      setExpandedColumns1(expandedColumns1.filter((item) => item !== column1Value));
+      setExpandedColumns2(
+        expandedColumns2.filter((item) => !column1Value.SEMESTER.includes(item))
       );
     } else {
-      setexpandedYears(expandedYears.concat(columnyear));
+      setExpandedColumns1(expandedColumns1.concat(column1Value));
     }
   };
-  const handleSemesterClick = (columnSemester) => {
-    if (expandedSemesters.includes(columnSemester)) {
-      setexpandedSemesters(
-        expandedSemesters.filter((item) => item !== columnSemester)
+  const handleColumn2Click = (column2Value) => {
+    if (expandedColumns2.includes(column2Value)) {
+      setExpandedColumns2(
+        expandedColumns2.filter((item) => item !== column2Value)
       );
     } else {
-      setexpandedSemesters(expandedSemesters.concat(columnSemester));
+      setExpandedColumns2(expandedColumns2.concat(column2Value));
     }
   };
 
   //render functions for columns section
 
-  const renderSubjectsColumns = (semesterData, i) => {
-    const subjectArray = semesterData[i].SUBJECT;
-    const semester = semesterData[i].VALUE;
+  const renderColumn3 = (col2Data, i) => {
+    const column3Array = col2Data[i].SUBJECT;
+    const col2 = col2Data[i].VALUE;
     return (
       <div
-        colSpan={subjectArray.length}
+        colSpan={column3Array.length}
         className={`sub-column-th ${
-          i == semesterData.length - 1 ? "" : "border-right"
+          i == col2Data.length - 1 ? "" : "border-right"
         }`}
         style={{ minWidth: "484px" }}>
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon
             onClick={() => {
-              handleSemesterClick(semesterData[i]);
+              handleColumn2Click(col2Data[i]);
             }}
           />
-          <span>{semester}</span>
+          <span>{col2}</span>
         </div>
         <div className="display-flex">
-          {subjectArray.map((subval, i) => (
+          {column3Array.map((col3val, i) => (
             <div
               className={`sub-column-th height-60 ${
-                i == subjectArray.length - 1 ? "" : "border-right"
+                i == column3Array.length - 1 ? "" : "border-right"
               }`}>
               <div
                 className="border-bottom height-30"
@@ -279,7 +279,7 @@ function App() {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                {subval.VALUE}
+                {col3val.VALUE}
               </div>
               {renderMarksHeadings()}
             </div>
@@ -288,58 +288,58 @@ function App() {
       </div>
     );
   };
-  const renderSemesterColumns = (yearData) => {
-    const semesterArray = yearData.SEMESTER;
-    const year = yearData.VALUE;
-    const semestersInCurrentYear = expandedYears.filter(
-      (year) => year.VALUE === yearData.VALUE
-    )[0].SEMESTER;
-    const filteredArray = expandedSemesters.filter((value) =>
-      semestersInCurrentYear.includes(value)
+  const renderColumn2 = (col1) => {
+    const column2Array = col1.SEMESTER;
+    const column1 = col1.VALUE;
+    const column2InCurrentColumn1 = expandedColumns1.find(
+      (col1) => col1.VALUE === col1.VALUE
+    ).SEMESTER;
+    const filteredArray = expandedColumns2.filter((value) =>
+      column2InCurrentColumn1.includes(value)
     );
     return (
       <th
         colSpan={
-          semesterArray.length + filteredArray.length * 4 - filteredArray.length
+          column2Array.length + filteredArray.length * 4 - filteredArray.length
         }
         className="th-colspan">
         <div className="display-flex height-30 border-bottom">
           <ArrowDropDownIcon
             onClick={() => {
-              handleYearClick(yearData);
+              handleColumn1Click(col1);
             }}
           />
-          <span className="expanded-year">{year}</span>
+          <span className="expanded-year">{column1}</span>
         </div>
 
         <div className="flex">
-          {semesterArray.map((semval, i) => (
+          {column2Array.map((col2val, i) => (
             <>
-              {/* {expandedSemesters.includes(semval) &&renderSubjectsColumns(semval)} */}
-              {expandedSemesters.includes(semval) ? (
-                renderSubjectsColumns(semesterArray, i)
+              {/* {expandedColumns2.includes(semval) &&renderColumn3(semval)} */}
+              {expandedColumns2.includes(col2val) ? (
+                renderColumn3(column2Array, i)
               ) : (
                 <div
                   className={`sub-column-th ${
-                    i == semesterArray.length - 1 ? "" : "border-right"
+                    i == column2Array.length - 1 ? "" : "border-right"
                   }`}>
                   <div
                     className={`columns-flex ${
-                      expandedSemesters.length != 0 &&
-                      !expandedSemesters.includes(semval)
+                      expandedColumns2.length != 0 &&
+                      !expandedColumns2.includes(col2val)
                         ? "height-60"
                         : "height-30"
                     }`}>
-                    {semval.VALUE == "Total" ? (
+                    {col2val.VALUE == "Total" ? (
                       <span className="empty-span"></span>
                     ) : (
                       <ArrowRightIcon
                         onClick={() => {
-                          handleSemesterClick(semval);
+                          handleColumn2Click(col2val);
                         }}
                       />
                     )}
-                    <span className="expanded-year">{semval.VALUE}</span>
+                    <span className="expanded-year">{col2val.VALUE}</span>
                   </div>
 
                   {renderMarksHeadings()}
@@ -364,28 +364,28 @@ function App() {
                   <thead>
                     <tr className="freezeTr">
                       <th className="freezeTh"></th>
-                      {columndata?.map((coldata) => {
+                      {columndata?.map((col1) => {
                         return (
                           <>
-                            {expandedYears.includes(coldata) ? (
-                              renderSemesterColumns(coldata)
+                            {expandedColumns1.includes(col1) ? (
+                              renderColumn2(col1)
                             ) : (
                               <th>
                                 <div
                                   className={`columns-flex ${
-                                    expandedYears.length != 0 &&
-                                    !expandedYears.includes(coldata)
-                                      ? expandedSemesters.length != 0
+                                    expandedColumns1.length != 0 &&
+                                    !expandedColumns1.includes(col1)
+                                      ? expandedColumns2.length != 0
                                         ? "height-90"
                                         : "height-60"
                                       : "height-30"
                                   }`}>
                                   <ArrowRightIcon
                                     onClick={() => {
-                                      handleYearClick(coldata);
+                                      handleColumn1Click(col1);
                                     }}
                                   />
-                                  <span>{coldata.VALUE}</span>
+                                  <span>{col1.VALUE}</span>
                                 </div>
                                 {renderMarksHeadings()}
                               </th>
@@ -402,46 +402,46 @@ function App() {
                           <tr className="row-tr">
                             <td className="td">
                               <div className="department-td">
-                                {expandedDepartments.includes(record) ? (
+                                {expandedRows1.includes(record) ? (
                                   <ArrowDropDownIcon
                                     onClick={() => {
-                                      handleDepartmentClick(record);
+                                      handleRow1Click(record);
                                     }}
                                   />
                                 ) : (
                                   <ArrowRightIcon
                                     onClick={() => {
-                                      handleDepartmentClick(record);
+                                      handleRow1Click(record);
                                     }}
                                   />
                                 )}
                                 <span>{record.VALUE}</span>
                               </div>
                             </td>
-                            {record.COLUMNS.YEAR.map((colYear) => {
+                            {record.COLUMNS.YEAR.map((col1) => {
                               // condition that we clicked the correct year
                               // console.log(colYear.VALUE);
 
                               return (
                                 <>
-                                  {expandedYears
+                                  {expandedColumns1
                                     .map((col) => col.VALUE)
-                                    .includes(colYear.VALUE) &&
-                                    renderSemesterRows(colYear)}
+                                    .includes(col1.VALUE) &&
+                                    renderColumn2Rows(col1)}
 
-                                  {expandedYears
+                                  {expandedColumns1
                                     .map((col) => col.VALUE)
-                                    .includes(colYear.VALUE) ? null : (
+                                    .includes(col1.VALUE) ? null : (
                                     <td className="td">
-                                      {renderValues(colYear.VALUES)}
+                                      {renderValues(col1.VALUES)}
                                     </td>
                                   )}
                                 </>
                               );
                             })}
                           </tr>
-                          {expandedDepartments.includes(record) &&
-                            renderClassRows(record.CLASS)}
+                          {expandedRows1.includes(record) &&
+                            renderRow2(record.CLASS)}
                         </>
                       );
                     })}
