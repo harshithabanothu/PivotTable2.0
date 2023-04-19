@@ -26,170 +26,279 @@ function App() {
       console.log(JSON.parse(response.d.results[0].Heirarchy));
       let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
       let data = JSON.parse(response.d.results[0].Data);
-      let  summaryData = prepareSummaryData(data, heirarchy);
+      let summaryData = prepareSummaryData(data, heirarchy);
       console.log(summaryData);
-      setData(summaryData)
+      setData(summaryData);
       // setData(JSON.parse(response.d.results[0].Data));
     });
   }, []);
   const rowdata = data.ROWS;
   const columndata = data.COLUMNS;
-  const prepareSummaryData = (dataArray, heirarchy) =>{
+  const prepareSummaryData = (dataArray, heirarchy) => {
     // Prepare column heirarchy
     const pivotDataColumn = {};
     dataArray.forEach((record) => {
-      let node = heirarchy.COLUMN.find(c => c.PARENTKEY === '');
+      let node = heirarchy.COLUMN.find((c) => c.PARENTKEY === "");
       if (!pivotDataColumn[node.KEY]) {
         pivotDataColumn[node.KEY] = [];
       }
-      prepareColumnChildElement(record, pivotDataColumn[node.KEY], node, heirarchy.COLUMN);    
+      prepareColumnChildElement(
+        record,
+        pivotDataColumn[node.KEY],
+        node,
+        heirarchy.COLUMN
+      );
     });
     const pivotDataRow = {};
     dataArray.forEach((record) => {
-      let node = heirarchy.ROW.find(c => c.PARENTKEY === '');
+      let node = heirarchy.ROW.find((c) => c.PARENTKEY === "");
       if (!pivotDataRow[node.KEY]) {
         pivotDataRow[node.KEY] = [];
       }
-      prepareRowChildElement(record, pivotDataRow[node.KEY], node, heirarchy.ROW, heirarchy.COLUMN, pivotDataColumn);    
+      prepareRowChildElement(
+        record,
+        pivotDataRow[node.KEY],
+        node,
+        heirarchy.ROW,
+        heirarchy.COLUMN,
+        pivotDataColumn
+      );
     });
     console.log(pivotDataRow);
-    return {COLUMNS: pivotDataColumn, ROWS : pivotDataRow};
+    return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
   };
   const prepareColumnChildElement = (record, obj, node, columnHeir) => {
     let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
-    if(index > -1){
-      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
-        if (childNodes.length > 0) {
-          childNodes.forEach((child) => {
-            if (!obj[index][child.KEY]) {
-              obj[index][child.KEY] = [];
-            }
-            prepareColumnChildElement(record, obj[index][child.KEY], child, columnHeir);
-          });
-        }
-    }else{
+    if (index > -1) {
+      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+      if (childNodes.length > 0) {
+        childNodes.forEach((child) => {
+          if (!obj[index][child.KEY]) {
+            obj[index][child.KEY] = [];
+          }
+          prepareColumnChildElement(
+            record,
+            obj[index][child.KEY],
+            child,
+            columnHeir
+          );
+        });
+      }
+    } else {
       obj.push({
         value: record[node.KEY],
-        aggrValue: 0
+        aggrValue: 0,
       });
-      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
+      if (node.KEY == "QUTR") {
+        obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
+      } else if (node.KEY == "MONTH") {
+        let monthsArray = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        obj[obj.length - 1].label = monthsArray[obj[obj.length - 1].value - 1];
+      }
+      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
       if (childNodes.length > 0) {
         childNodes.forEach((child) => {
           obj[obj.length - 1][child.KEY] = [];
-          prepareColumnChildElement(record, obj[obj.length - 1][child.KEY], child, columnHeir);
+          prepareColumnChildElement(
+            record,
+            obj[obj.length - 1][child.KEY],
+            child,
+            columnHeir
+          );
         });
       }
-    }    
+    }
   };
-  const prepareRowChildElement = (record, obj, node, rowHeir, columnHeir, columns) => {
+  const prepareRowChildElement = (
+    record,
+    obj,
+    node,
+    rowHeir,
+    columnHeir,
+    columns
+  ) => {
     let index;
-    if(node.TYPE == "characteristic"){
+    if (node.TYPE == "characteristic") {
       index = obj.findIndex((obj) => obj.label == record[node.KEY]);
-    }else{
+    } else {
       index = obj.findIndex((obj) => obj.label == node.LABEL);
-    }    
-    if(index > -1){
-      if(node.TYPE == "metric"){
-        prepareAggregation(record, obj[index], node, rowHeir, columnHeir, columns);
+    }
+    if (index > -1) {
+      if (node.TYPE == "metric") {
+        prepareAggregation(
+          record,
+          obj[index],
+          node,
+          rowHeir,
+          columnHeir,
+          columns
+        );
       }
-      let childNodes = rowHeir.filter(c => c.PARENTKEY === node.KEY);
-        if (childNodes.length > 0) {
-          childNodes.forEach((child) => {
-            if (!obj[index][child.KEY]) {
-              obj[index][child.KEY] = [];
-            }
-            prepareRowChildElement(record, obj[index][child.KEY], child, rowHeir, columnHeir, columns);
-          });
-        }
-    }else{
+      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+      if (childNodes.length > 0) {
+        childNodes.forEach((child) => {
+          if (!obj[index][child.KEY]) {
+            obj[index][child.KEY] = [];
+          }
+          prepareRowChildElement(
+            record,
+            obj[index][child.KEY],
+            child,
+            rowHeir,
+            columnHeir,
+            columns
+          );
+        });
+      }
+    } else {
       if (node.TYPE == "characteristic") {
         obj.push({
           label: record[node.KEY],
-          columns: JSON.parse(JSON.stringify(columns))
+          columns: JSON.parse(JSON.stringify(columns)),
         });
-      }else{
+      } else {
         obj.push({
-          label: node.LABEL
+          label: node.LABEL,
         });
-        prepareAggregation(record, obj[obj.length - 1], node, rowHeir, columnHeir, columns);
+        prepareAggregation(
+          record,
+          obj[obj.length - 1],
+          node,
+          rowHeir,
+          columnHeir,
+          columns
+        );
       }
-      let childNodes = rowHeir.filter(c => c.PARENTKEY === node.KEY);
+      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
       if (childNodes.length > 0) {
         childNodes.forEach((child) => {
           obj[obj.length - 1][child.KEY] = [];
-          prepareRowChildElement(record, obj[obj.length - 1][child.KEY], child, rowHeir, columnHeir, columns);
+          prepareRowChildElement(
+            record,
+            obj[obj.length - 1][child.KEY],
+            child,
+            rowHeir,
+            columnHeir,
+            columns
+          );
         });
       }
-    }    
-  }
-  const prepareAggregation = (record, obj, valueNode, rowHeir, columnHeir, columns) => {
-    let columnsData = JSON.parse(JSON.stringify(columns));    
-    if(!obj["columns"]){
+    }
+  };
+  const prepareAggregation = (
+    record,
+    obj,
+    valueNode,
+    rowHeir,
+    columnHeir,
+    columns
+  ) => {
+    let columnsData = JSON.parse(JSON.stringify(columns));
+    if (!obj["columns"]) {
       obj["columns"] = columnsData;
     }
-    let node = columnHeir.find(c => c.PARENTKEY === '');
-    prepareRowsColumnAggr(record, obj["columns"][node.KEY], node, rowHeir, columnHeir, valueNode)
-  }
-  const prepareRowsColumnAggr = (record, obj, node, rowHeir, columnHeir, valueNode) => {
+    let node = columnHeir.find((c) => c.PARENTKEY === "");
+    prepareRowsColumnAggr(
+      record,
+      obj["columns"][node.KEY],
+      node,
+      rowHeir,
+      columnHeir,
+      valueNode
+    );
+  };
+  const prepareRowsColumnAggr = (
+    record,
+    obj,
+    node,
+    rowHeir,
+    columnHeir,
+    valueNode
+  ) => {
     let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
-    if(index > -1){
+    if (index > -1) {
       let value = 0;
-      if(valueNode.FIELD.includes("SUM(")){
-        let fieldArray = valueNode.FIELD.split("SUM(")[1].split(")")[0].split(",");
-        fieldArray.forEach( f => {
+      if (valueNode.FIELD.includes("SUM(")) {
+        let fieldArray = valueNode.FIELD.split("SUM(")[1]
+          .split(")")[0]
+          .split(",");
+        fieldArray.forEach((f) => {
           value = value + record[f.trim()];
         });
-      }else if(valueNode.FIELD.includes("CALC(")){
-        let fieldArray = valueNode.FIELD.split("CALC(")[1].split(")")[0].split("-");
-        fieldArray.forEach( (f, i) => {
-         let row = rowHeir.find(c => c.KEY === f.trim());
-         if(row && row.FIELD.includes("SUM(")){
-           let fieldArray1 = row.FIELD.split("SUM(")[1].split(")")[0].split(",");
-           fieldArray1.forEach(f1 => {            
-             if(i == 0){
-              value = value + record[f1.trim()];
-            }else{
-              value = value - record[f1.trim()];
+      } else if (valueNode.FIELD.includes("CALC(")) {
+        let fieldArray = valueNode.FIELD.split("CALC(")[1]
+          .split(")")[0]
+          .split("-");
+        fieldArray.forEach((f, i) => {
+          let row = rowHeir.find((c) => c.KEY === f.trim());
+          if (row && row.FIELD.includes("SUM(")) {
+            let fieldArray1 = row.FIELD.split("SUM(")[1]
+              .split(")")[0]
+              .split(",");
+            fieldArray1.forEach((f1) => {
+              if (i == 0) {
+                value = value + record[f1.trim()];
+              } else {
+                value = value - record[f1.trim()];
+              }
+            });
+          } else {
+            if (i == 0) {
+              value = record[f.trim()];
+            } else {
+              value = value - record[f.trim()];
             }
-           });
-         }else{
-          if(i == 0){
-            value = record[f.trim()];
-          }else{
-            value = value - record[f.trim()];
           }
-         }
         });
-      }else{
+      } else {
         value = record[valueNode.KEY];
       }
-      if(obj[index].value !== undefined){
-        obj[index].aggrValue =  obj[index].aggrValue + value;
-      }else{
+      if (obj[index].value !== undefined) {
+        obj[index].aggrValue = obj[index].aggrValue + value;
+      } else {
         obj[index].aggrValue = value;
-      }     
-      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
-        if (childNodes.length > 0) {
-          childNodes.forEach((child) => {            
-            prepareRowsColumnAggr(record, obj[index][child.KEY], child, rowHeir, columnHeir, valueNode);
-          });
-        }
+      }
+      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+      if (childNodes.length > 0) {
+        childNodes.forEach((child) => {
+          prepareRowsColumnAggr(
+            record,
+            obj[index][child.KEY],
+            child,
+            rowHeir,
+            columnHeir,
+            valueNode
+          );
+        });
+      }
     }
-
-  }
+  };
   //onclick functions for rows display
   const handleRow1Click = (row1Data) => {
     if (expandedRows1.includes(row1Data)) {
-      setExpandedRows1(
-        expandedRows1.filter((item) => item !== row1Data)
-      );
+      setExpandedRows1(expandedRows1.filter((item) => item !== row1Data));
     } else {
       setExpandedRows1(expandedRows1.concat(row1Data));
     }
   };
 
   const handleRow2Click = (row2Data) => {
-    console.log(1234,row2Data)
+    console.log(1234, row2Data);
     if (expandedRows2.includes(row2Data)) {
       setExpandedRows2(expandedRows2.filter((item) => item !== row2Data));
     } else {
@@ -232,9 +341,10 @@ function App() {
   //render functions for expanded rows display
   const renderColumn3Rows = (column3) => {
     return column3.map((col3) => (
-      <td className="td">{col3.aggrValue}
+      <td className="td">
+        {col3.aggrValue}
         {/* {renderValues(col3.aggrValue)} */}
-        </td>
+      </td>
     ));
   };
 
@@ -245,7 +355,9 @@ function App() {
     const filteredArray = expandedColumns2.filter((value) =>
       filteredYear.includes(value)
     );
-    return filteredArray.map((col2val) => col2val.value).includes(column2.value);
+    return filteredArray
+      .map((col2val) => col2val.value)
+      .includes(column2.value);
   };
 
   const renderColumn2Rows = (column1) => {
@@ -255,9 +367,10 @@ function App() {
         {checkColumn3Condition(column2, column1.value) &&
           renderColumn3Rows(column2.MONTH)}
         {checkColumn3Condition(column2, column1.value) ? null : (
-          <td className="td">{column2.aggrValue}
+          <td className="td">
+            {column2.aggrValue}
             {/* {renderValues(column2.aggrValue)} */}
-            </td>
+          </td>
         )}
       </>
     ));
@@ -278,9 +391,10 @@ function App() {
                 {expandedColumns1
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
-                  <td className="td">{col1.aggrValue}
+                  <td className="td">
+                    {col1.aggrValue}
                     {/* {renderValues(col1.aggrValue)} */}
-                    </td>
+                  </td>
                 )}
               </>
             ))}
@@ -290,9 +404,9 @@ function App() {
     });
   };
   const renderRow3 = (row3Array) => {
-    const {label,columns,...rest} = row3Array;
-    const newArr = Object.values(rest).map((arr)=>arr[0])
-    console.log(row3Array)
+    const { label, columns, ...rest } = row3Array;
+    const newArr = Object.values(rest).map((arr) => arr[0]);
+    console.log(row3Array);
     return newArr?.map((record) => {
       return (
         <>
@@ -323,9 +437,10 @@ function App() {
                 {expandedColumns1
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
-                  <td className="td">{col1.aggrValue}
+                  <td className="td">
+                    {col1.aggrValue}
                     {/* {renderValues(col1.aggrValue)} */}
-                    </td>
+                  </td>
                 )}
               </>
             ))}
@@ -336,11 +451,11 @@ function App() {
   };
 
   const renderRow2 = (row2Array) => {
-    const {label,columns,...rest} = row2Array;
-    const newArr = Object.values(rest).map((arr)=>arr[0])
-    console.log('12345',rest,newArr)
+    const { label, columns, ...rest } = row2Array;
+    const newArr = Object.values(rest).map((arr) => arr[0]);
+    console.log("12345", rest, newArr);
     return newArr.map((record) => {
-    // return row2Array.map((record) => {
+      
       return (
         <>
           <tr className="row-tr">
@@ -370,9 +485,9 @@ function App() {
                 {expandedColumns1
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
-                  <td className="td">{col1.aggrValue}
-                    {/* {renderValues(col1.aggrValue)} */}
-                    </td>
+                  <td className="td">
+                    {col1.aggrValue}
+                  </td>
                 )}
               </>
             ))}
@@ -386,7 +501,9 @@ function App() {
   //onclicks for columns section
   const handleColumn1Click = (column1Value) => {
     if (expandedColumns1.includes(column1Value)) {
-      setExpandedColumns1(expandedColumns1.filter((item) => item !== column1Value));
+      setExpandedColumns1(
+        expandedColumns1.filter((item) => item !== column1Value)
+      );
       setExpandedColumns2(
         expandedColumns2.filter((item) => !column1Value.QUTR.includes(item))
       );
@@ -408,7 +525,7 @@ function App() {
 
   const renderColumn3 = (col2Data, i) => {
     const column3Array = col2Data[i].MONTH;
-    const col2 = col2Data[i].value;
+    const col2 = col2Data[i].label;
     return (
       <div
         colSpan={column3Array.length}
@@ -437,7 +554,7 @@ function App() {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                {col3val.value}
+                {col3val.label}
               </div>
               {/* {renderMarksHeadings()} */}
             </div>
@@ -458,7 +575,7 @@ function App() {
     return (
       <th
         colSpan={
-          column2Array.length + filteredArray.length * 4 - filteredArray.length
+          column2Array.length + filteredArray.length * 3 - filteredArray.length
         }
         className="th-colspan">
         <div className="display-flex height-30 border-bottom">
@@ -488,16 +605,13 @@ function App() {
                         ? "height-60"
                         : "height-30"
                     }`}>
-                    {col2val.value == "Total" ? (
-                      <span className="empty-span"></span>
-                    ) : (
+                    
                       <ArrowRightIcon
                         onClick={() => {
                           handleColumn2Click(col2val);
                         }}
                       />
-                    )}
-                    <span className="expanded-year">{col2val.value}</span>
+                    <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
               )}
@@ -587,16 +701,13 @@ function App() {
                                   {expandedColumns1
                                     .map((col) => col.value)
                                     .includes(col1.value) ? null : (
-                                    <td className="td">
-                                     {col1.aggrValue}
-                                    </td>
+                                    <td className="td">{col1.aggrValue}</td>
                                   )}
                                 </>
                               );
                             })}
                           </tr>
-                          {expandedRows1.includes(record) &&
-                            renderRow2(record)}
+                          {expandedRows1.includes(record) && renderRow2(record)}
                         </>
                       );
                     })}
