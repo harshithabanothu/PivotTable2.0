@@ -20,23 +20,168 @@ function App() {
     if (dataFetchRef.current) return;
     dataFetchRef.current = true;
     $.ajax({
-      url: "http://shelby.vistex.local:8000/sap/opu/odata/sap/ZSYNDATA_SRV/PivotDataSet?$format=json",
+      url: "http://sergio.vistex.local:8000/sap/opu/odata/sap/ZSYNDATA_SRV/SYNDATASET?$format=json",
     }).done((response) => {
       console.log(JSON.parse(response.d.results[0].Data));
-      setData(JSON.parse(response.d.results[0].Data));
+      console.log(JSON.parse(response.d.results[0].Heirarchy));
+      let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
+      let data = JSON.parse(response.d.results[0].Data);
+      let  summaryData = prepareSummaryData(data, heirarchy);
+      console.log(summaryData);
+      setData(summaryData)
+      // setData(JSON.parse(response.d.results[0].Data));
     });
   }, []);
   const rowdata = data.ROWS;
   const columndata = data.COLUMNS;
+  const prepareSummaryData = (dataArray, heirarchy) =>{
+    // Prepare column heirarchy
+    const pivotDataColumn = {};
+    dataArray.forEach((record) => {
+      let node = heirarchy.COLUMN.find(c => c.PARENTKEY === '');
+      if (!pivotDataColumn[node.KEY]) {
+        pivotDataColumn[node.KEY] = [];
+      }
+      prepareColumnChildElement(record, pivotDataColumn[node.KEY], node, heirarchy.COLUMN);    
+    });
+    const pivotDataRow = {};
+    dataArray.forEach((record) => {
+      let node = heirarchy.ROW.find(c => c.PARENTKEY === '');
+      if (!pivotDataRow[node.KEY]) {
+        pivotDataRow[node.KEY] = [];
+      }
+      prepareRowChildElement(record, pivotDataRow[node.KEY], node, heirarchy.ROW, heirarchy.COLUMN, pivotDataColumn);    
+    });
+    console.log(pivotDataRow);
+    return {COLUMNS: pivotDataColumn, ROWS : pivotDataRow};
+  };
+  const prepareColumnChildElement = (record, obj, node, columnHeir) => {
+    let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
+    if(index > -1){
+      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
+        if (childNodes.length > 0) {
+          childNodes.forEach((child) => {
+            if (!obj[index][child.KEY]) {
+              obj[index][child.KEY] = [];
+            }
+            prepareColumnChildElement(record, obj[index][child.KEY], child, columnHeir);
+          });
+        }
+    }else{
+      obj.push({
+        value: record[node.KEY],
+        aggrValue: 0
+      });
+      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
+      if (childNodes.length > 0) {
+        childNodes.forEach((child) => {
+          obj[obj.length - 1][child.KEY] = [];
+          prepareColumnChildElement(record, obj[obj.length - 1][child.KEY], child, columnHeir);
+        });
+      }
+    }    
+  };
+  const prepareRowChildElement = (record, obj, node, rowHeir, columnHeir, columns) => {
+    let index;
+    if(node.TYPE == "characteristic"){
+      index = obj.findIndex((obj) => obj.label == record[node.KEY]);
+    }else{
+      index = obj.findIndex((obj) => obj.label == node.LABEL);
+    }    
+    if(index > -1){
+      if(node.TYPE == "metric"){
+        prepareAggregation(record, obj[index], node, rowHeir, columnHeir, columns);
+      }
+      let childNodes = rowHeir.filter(c => c.PARENTKEY === node.KEY);
+        if (childNodes.length > 0) {
+          childNodes.forEach((child) => {
+            if (!obj[index][child.KEY]) {
+              obj[index][child.KEY] = [];
+            }
+            prepareRowChildElement(record, obj[index][child.KEY], child, rowHeir, columnHeir, columns);
+          });
+        }
+    }else{
+      if (node.TYPE == "characteristic") {
+        obj.push({
+          label: record[node.KEY],
+          columns: JSON.parse(JSON.stringify(columns))
+        });
+      }else{
+        obj.push({
+          label: node.LABEL
+        });
+        prepareAggregation(record, obj[obj.length - 1], node, rowHeir, columnHeir, columns);
+      }
+      let childNodes = rowHeir.filter(c => c.PARENTKEY === node.KEY);
+      if (childNodes.length > 0) {
+        childNodes.forEach((child) => {
+          obj[obj.length - 1][child.KEY] = [];
+          prepareRowChildElement(record, obj[obj.length - 1][child.KEY], child, rowHeir, columnHeir, columns);
+        });
+      }
+    }    
+  }
+  const prepareAggregation = (record, obj, valueNode, rowHeir, columnHeir, columns) => {
+    let columnsData = JSON.parse(JSON.stringify(columns));    
+    if(!obj["columns"]){
+      obj["columns"] = columnsData;
+    }
+    let node = columnHeir.find(c => c.PARENTKEY === '');
+    prepareRowsColumnAggr(record, obj["columns"][node.KEY], node, rowHeir, columnHeir, valueNode)
+  }
+  const prepareRowsColumnAggr = (record, obj, node, rowHeir, columnHeir, valueNode) => {
+    let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
+    if(index > -1){
+      let value = 0;
+      if(valueNode.FIELD.includes("SUM(")){
+        let fieldArray = valueNode.FIELD.split("SUM(")[1].split(")")[0].split(",");
+        fieldArray.forEach( f => {
+          value = value + record[f.trim()];
+        });
+      }else if(valueNode.FIELD.includes("CALC(")){
+        let fieldArray = valueNode.FIELD.split("CALC(")[1].split(")")[0].split("-");
+        fieldArray.forEach( (f, i) => {
+         let row = rowHeir.find(c => c.KEY === f.trim());
+         if(row && row.FIELD.includes("SUM(")){
+           let fieldArray1 = row.FIELD.split("SUM(")[1].split(")")[0].split(",");
+           fieldArray1.forEach(f1 => {            
+             if(i == 0){
+              value = value + record[f1.trim()];
+            }else{
+              value = value - record[f1.trim()];
+            }
+           });
+         }else{
+          if(i == 0){
+            value = record[f.trim()];
+          }else{
+            value = value - record[f.trim()];
+          }
+         }
+        });
+      }else{
+        value = record[valueNode.KEY];
+      }
+      if(obj[index].value !== undefined){
+        obj[index].aggrValue =  obj[index].aggrValue + value;
+      }else{
+        obj[index].aggrValue = value;
+      }     
+      let childNodes = columnHeir.filter(c => c.PARENTKEY === node.KEY);
+        if (childNodes.length > 0) {
+          childNodes.forEach((child) => {            
+            prepareRowsColumnAggr(record, obj[index][child.KEY], child, rowHeir, columnHeir, valueNode);
+          });
+        }
+    }
 
+  }
   //onclick functions for rows display
   const handleRow1Click = (row1Data) => {
     if (expandedRows1.includes(row1Data)) {
       setExpandedRows1(
         expandedRows1.filter((item) => item !== row1Data)
-      );
-      setExpandedRows2(
-        expandedRows2.filter((item) => !row1Data.CLASS.includes(item))
       );
     } else {
       setExpandedRows1(expandedRows1.concat(row1Data));
@@ -44,11 +189,9 @@ function App() {
   };
 
   const handleRow2Click = (row2Data) => {
+    console.log(1234,row2Data)
     if (expandedRows2.includes(row2Data)) {
       setExpandedRows2(expandedRows2.filter((item) => item !== row2Data));
-      setExpandedRows2(
-        expandedRows3.filter((item) => !row2Data.BATCH.includes(item))
-      );
     } else {
       setExpandedRows2(expandedRows2.concat(row2Data));
     }
@@ -89,28 +232,32 @@ function App() {
   //render functions for expanded rows display
   const renderColumn3Rows = (column3) => {
     return column3.map((col3) => (
-      <td className="td">{renderValues(col3.VALUES)}</td>
+      <td className="td">{col3.aggrValue}
+        {/* {renderValues(col3.aggrValue)} */}
+        </td>
     ));
   };
 
   const checkColumn3Condition = (column2, column1) => {
     const filteredYear = expandedColumns1.filter(
-      (col1) => col1.VALUE === column1
-    )[0].SEMESTER;
+      (col1) => col1.value === column1
+    )[0].QUTR;
     const filteredArray = expandedColumns2.filter((value) =>
       filteredYear.includes(value)
     );
-    return filteredArray.map((col2val) => col2val.VALUE).includes(column2.VALUE);
+    return filteredArray.map((col2val) => col2val.value).includes(column2.value);
   };
 
   const renderColumn2Rows = (column1) => {
-    const columns2 = column1.SEMESTER;
+    const columns2 = column1.QUTR;
     return columns2.map((column2) => (
       <>
-        {checkColumn3Condition(column2, column1.VALUE) &&
-          renderColumn3Rows(column2.SUBJECT)}
-        {checkColumn3Condition(column2, column1.VALUE) ? null : (
-          <td className="td">{renderValues(column2.VALUES)}</td>
+        {checkColumn3Condition(column2, column1.value) &&
+          renderColumn3Rows(column2.MONTH)}
+        {checkColumn3Condition(column2, column1.value) ? null : (
+          <td className="td">{column2.aggrValue}
+            {/* {renderValues(column2.aggrValue)} */}
+            </td>
         )}
       </>
     ));
@@ -121,17 +268,19 @@ function App() {
         <>
           <tr className="row-tr">
             <td className="td">
-              <div className="student-items-flex">{record.VALUE}</div>
+              <div className="student-items-flex">{record.label}</div>
             </td>
-            {record.COLUMNS.YEAR.map((col1) => (
+            {record.columns.YEAR.map((col1) => (
               <>
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                  .map((col) => col.value)
+                  .includes(col1.value) && renderColumn2Rows(col1)}
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) ? null : (
-                  <td className="td">{renderValues(col1.VALUES)}</td>
+                  .map((col) => col.value)
+                  .includes(col1.value) ? null : (
+                  <td className="td">{col1.aggrValue}
+                    {/* {renderValues(col1.aggrValue)} */}
+                    </td>
                 )}
               </>
             ))}
@@ -141,7 +290,10 @@ function App() {
     });
   };
   const renderRow3 = (row3Array) => {
-    return row3Array?.map((record) => {
+    const {label,columns,...rest} = row3Array;
+    const newArr = Object.values(rest).map((arr)=>arr[0])
+    console.log(row3Array)
+    return newArr?.map((record) => {
       return (
         <>
           <tr className="row-tr">
@@ -160,31 +312,35 @@ function App() {
                     }}
                   />
                 )}
-                <span>{record.VALUE}</span>
+                <span>{record.label}</span>
               </div>
             </td>
-            {record.COLUMNS.YEAR.map((col1) => (
+            {record.columns.YEAR.map((col1) => (
               <>
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                  .map((col) => col.value)
+                  .includes(col1.value) && renderColumn2Rows(col1)}
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) ? null : (
-                  <td className="td">{renderValues(col1.VALUES)}</td>
+                  .map((col) => col.value)
+                  .includes(col1.value) ? null : (
+                  <td className="td">{col1.aggrValue}
+                    {/* {renderValues(col1.aggrValue)} */}
+                    </td>
                 )}
               </>
             ))}
           </tr>
-          {expandedRows3.includes(record) &&
-            renderRow4(record.STUDENT)}
         </>
       );
     });
   };
 
   const renderRow2 = (row2Array) => {
-    return row2Array.map((record) => {
+    const {label,columns,...rest} = row2Array;
+    const newArr = Object.values(rest).map((arr)=>arr[0])
+    console.log('12345',rest,newArr)
+    return newArr.map((record) => {
+    // return row2Array.map((record) => {
       return (
         <>
           <tr className="row-tr">
@@ -203,23 +359,25 @@ function App() {
                     }}
                   />
                 )}
-                <span>{record.VALUE}</span>
+                <span>{record.label}</span>
               </div>
             </td>
-            {record.COLUMNS.YEAR.map((col1) => (
+            {record.columns.YEAR.map((col1) => (
               <>
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) && renderColumn2Rows(col1)}
+                  .map((col) => col.value)
+                  .includes(col1.value) && renderColumn2Rows(col1)}
                 {expandedColumns1
-                  .map((col) => col.VALUE)
-                  .includes(col1.VALUE) ? null : (
-                  <td className="td">{renderValues(col1.VALUES)}</td>
+                  .map((col) => col.value)
+                  .includes(col1.value) ? null : (
+                  <td className="td">{col1.aggrValue}
+                    {/* {renderValues(col1.aggrValue)} */}
+                    </td>
                 )}
               </>
             ))}
           </tr>
-          {expandedRows2.includes(record) && renderRow3(record.BATCH)}
+          {expandedRows2.includes(record) && renderRow3(record)}
         </>
       );
     });
@@ -230,7 +388,7 @@ function App() {
     if (expandedColumns1.includes(column1Value)) {
       setExpandedColumns1(expandedColumns1.filter((item) => item !== column1Value));
       setExpandedColumns2(
-        expandedColumns2.filter((item) => !column1Value.SEMESTER.includes(item))
+        expandedColumns2.filter((item) => !column1Value.QUTR.includes(item))
       );
     } else {
       setExpandedColumns1(expandedColumns1.concat(column1Value));
@@ -249,8 +407,8 @@ function App() {
   //render functions for columns section
 
   const renderColumn3 = (col2Data, i) => {
-    const column3Array = col2Data[i].SUBJECT;
-    const col2 = col2Data[i].VALUE;
+    const column3Array = col2Data[i].MONTH;
+    const col2 = col2Data[i].value;
     return (
       <div
         colSpan={column3Array.length}
@@ -269,7 +427,7 @@ function App() {
         <div className="display-flex">
           {column3Array.map((col3val, i) => (
             <div
-              className={`sub-column-th height-60 ${
+              className={`sub-column-th  ${
                 i == column3Array.length - 1 ? "" : "border-right"
               }`}>
               <div
@@ -279,9 +437,9 @@ function App() {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                {col3val.VALUE}
+                {col3val.value}
               </div>
-              {renderMarksHeadings()}
+              {/* {renderMarksHeadings()} */}
             </div>
           ))}
         </div>
@@ -289,11 +447,11 @@ function App() {
     );
   };
   const renderColumn2 = (col1) => {
-    const column2Array = col1.SEMESTER;
-    const column1 = col1.VALUE;
+    const column2Array = col1.QUTR;
+    const column1 = col1.value;
     const column2InCurrentColumn1 = expandedColumns1.find(
-      (col1) => col1.VALUE === col1.VALUE
-    ).SEMESTER;
+      (col1) => col1.value === col1.value
+    ).QUTR;
     const filteredArray = expandedColumns2.filter((value) =>
       column2InCurrentColumn1.includes(value)
     );
@@ -330,7 +488,7 @@ function App() {
                         ? "height-60"
                         : "height-30"
                     }`}>
-                    {col2val.VALUE == "Total" ? (
+                    {col2val.value == "Total" ? (
                       <span className="empty-span"></span>
                     ) : (
                       <ArrowRightIcon
@@ -339,10 +497,8 @@ function App() {
                         }}
                       />
                     )}
-                    <span className="expanded-year">{col2val.VALUE}</span>
+                    <span className="expanded-year">{col2val.value}</span>
                   </div>
-
-                  {renderMarksHeadings()}
                 </div>
               )}
             </>
@@ -364,7 +520,7 @@ function App() {
                   <thead>
                     <tr className="freezeTr">
                       <th className="freezeTh"></th>
-                      {columndata?.map((col1) => {
+                      {columndata?.YEAR.map((col1) => {
                         return (
                           <>
                             {expandedColumns1.includes(col1) ? (
@@ -385,9 +541,8 @@ function App() {
                                       handleColumn1Click(col1);
                                     }}
                                   />
-                                  <span>{col1.VALUE}</span>
+                                  <span>{col1.value}</span>
                                 </div>
-                                {renderMarksHeadings()}
                               </th>
                             )}
                           </>
@@ -396,7 +551,7 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {rowdata?.map((record, i) => {
+                    {rowdata?.EMPID.map((record, i) => {
                       return (
                         <>
                           <tr className="row-tr">
@@ -415,25 +570,25 @@ function App() {
                                     }}
                                   />
                                 )}
-                                <span>{record.VALUE}</span>
+                                <span>{record.label}</span>
                               </div>
                             </td>
-                            {record.COLUMNS.YEAR.map((col1) => {
+                            {record.columns.YEAR.map((col1) => {
                               // condition that we clicked the correct year
                               // console.log(colYear.VALUE);
 
                               return (
                                 <>
                                   {expandedColumns1
-                                    .map((col) => col.VALUE)
-                                    .includes(col1.VALUE) &&
+                                    .map((col) => col.value)
+                                    .includes(col1.value) &&
                                     renderColumn2Rows(col1)}
 
                                   {expandedColumns1
-                                    .map((col) => col.VALUE)
-                                    .includes(col1.VALUE) ? null : (
+                                    .map((col) => col.value)
+                                    .includes(col1.value) ? null : (
                                     <td className="td">
-                                      {renderValues(col1.VALUES)}
+                                     {col1.aggrValue}
                                     </td>
                                   )}
                                 </>
@@ -441,7 +596,7 @@ function App() {
                             })}
                           </tr>
                           {expandedRows1.includes(record) &&
-                            renderRow2(record.CLASS)}
+                            renderRow2(record)}
                         </>
                       );
                     })}

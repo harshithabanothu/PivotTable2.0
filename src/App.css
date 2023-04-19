@@ -41,7 +41,7 @@ th,
 .sub-column-th {
   background-color: #f5f5f5;
   text-align: center;
-  min-width: 180px;
+  min-width: 160px;
   /* outline: 0.5px solid rgb(137, 131, 131); */
 
 }
@@ -76,7 +76,7 @@ td:first-child {
 }
 
 .sub-column-heading div {
-  width: calc(100% / 2);
+  width: calc(100% / 3);
   /* padding-right: 4px; */
   display: flex;
   justify-content:center;
@@ -123,7 +123,7 @@ td:first-child {
 .columns-flex {
   display: flex;
   align-items: center;
-  border-bottom: 0.5px solid grey;
+  /* border-bottom: 0.5px solid grey; */
   height: 30px;
   /* margin-top:18px; */
 }

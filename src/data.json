@@ -1,0 +1,150 @@
+{
+    "ROW": [
+        {
+            "KEY": "EMPID",
+            "PARENTKEY": "",
+            "FIELD": "EMPID",
+            "TYPE": "characteristic",
+            "LABEL": "Employee",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "NSAL",
+            "PARENTKEY": "EMPID",
+            "FIELD": "CALC(GPAY - DEDUCT)",
+            "TYPE": "metric",
+            "LABEL": "Net Salary",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "GPAY",
+            "PARENTKEY": "EMPID",
+            "FIELD": "SUM(BPAY,HRA,SALW,LTA,FCOUP,MALW,OVRT,CONY)",
+            "TYPE": "metric",
+            "LABEL": "Gross Pay",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "BPAY",
+            "PARENTKEY": "GPAY",
+            "FIELD": "BPAY",
+            "TYPE": "metric",
+            "LABEL": "Basic Pay",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "HRA",
+            "PARENTKEY": "GPAY",
+            "FIELD": "HRA",
+            "TYPE": "metric",
+            "LABEL": "HRA",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "SALW",
+            "PARENTKEY": "GPAY",
+            "FIELD": "SALW",
+            "TYPE": "metric",
+            "LABEL": "Special Allowance",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "LTA",
+            "PARENTKEY": "GPAY",
+            "FIELD": "LTA",
+            "TYPE": "metric",
+            "LABEL": "LTA",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "FCOUP",
+            "PARENTKEY": "GPAY",
+            "FIELD": "FCOUP",
+            "TYPE": "metric",
+            "LABEL": "Food Coupons",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "MALW",
+            "PARENTKEY": "GPAY",
+            "FIELD": "MALW",
+            "TYPE": "metric",
+            "LABEL": "Medical Allowance",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "OVRT",
+            "PARENTKEY": "GPAY",
+            "FIELD": "OVRT",
+            "TYPE": "metric",
+            "LABEL": "Overtime",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "CONY",
+            "PARENTKEY": "GPAY",
+            "FIELD": "CONY",
+            "TYPE": "metric",
+            "LABEL": "Conveyance",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "DEDUCT",
+            "PARENTKEY": "EMPID",
+            "FIELD": "SUM(PRFTAX,ITDS,PRVFND)",
+            "TYPE": "metric",
+            "LABEL": "Deductions",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "PRFTAX",
+            "PARENTKEY": "GPAY",
+            "FIELD": "PRFTAX",
+            "TYPE": "metric",
+            "LABEL": "Professional Tax",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "ITDS",
+            "PARENTKEY": "GPAY",
+            "FIELD": "ITDS",
+            "TYPE": "metric",
+            "LABEL": "TDS",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "PRVFND",
+            "PARENTKEY": "GPAY",
+            "FIELD": "PRVFND",
+            "TYPE": "metric",
+            "LABEL": "Provident Fund",
+            "ROLLUP": ""
+        }
+    ],
+    "COLUMN": [
+        {
+            "KEY": "YEAR",
+            "PARENTKEY": "",
+            "FIELD": "YEAR",
+            "TYPE": "characteristic",
+            "LABEL": "Year",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "QUTR",
+            "PARENTKEY": "YEAR",
+            "FIELD": "QUTR",
+            "TYPE": "characteristic",
+            "LABEL": "Quarter",
+            "ROLLUP": ""
+        },
+        {
+            "KEY": "MONTH",
+            "PARENTKEY": "QUTR",
+            "FIELD": "MONTH",
+            "TYPE": "characteristic",
+            "LABEL": "Month",
+            "ROLLUP": ""
+        }
+    ]
+}
