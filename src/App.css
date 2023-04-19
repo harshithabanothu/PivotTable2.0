@@ -57,6 +57,7 @@ td:first-child {
 
 .td:first-child {
   outline: 0.5px solid rgba(137, 131, 131, 0.4);
+  min-width:180px;
 }
 
 .freezeTh {

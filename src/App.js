@@ -342,7 +342,7 @@ function App() {
   const renderColumn3Rows = (column3) => {
     return column3.map((col3) => (
       <td className="td">
-        {col3.aggrValue}
+        {col3.aggrValue==0 ? " ":col3.aggrValue}
         {/* {renderValues(col3.aggrValue)} */}
       </td>
     ));
@@ -368,8 +368,8 @@ function App() {
           renderColumn3Rows(column2.MONTH)}
         {checkColumn3Condition(column2, column1.value) ? null : (
           <td className="td">
-            {column2.aggrValue}
-            {/* {renderValues(column2.aggrValue)} */}
+            {column2.aggrValue==0 ? " ":column2.aggrValue}
+           
           </td>
         )}
       </>
@@ -413,7 +413,7 @@ function App() {
           <tr className="row-tr">
             <td className="td">
               <div className="batch-items-flex">
-                <span>{record.label}</span>
+                <span className="marginleft">{record.label}</span>
               </div>
             </td>
             {record.columns.YEAR.map((col1) => (
