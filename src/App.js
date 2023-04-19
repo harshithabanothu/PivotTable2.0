@@ -455,7 +455,7 @@ function App() {
     const newArr = Object.values(rest).map((arr) => arr[0]);
     console.log("12345", rest, newArr);
     return newArr.map((record) => {
-      
+
       return (
         <>
           <tr className="row-tr">
@@ -529,9 +529,8 @@ function App() {
     return (
       <div
         colSpan={column3Array.length}
-        className={`sub-column-th ${
-          i == col2Data.length - 1 ? "" : "border-right"
-        }`}
+        className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"
+          }`}
         style={{ minWidth: "484px" }}>
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon
@@ -544,9 +543,8 @@ function App() {
         <div className="display-flex">
           {column3Array.map((col3val, i) => (
             <div
-              className={`sub-column-th  ${
-                i == column3Array.length - 1 ? "" : "border-right"
-              }`}>
+              className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"
+                }`}>
               <div
                 className="border-bottom height-30"
                 style={{
@@ -566,12 +564,8 @@ function App() {
   const renderColumn2 = (col1) => {
     const column2Array = col1.QUTR;
     const column1 = col1.value;
-    const column2InCurrentColumn1 = expandedColumns1.find(
-      (col1) => col1.value === col1.value
-    ).QUTR;
-    const filteredArray = expandedColumns2.filter((value) =>
-      column2InCurrentColumn1.includes(value)
-    );
+    const column2InCurrentColumn1 = expandedColumns1.find((col1) => col1.value === column1).QUTR;
+    const filteredArray = expandedColumns2.filter((value) => column2InCurrentColumn1.includes(value));
     return (
       <th
         colSpan={
@@ -595,22 +589,20 @@ function App() {
                 renderColumn3(column2Array, i)
               ) : (
                 <div
-                  className={`sub-column-th ${
-                    i == column2Array.length - 1 ? "" : "border-right"
-                  }`}>
-                  <div
-                    className={`columns-flex ${
-                      expandedColumns2.length != 0 &&
-                      !expandedColumns2.includes(col2val)
-                        ? "height-60"
-                        : "height-30"
+                  className={`sub-column-th ${i == column2Array.length - 1 ? "" : "border-right"
                     }`}>
-                    
-                      <ArrowRightIcon
-                        onClick={() => {
-                          handleColumn2Click(col2val);
-                        }}
-                      />
+                  <div
+                    className={`columns-flex ${expandedColumns2.length != 0 &&
+                      !expandedColumns2.includes(col2val)
+                      ? "height-60"
+                      : "height-30"
+                      }`}>
+
+                    <ArrowRightIcon
+                      onClick={() => {
+                        handleColumn2Click(col2val);
+                      }}
+                    />
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
@@ -642,14 +634,13 @@ function App() {
                             ) : (
                               <th>
                                 <div
-                                  className={`columns-flex ${
-                                    expandedColumns1.length != 0 &&
+                                  className={`columns-flex ${expandedColumns1.length != 0 &&
                                     !expandedColumns1.includes(col1)
-                                      ? expandedColumns2.length != 0
-                                        ? "height-90"
-                                        : "height-60"
-                                      : "height-30"
-                                  }`}>
+                                    ? expandedColumns2.length != 0
+                                      ? "height-90"
+                                      : "height-60"
+                                    : "height-30"
+                                    }`}>
                                   <ArrowRightIcon
                                     onClick={() => {
                                       handleColumn1Click(col1);
