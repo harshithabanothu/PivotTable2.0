@@ -442,13 +442,12 @@ function App() {
     const newArr = Object.values(rest).map((arr) => arr[0]);
     console.log("12345", rest, newArr);
     return newArr.map((record) => {
-
       return (
         <>
           <tr className="row-tr">
             <td className="td">
               <div className="class-items-flex">
-                {expandedRows2.includes(record) ? (
+                {Object.keys(record).length > 2 && (expandedRows2.includes(record) ? (
                   <ArrowDropDownIcon
                     onClick={() => {
                       handleRow2Click(record);
@@ -460,8 +459,8 @@ function App() {
                       handleRow2Click(record);
                     }}
                   />
-                )}
-                <span>{record.label}</span>
+                ))}
+                <span className={`${Object.keys(record).length > 2 ? "" : "marginleft"}`}>{record.label}</span>
               </div>
             </td>
             {record.columns.YEAR.map((col1) => (

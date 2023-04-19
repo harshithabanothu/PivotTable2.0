@@ -23,7 +23,7 @@ thead {
   position: sticky;
   top: 0;
   z-index: 50;
-  outline: 0.5px solid rgba(137, 131, 131,0.4);
+  outline: 0.5px solid rgba(137, 131, 131, 0.4);
 }
 
 .row-tr {
@@ -56,14 +56,15 @@ td:first-child {
 }
 
 .td:first-child {
-  outline: 0.5px solid rgba(137, 131, 131,0.4);
+  outline: 0.5px solid rgba(137, 131, 131, 0.4);
 }
 
 .freezeTh {
-  outline: 0.2px solid rgba(137, 131, 131,0.4);
+  outline: 0.2px solid rgba(137, 131, 131, 0.4);
 }
+
 .freezeTr {
-  outline: 0.2px solid rgba(137, 131, 131,0.4);
+  outline: 0.2px solid rgba(137, 131, 131, 0.4);
 }
 
 .sub-column-heading {
@@ -79,7 +80,7 @@ td:first-child {
   width: calc(100% / 3);
   /* padding-right: 4px; */
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
 }
 
@@ -127,8 +128,9 @@ td:first-child {
   height: 30px;
   /* margin-top:18px; */
 }
-.empty-span{
-  padding:8px;
+
+.empty-span {
+  padding: 8px;
 }
 
 .height-30 {
@@ -237,12 +239,12 @@ td:first-child {
 }
 
 .td {
-  min-width:160px;
+  min-width: 160px;
   height: 20px;
   border: 0.5px solid rgb(137, 131, 131);
   padding: 0;
-  text-align:right;
-  
+  text-align: right;
+
 }
 
 .spinner-container {
@@ -251,4 +253,8 @@ td:first-child {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.marginleft {
+  margin-left: 24px;
 }
