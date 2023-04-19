@@ -413,19 +413,6 @@ function App() {
           <tr className="row-tr">
             <td className="td">
               <div className="batch-items-flex">
-                {expandedRows3.includes(record) ? (
-                  <ArrowDropDownIcon
-                    onClick={() => {
-                      handleRow3Click(record);
-                    }}
-                  />
-                ) : (
-                  <ArrowRightIcon
-                    onClick={() => {
-                      handleRow3Click(record);
-                    }}
-                  />
-                )}
                 <span>{record.label}</span>
               </div>
             </td>
@@ -692,7 +679,7 @@ function App() {
                                   {expandedColumns1
                                     .map((col) => col.value)
                                     .includes(col1.value) ? null : (
-                                    <td className="td">{col1.aggrValue}</td>
+                                    <td className="td"></td>
                                   )}
                                 </>
                               );
