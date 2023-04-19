@@ -27,7 +27,7 @@ thead {
 }
 
 .row-tr {
-  border: 0.5px solid rgb(9, 8, 8);
+  /* border: 0.5px solid rgb(9, 8, 8); */
   border-collapse: collapse;
   height: 20px;
 }
@@ -56,7 +56,7 @@ td:first-child {
 }
 
 .td:first-child {
-  outline: 0.5px solid rgba(137, 131, 131, 0.4);
+  /* outline: 0.5px solid rgba(137, 131, 131, 0.4); */
   min-width:180px;
 }
 
@@ -242,7 +242,7 @@ td:first-child {
 .td {
   min-width: 160px;
   height: 20px;
-  border: 0.5px solid rgb(137, 131, 131);
+  /* border: 0.5px solid rgb(137, 131, 131); */
   padding: 0;
   text-align: right;
 
@@ -258,4 +258,7 @@ td:first-child {
 
 .marginleft {
   margin-left: 24px;
+}
+.td-cells-padding{
+  padding-right:5px
 }

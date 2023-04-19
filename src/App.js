@@ -319,24 +319,24 @@ function App() {
     return num_parts.join(".");
   };
 
-  const renderValues = (values) => {
-    return (
-      <div className="data-value-cells">
-        <div>{handleNumFormater(values?.WRITTEN) || 0}</div>
-        <div className="border-none">
-          {handleNumFormater(values?.PRACTICAL) || 0}
-        </div>
-      </div>
-    );
-  };
-  const renderMarksHeadings = () => {
-    return (
-      <div className="sub-column-heading ">
-        <div className="border-right">Written</div>
-        <div className="border-none">Practical</div>
-      </div>
-    );
-  };
+  // const renderValues = (values) => {
+  //   return (
+  //     <div className="data-value-cells">
+  //       <div>{handleNumFormater(values?.WRITTEN) || 0}</div>
+  //       <div className="border-none">
+  //         {handleNumFormater(values?.PRACTICAL) || 0}
+  //       </div>
+  //     </div>
+  //   );
+  // };
+  // const renderMarksHeadings = () => {
+  //   return (
+  //     <div className="sub-column-heading ">
+  //       <div className="border-right">Written</div>
+  //       <div className="border-none">Practical</div>
+  //     </div>
+  //   );
+  // };
 
   //render functions for expanded rows display
   const renderColumn3Rows = (column3) => {
@@ -392,8 +392,7 @@ function App() {
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
                   <td className="td">
-                    {col1.aggrValue}
-                    {/* {renderValues(col1.aggrValue)} */}
+                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
                   </td>
                 )}
               </>
@@ -425,8 +424,7 @@ function App() {
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
                   <td className="td">
-                    {col1.aggrValue}
-                    {/* {renderValues(col1.aggrValue)} */}
+                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
                   </td>
                 )}
               </>
@@ -472,7 +470,7 @@ function App() {
                   .map((col) => col.value)
                   .includes(col1.value) ? null : (
                   <td className="td">
-                    {col1.aggrValue}
+                    <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
                   </td>
                 )}
               </>
