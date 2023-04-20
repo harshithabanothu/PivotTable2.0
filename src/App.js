@@ -342,11 +342,16 @@ function App() {
 
   //render functions for expanded rows display
   const renderColumn3Rows = (column3) => {
-    return column3.map((col3) => (
-      <td className="td">
-        {col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}
-      </td>
-    ));
+    let totalValue = 0;
+    return (
+      <>
+        {column3.map(col3 => {
+          totalValue = totalValue + col3.aggrValue;
+          return (<td className="td">{col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}</td>)
+        })}
+        <td className="td">{totalValue == 0 ? " " : handleNumFormater(totalValue)}</td>
+      </>
+    )
   };
 
   const checkColumn3Condition = (column2, column1) => {
@@ -505,7 +510,7 @@ function App() {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     return (
-      <div colSpan={column3Array.length} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
+      <div colSpan={column3Array.length + 1} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon onClick={() => { handleColumn2Click(col2Data[i]) }} />
           <span>{col2}</span>
