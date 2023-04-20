@@ -512,7 +512,7 @@ function App() {
               className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"
                 }`}>
               <div
-                className="border-bottom height-30"
+                className=" height-30"
                 style={{
                   display: "flex",
                   alignItems: "center",
