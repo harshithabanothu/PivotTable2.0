@@ -343,66 +343,56 @@ function App() {
   const renderColumn3Rows = (column3) => {
     return column3.map((col3) => (
       <td className="td">
-        {col3.aggrValue==0 ? " ":col3.aggrValue}
-        {/* {renderValues(col3.aggrValue)} */}
+        {col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}
       </td>
     ));
   };
 
   const checkColumn3Condition = (column2, column1) => {
-    const filteredYear = expandedColumns1.filter(
-      (col1) => col1.value === column1
-    )[0].QUTR;
-    const filteredArray = expandedColumns2.filter((value) =>
-      filteredYear.includes(value)
-    );
-    return filteredArray
-      .map((col2val) => col2val.value)
-      .includes(column2.value);
+    const filteredYear = expandedColumns1.filter((col1) => col1.value === column1)[0].QUTR;
+    const filteredArray = expandedColumns2.filter((value) => filteredYear.includes(value));
+    return filteredArray.map((col2val) => col2val.value).includes(column2.value);
   };
 
   const renderColumn2Rows = (column1) => {
     const columns2 = column1.QUTR;
     return columns2.map((column2) => (
       <>
-        {checkColumn3Condition(column2, column1.value) &&
-          renderColumn3Rows(column2.MONTH)}
-        {checkColumn3Condition(column2, column1.value) ? null : (
+        {checkColumn3Condition(column2, column1.value) ? renderColumn3Rows(column2.MONTH) : (
           <td className="td">
-            {column2.aggrValue==0 ? " ":column2.aggrValue}
-           
+            {column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}
           </td>
         )}
       </>
     ));
   };
-  const renderRow4 = (row4Array) => {
-    return row4Array?.map((record) => {
-      return (
-        <>
-          <tr className="row-tr">
-            <td className="td">
-              <div className="student-items-flex">{record.label}</div>
-            </td>
-            {record.columns.YEAR.map((col1) => (
-              <>
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) && renderColumn2Rows(col1)}
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? null : (
-                  <td className="td">
-                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
-                  </td>
-                )}
-              </>
-            ))}
-          </tr>
-        </>
-      );
-    });
-  };
+  // const renderRow4 = (row4Array) => {
+  //   return row4Array?.map((record) => {
+  //     return (
+  //       <>
+  //         <tr className="row-tr">
+  //           <td className="td">
+  //             <div className="student-items-flex">{record.label}</div>
+  //           </td>
+  //           {record.columns.YEAR.map((col1) => (
+  //             <>
+  //               {expandedColumns1
+  //                 .map((col) => col.value)
+  //                 .includes(col1.value) && renderColumn2Rows(col1)}
+  //               {expandedColumns1
+  //                 .map((col) => col.value)
+  //                 .includes(col1.value) ? null : (
+  //                 <td className="td">
+  //                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
+  //                 </td>
+  //               )}
+  //             </>
+  //           ))}
+  //         </tr>
+  //       </>
+  //     );
+  //   });
+  // };
   const renderRow3 = (row3Array) => {
     const { label, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
@@ -418,14 +408,9 @@ function App() {
             </td>
             {record.columns.YEAR.map((col1) => (
               <>
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) && renderColumn2Rows(col1)}
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? null : (
+                {expandedColumns1.map((col) => col.value).includes(col1.value) ? renderColumn2Rows(col1) : (
                   <td className="td">
-                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
+                    <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
                   </td>
                 )}
               </>
@@ -464,12 +449,7 @@ function App() {
             </td>
             {record.columns.YEAR.map((col1) => (
               <>
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) && renderColumn2Rows(col1)}
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? null : (
+                {expandedColumns1.map((col) => col.value).includes(col1.value) ? renderColumn2Rows(col1) : (
                   <td className="td">
                     <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
                   </td>
@@ -516,8 +496,8 @@ function App() {
         colSpan={column3Array.length}
         className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"
           }`}
-        // style={{ minWidth: "484px" }}
-        >
+      // style={{ minWidth: "484px" }}
+      >
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon
             onClick={() => {
