@@ -347,9 +347,15 @@ function App() {
       <>
         {column3.map(col3 => {
           totalValue = totalValue + col3.aggrValue;
-          return (<td className="td">{col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}</td>)
+          return (
+          <td className="td">
+            <span className="td-cells-padding">{col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}</span>
+          </td>
+          )
         })}
-        <td className="td">{totalValue == 0 ? " " : handleNumFormater(totalValue)}</td>
+        <td className="td">
+          <span className="td-cells-padding">{totalValue == 0 ? " " : handleNumFormater(totalValue)}</span>
+          </td>
       </>
     )
   };
@@ -371,13 +377,15 @@ function App() {
             <>
               {checkColumn3Condition(column2, column1.value) ? renderColumn3Rows(column2.MONTH) : (
                 <td className="td">
-                  {column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}
+                  <span className="td-cells-padding">{column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}</span>
                 </td>
               )}
             </>
           );
         })}
-        <td className="td">{totalValue == 0 ? "" : handleNumFormater(totalValue)}</td>
+        <td className="td">
+          <span className="td-cells-padding">{totalValue == 0 ? "" : handleNumFormater(totalValue)}</span>
+          </td>
       </>
 
     );
