@@ -7,6 +7,7 @@ import $ from "jquery";
 import "./App.css";
 import { myFunction } from "./script";
 
+
 function App() {
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
@@ -515,7 +516,8 @@ function App() {
         colSpan={column3Array.length}
         className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"
           }`}
-        style={{ minWidth: "484px" }}>
+        // style={{ minWidth: "484px" }}
+        >
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon
             onClick={() => {

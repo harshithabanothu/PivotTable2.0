@@ -41,7 +41,7 @@ th,
 .sub-column-th {
   background-color: #f5f5f5;
   text-align: center;
-  min-width: 160px;
+  min-width: 140px;
   /* outline: 0.5px solid rgb(137, 131, 131); */
 
 }
@@ -240,7 +240,7 @@ td:first-child {
 }
 
 .td {
-  min-width: 160px;
+  min-width: 140px;
   height: 20px;
   /* border: 0.5px solid rgb(137, 131, 131); */
   padding: 0;
@@ -260,5 +260,5 @@ td:first-child {
   margin-left: 24px;
 }
 .td-cells-padding{
-  padding-right:5px
+  padding-right:6px
 }
