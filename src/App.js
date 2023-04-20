@@ -14,6 +14,7 @@ function App() {
   const [expandedRows3, setExpandedRows3] = useState([]);
   const [expandedColumns1, setExpandedColumns1] = useState([]);
   const [expandedColumns2, setExpandedColumns2] = useState([]);
+  const [isSwapped, setisSwapped] = useState(false);
   const [data, setData] = useState({});
   const dataFetchRef = useRef(false);
 
@@ -492,37 +493,21 @@ function App() {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     return (
-      <div
-        colSpan={column3Array.length}
-        className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"
-          }`}
-      // style={{ minWidth: "484px" }}
-      >
+      <div colSpan={column3Array.length} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}      >
         <div className="display-flex border-bottom height-30">
-          <ArrowDropDownIcon
-            onClick={() => {
-              handleColumn2Click(col2Data[i]);
-            }}
-          />
+          <ArrowDropDownIcon onClick={() => { handleColumn2Click(col2Data[i]) }} />
           <span>{col2}</span>
         </div>
         <div className="display-flex">
           {column3Array.map((col3val, i) => (
-            <div
-              className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"
-                }`}>
-              <div
-                className=" height-30"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}>
-                {col3val.label}
-              </div>
-              {/* {renderMarksHeadings()} */}
+            // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
+            <div className="sub-column-th border-right">
+              <div className=" height-30 displayFlex">{col3val.label}</div>
             </div>
           ))}
+          <div className="sub-column-th">
+            <div className=" height-30 displayFlex">Total</div>
+          </div>
         </div>
       </div>
     );
@@ -533,52 +518,56 @@ function App() {
     const column2InCurrentColumn1 = expandedColumns1.find((col1) => col1.value === column1).QUTR;
     const filteredArray = expandedColumns2.filter((value) => column2InCurrentColumn1.includes(value));
     return (
-      <th
-        colSpan={
-          column2Array.length + filteredArray.length * 3 - filteredArray.length
-        }
-        className="th-colspan">
+      <th colSpan={column2Array.length + filteredArray.length * 3 - filteredArray.length} className="th-colspan">
         <div className="display-flex height-30 border-bottom">
-          <ArrowDropDownIcon
-            onClick={() => {
-              handleColumn1Click(col1);
-            }}
-          />
+          <ArrowDropDownIcon onClick={() => { handleColumn1Click(col1) }} />
           <span className="expanded-year">{column1}</span>
         </div>
-
         <div className="flex">
           {column2Array.map((col2val, i) => (
             <>
-              {/* {expandedColumns2.includes(semval) &&renderColumn3(semval)} */}
-              {expandedColumns2.includes(col2val) ? (
-                renderColumn3(column2Array, i)
-              ) : (
-                <div
-                  className={`sub-column-th ${i == column2Array.length - 1 ? "" : "border-right"
-                    }`}>
-                  <div
-                    className={`columns-flex ${expandedColumns2.length != 0 &&
-                      !expandedColumns2.includes(col2val)
-                      ? "height-60"
-                      : "height-30"
-                      }`}>
-
-                    <ArrowRightIcon
-                      onClick={() => {
-                        handleColumn2Click(col2val);
-                      }}
-                    />
+              {expandedColumns2.includes(col2val) ? (renderColumn3(column2Array, i)) : (
+                // ${i == column2Array.length - 1 ? "" : "border-right"}
+                <div className="sub-column-th border-right">
+                  <div className={`columns-flex ${expandedColumns2.length != 0 && !expandedColumns2.includes(col2val) ? "height-60" : "height-30"}`}>
+                    <ArrowRightIcon onClick={() => { handleColumn2Click(col2val) }} />
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
               )}
             </>
           ))}
+          <div className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"}`}>
+            <span className="expanded-year marginleft">Total</span>
+          </div>
         </div>
       </th>
     );
   };
+
+  const prepareThead = (tableData) => {
+    if (!tableData) return;
+    let key = Object.keys(tableData)[0];
+    return (
+      <>
+        {tableData[key].map((col1) => {
+          return (
+            <>
+              {expandedColumns1.includes(col1) ? (renderColumn2(col1)) : (
+                <th>
+                  <div
+                    className={`columns-flex ${expandedColumns1.length != 0 && !expandedColumns1.includes(col1) ? expandedColumns2.length != 0 ? "height-90" : "height-60" : "height-30"}`}>
+                    <ArrowRightIcon onClick={() => { handleColumn1Click(col1) }} />
+                    <span>{col1.value ?? col1.label}</span>
+                  </div>
+                </th>
+              )}
+            </>
+          );
+        })}
+      </>
+    );
+  }
 
   return (
     <>
@@ -590,9 +579,13 @@ function App() {
               <div className="table-scrollbar-container">
                 <table>
                   <thead>
+
                     <tr className="freezeTr">
-                      <th className="freezeTh"></th>
-                      {columndata?.YEAR.map((col1) => {
+                      <th className="freezeTh">
+                        {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
+                      </th>
+                      {isSwapped ? prepareThead(rowdata) : prepareThead(columndata)}
+                      {/* {columndata?.YEAR.map((col1) => {
                         return (
                           <>
                             {expandedColumns1.includes(col1) ? (
@@ -618,7 +611,7 @@ function App() {
                             )}
                           </>
                         );
-                      })}
+                      })} */}
                     </tr>
                   </thead>
                   <tbody>
