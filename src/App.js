@@ -357,16 +357,27 @@ function App() {
 
   const renderColumn2Rows = (column1) => {
     const columns2 = column1.QUTR;
-    return columns2.map((column2) => (
+    let totalValue = 0;
+    return (
       <>
-        {checkColumn3Condition(column2, column1.value) ? renderColumn3Rows(column2.MONTH) : (
-          <td className="td">
-            {column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}
-          </td>
-        )}
+        {columns2.map(column2 => {
+          totalValue = totalValue + parseInt(column2.aggrValue);
+          return (
+            <>
+              {checkColumn3Condition(column2, column1.value) ? renderColumn3Rows(column2.MONTH) : (
+                <td className="td">
+                  {column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}
+                </td>
+              )}
+            </>
+          );
+        })}
+        <td className="td">{totalValue == 0 ? "" : handleNumFormater(totalValue)}</td>
       </>
-    ));
+
+    );
   };
+
   // const renderRow4 = (row4Array) => {
   //   return row4Array?.map((record) => {
   //     return (
@@ -394,6 +405,7 @@ function App() {
   //     );
   //   });
   // };
+
   const renderRow3 = (row3Array) => {
     const { label, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
@@ -493,7 +505,7 @@ function App() {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     return (
-      <div colSpan={column3Array.length} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}      >
+      <div colSpan={column3Array.length} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon onClick={() => { handleColumn2Click(col2Data[i]) }} />
           <span>{col2}</span>
@@ -518,7 +530,7 @@ function App() {
     const column2InCurrentColumn1 = expandedColumns1.find((col1) => col1.value === column1).QUTR;
     const filteredArray = expandedColumns2.filter((value) => column2InCurrentColumn1.includes(value));
     return (
-      <th colSpan={column2Array.length + filteredArray.length * 3 - filteredArray.length} className="th-colspan">
+      <th colSpan={(column2Array.length + filteredArray.length * 3 - filteredArray.length) + 1} className="th-colspan">
         <div className="display-flex height-30 border-bottom">
           <ArrowDropDownIcon onClick={() => { handleColumn1Click(col1) }} />
           <span className="expanded-year">{column1}</span>
