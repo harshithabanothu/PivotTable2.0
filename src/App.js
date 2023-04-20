@@ -24,8 +24,8 @@ function App() {
     $.ajax({
       url: "http://sergio.vistex.local:8000/sap/opu/odata/sap/ZSYNDATA_SRV/SYNDATASET?$format=json",
     }).done((response) => {
-      console.log(JSON.parse(response.d.results[0].Data));
-      console.log(JSON.parse(response.d.results[0].Heirarchy));
+      // console.log(JSON.parse(response.d.results[0].Data));
+      // console.log(JSON.parse(response.d.results[0].Heirarchy));
       let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
       let data = JSON.parse(response.d.results[0].Data);
       let summaryData = prepareSummaryData(data, heirarchy);
@@ -66,7 +66,7 @@ function App() {
         pivotDataColumn
       );
     });
-    console.log(pivotDataRow);
+    // console.log(pivotDataRow);
     return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
   };
   const prepareColumnChildElement = (record, obj, node, columnHeir) => {
@@ -300,7 +300,7 @@ function App() {
   };
 
   const handleRow2Click = (row2Data) => {
-    console.log(1234, row2Data);
+    // console.log(1234, row2Data);
     if (expandedRows2.includes(row2Data)) {
       setExpandedRows2(expandedRows2.filter((item) => item !== row2Data));
     } else {
@@ -414,7 +414,7 @@ function App() {
   const renderRow3 = (row3Array) => {
     const { label, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log(row3Array);
+    // console.log(row3Array);
     return newArr?.map((record) => {
       return (
         <>
@@ -442,7 +442,7 @@ function App() {
   const renderRow2 = (row2Array) => {
     const { label, columns, ...rest } = row2Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log("12345", rest, newArr);
+    // console.log("12345", rest, newArr);
     return newArr.map((record) => {
       return (
         <>
@@ -510,7 +510,8 @@ function App() {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     return (
-      <div colSpan={column3Array.length + 1} className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
+      // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
+      <div className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon onClick={() => { handleColumn2Click(col2Data[i]) }} />
           <span>{col2}</span>
@@ -535,7 +536,7 @@ function App() {
     const column2InCurrentColumn1 = expandedColumns1.find((col1) => col1.value === column1).QUTR;
     const filteredArray = expandedColumns2.filter((value) => column2InCurrentColumn1.includes(value));
     return (
-      <th colSpan={(column2Array.length + filteredArray.length * 3 - filteredArray.length) + 1} className="th-colspan">
+      <th colSpan={((column2Array.length + 1) + (filteredArray.length * 4) - filteredArray.length)} className="th-colspan">
         <div className="display-flex height-30 border-bottom">
           <ArrowDropDownIcon onClick={() => { handleColumn1Click(col1) }} />
           <span className="expanded-year">{column1}</span>
@@ -656,8 +657,6 @@ function App() {
                             </td>
                             {record.columns.YEAR.map((col1) => {
                               // condition that we clicked the correct year
-                              // console.log(colYear.VALUE);
-
                               return (
                                 <>
                                   {expandedColumns1
