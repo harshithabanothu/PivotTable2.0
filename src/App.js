@@ -319,7 +319,6 @@ function App() {
     // }
   };
   const handleExpandAllRows = (rowdata) => {
-    // console.log("");
     if (isRowsExpanded) {
       setisRowsExpanded(!isRowsExpanded);
       setExpandedRows1([]);
@@ -346,15 +345,11 @@ function App() {
     } else {
       setisColumnsExpanded(!isColumnsExpanded);
       setExpandedColumns1(coldata.YEAR)
-      // let records = [];
-      // rowdata.EMPID.map((record) => {
-      //   const { label, columns, ...rest } = record;
-      //   const newArr = Object.values(rest).map((arr) => arr[0]);
-      //   newArr.map((obj) => {
-      //     records.push(obj);
-      //   })
-      //   setExpandedRows2(records);
-      // })
+      let records = [];
+      coldata.YEAR.map((obj) =>{
+          records=records.concat(obj.QUTR)
+        })
+      setExpandedColumns2(records)
     }
   };
   const handleNumFormater = (num) => {
