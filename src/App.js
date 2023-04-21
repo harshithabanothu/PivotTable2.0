@@ -7,13 +7,13 @@ import $ from "jquery";
 import "./App.css";
 import { myFunction } from "./script";
 
-
 function App() {
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
   const [expandedRows3, setExpandedRows3] = useState([]);
   const [expandedColumns1, setExpandedColumns1] = useState([]);
   const [expandedColumns2, setExpandedColumns2] = useState([]);
+  const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
   const [data, setData] = useState({});
   const dataFetchRef = useRef(false);
@@ -315,6 +315,24 @@ function App() {
       setExpandedRows3(expandedRows3.concat(row3Data));
     }
   };
+  const handleExpandAllRows = (rowdata) => {
+    // console.log("");
+     setExpandedRows1(rowdata.EMPID)
+     rowdata.EMPID.map((record)=>{
+      // const { label, columns, ...rest } = record;
+      // const newArr = Object.values(rest).map((arr) => arr[0]);
+       setExpandedRows2(record)
+
+     })
+    // let rowsExpand=rowdata.EMPID.map((obj)=>{
+    //   if(expandRows.includes(obj.label)){
+    //     setExpandedRows(expandedRows.filter((item)=> item !== obj.label));
+    //   }else{
+    //     setExpandedRows(expandRows.concat(obj.label))
+    //   }
+
+    // })
+  };
   const handleNumFormater = (num) => {
     var num_parts = num.toString().split(".");
     num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -345,25 +363,35 @@ function App() {
     let totalValue = 0;
     return (
       <>
-        {column3.map(col3 => {
+        {column3.map((col3) => {
           totalValue = totalValue + col3.aggrValue;
           return (
-          <td className="td">
-            <span className="td-cells-padding">{col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}</span>
-          </td>
-          )
+            <td className="td">
+              <span className="td-cells-padding">
+                {col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}
+              </span>
+            </td>
+          );
         })}
         <td className="td">
-          <span className="td-cells-padding">{totalValue == 0 ? " " : handleNumFormater(totalValue)}</span>
-          </td>
+          <span className="td-cells-padding">
+            {totalValue == 0 ? " " : handleNumFormater(totalValue)}
+          </span>
+        </td>
       </>
-    )
+    );
   };
 
   const checkColumn3Condition = (column2, column1) => {
-    const filteredYear = expandedColumns1.filter((col1) => col1.value === column1)[0].QUTR;
-    const filteredArray = expandedColumns2.filter((value) => filteredYear.includes(value));
-    return filteredArray.map((col2val) => col2val.value).includes(column2.value);
+    const filteredYear = expandedColumns1.filter(
+      (col1) => col1.value === column1
+    )[0].QUTR;
+    const filteredArray = expandedColumns2.filter((value) =>
+      filteredYear.includes(value)
+    );
+    return filteredArray
+      .map((col2val) => col2val.value)
+      .includes(column2.value);
   };
 
   const renderColumn2Rows = (column1) => {
@@ -371,23 +399,30 @@ function App() {
     let totalValue = 0;
     return (
       <>
-        {columns2.map(column2 => {
+        {columns2.map((column2) => {
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
-              {checkColumn3Condition(column2, column1.value) ? renderColumn3Rows(column2.MONTH) : (
+              {checkColumn3Condition(column2, column1.value) ? (
+                renderColumn3Rows(column2.MONTH)
+              ) : (
                 <td className="td">
-                  <span className="td-cells-padding">{column2.aggrValue == 0 ? "" : handleNumFormater(column2.aggrValue)}</span>
+                  <span className="td-cells-padding">
+                    {column2.aggrValue == 0
+                      ? ""
+                      : handleNumFormater(column2.aggrValue)}
+                  </span>
                 </td>
               )}
             </>
           );
         })}
         <td className="td">
-          <span className="td-cells-padding">{totalValue == 0 ? "" : handleNumFormater(totalValue)}</span>
-          </td>
+          <span className="td-cells-padding">
+            {totalValue == 0 ? "" : handleNumFormater(totalValue)}
+          </span>
+        </td>
       </>
-
     );
   };
 
@@ -434,9 +469,15 @@ function App() {
             </td>
             {record.columns.YEAR.map((col1) => (
               <>
-                {expandedColumns1.map((col) => col.value).includes(col1.value) ? renderColumn2Rows(col1) : (
+                {expandedColumns1
+                  .map((col) => col.value)
+                  .includes(col1.value) ? (
+                  renderColumn2Rows(col1)
+                ) : (
                   <td className="td">
-                    <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
+                    <span className="td-cells-padding">
+                      {handleNumFormater(col1.aggrValue)}
+                    </span>
                   </td>
                 )}
               </>
@@ -457,27 +498,39 @@ function App() {
           <tr className="row-tr">
             <td className="td">
               <div className="class-items-flex">
-                {Object.keys(record).length > 2 && (expandedRows2.includes(record) ? (
-                  <ArrowDropDownIcon
-                    onClick={() => {
-                      handleRow2Click(record);
-                    }}
-                  />
-                ) : (
-                  <ArrowRightIcon
-                    onClick={() => {
-                      handleRow2Click(record);
-                    }}
-                  />
-                ))}
-                <span className={`${Object.keys(record).length > 2 ? "" : "marginleft"}`}>{record.label}</span>
+                {Object.keys(record).length > 2 &&
+                  (expandedRows2.includes(record) ? (
+                    <ArrowDropDownIcon
+                      onClick={() => {
+                        handleRow2Click(record);
+                      }}
+                    />
+                  ) : (
+                    <ArrowRightIcon
+                      onClick={() => {
+                        handleRow2Click(record);
+                      }}
+                    />
+                  ))}
+                <span
+                  className={`${
+                    Object.keys(record).length > 2 ? "" : "marginleft"
+                  }`}>
+                  {record.label}
+                </span>
               </div>
             </td>
             {record.columns.YEAR.map((col1) => (
               <>
-                {expandedColumns1.map((col) => col.value).includes(col1.value) ? renderColumn2Rows(col1) : (
+                {expandedColumns1
+                  .map((col) => col.value)
+                  .includes(col1.value) ? (
+                  renderColumn2Rows(col1)
+                ) : (
                   <td className="td">
-                    <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
+                    <span className="td-cells-padding">
+                      {handleNumFormater(col1.aggrValue)}
+                    </span>
                   </td>
                 )}
               </>
@@ -521,7 +574,11 @@ function App() {
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
       <div className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
-          <ArrowDropDownIcon onClick={() => { handleColumn2Click(col2Data[i]) }} />
+          <ArrowDropDownIcon
+            onClick={() => {
+              handleColumn2Click(col2Data[i]);
+            }}
+          />
           <span>{col2}</span>
         </div>
         <div className="display-flex">
@@ -541,29 +598,59 @@ function App() {
   const renderColumn2 = (col1) => {
     const column2Array = col1.QUTR;
     const column1 = col1.value;
-    const column2InCurrentColumn1 = expandedColumns1.find((col1) => col1.value === column1).QUTR;
-    const filteredArray = expandedColumns2.filter((value) => column2InCurrentColumn1.includes(value));
+    const column2InCurrentColumn1 = expandedColumns1.find(
+      (col1) => col1.value === column1
+    ).QUTR;
+    const filteredArray = expandedColumns2.filter((value) =>
+      column2InCurrentColumn1.includes(value)
+    );
     return (
-      <th colSpan={((column2Array.length + 1) + (filteredArray.length * 4) - filteredArray.length)} className="th-colspan">
+      <th
+        colSpan={
+          column2Array.length +
+          1 +
+          filteredArray.length * 4 -
+          filteredArray.length
+        }
+        className="th-colspan">
         <div className="display-flex height-30 border-bottom">
-          <ArrowDropDownIcon onClick={() => { handleColumn1Click(col1) }} />
+          <ArrowDropDownIcon
+            onClick={() => {
+              handleColumn1Click(col1);
+            }}
+          />
           <span className="expanded-year">{column1}</span>
         </div>
         <div className="flex">
           {column2Array.map((col2val, i) => (
             <>
-              {expandedColumns2.includes(col2val) ? (renderColumn3(column2Array, i)) : (
+              {expandedColumns2.includes(col2val) ? (
+                renderColumn3(column2Array, i)
+              ) : (
                 // ${i == column2Array.length - 1 ? "" : "border-right"}
                 <div className="sub-column-th border-right">
-                  <div className={`columns-flex ${expandedColumns2.length != 0 && !expandedColumns2.includes(col2val) ? "height-60" : "height-30"}`}>
-                    <ArrowRightIcon onClick={() => { handleColumn2Click(col2val) }} />
+                  <div
+                    className={`columns-flex ${
+                      expandedColumns2.length != 0 &&
+                      !expandedColumns2.includes(col2val)
+                        ? "height-60"
+                        : "height-30"
+                    }`}>
+                    <ArrowRightIcon
+                      onClick={() => {
+                        handleColumn2Click(col2val);
+                      }}
+                    />
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
               )}
             </>
           ))}
-          <div className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"}`}>
+          <div
+            className={`sub-column-th columns-flex ${
+              expandedColumns2.length != 0 ? "height-60" : "height-30"
+            }`}>
             <span className="expanded-year marginleft">Total</span>
           </div>
         </div>
@@ -579,11 +666,24 @@ function App() {
         {tableData[key].map((col1) => {
           return (
             <>
-              {expandedColumns1.includes(col1) ? (renderColumn2(col1)) : (
+              {expandedColumns1.includes(col1) ? (
+                renderColumn2(col1)
+              ) : (
                 <th>
                   <div
-                    className={`columns-flex ${expandedColumns1.length != 0 && !expandedColumns1.includes(col1) ? expandedColumns2.length != 0 ? "height-90" : "height-60" : "height-30"}`}>
-                    <ArrowRightIcon onClick={() => { handleColumn1Click(col1) }} />
+                    className={`columns-flex ${
+                      expandedColumns1.length != 0 &&
+                      !expandedColumns1.includes(col1)
+                        ? expandedColumns2.length != 0
+                          ? "height-90"
+                          : "height-60"
+                        : "height-30"
+                    }`}>
+                    <ArrowRightIcon
+                      onClick={() => {
+                        handleColumn1Click(col1);
+                      }}
+                    />
                     <span>{col1.value ?? col1.label}</span>
                   </div>
                 </th>
@@ -593,7 +693,7 @@ function App() {
         })}
       </>
     );
-  }
+  };
 
   return (
     <>
@@ -605,12 +705,16 @@ function App() {
               <div className="table-scrollbar-container">
                 <table>
                   <thead>
-
                     <tr className="freezeTr">
                       <th className="freezeTh">
+                        <ArrowRightIcon
+                          onClick={() => handleExpandAllRows(rowdata)}
+                        />
                         {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
                       </th>
-                      {isSwapped ? prepareThead(rowdata) : prepareThead(columndata)}
+                      {isSwapped
+                        ? prepareThead(rowdata)
+                        : prepareThead(columndata)}
                       {/* {columndata?.YEAR.map((col1) => {
                         return (
                           <>
