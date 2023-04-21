@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import $ from "jquery";
 import "./App.css";
 import { myFunction } from "./script";
@@ -10,10 +12,11 @@ import { myFunction } from "./script";
 function App() {
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
-  const [expandedRows3, setExpandedRows3] = useState([]);
+  const [isRowsExpanded, setisRowsExpanded] = useState(false);
+  const [isColumnsExpanded, setisColumnsExpanded] = useState(false);
   const [expandedColumns1, setExpandedColumns1] = useState([]);
   const [expandedColumns2, setExpandedColumns2] = useState([]);
-  const [expandRows, setExpandedRows] = useState([]);
+  // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
   const [data, setData] = useState({});
   const dataFetchRef = useRef(false);
@@ -309,29 +312,50 @@ function App() {
   };
 
   const handleRow3Click = (row3Data) => {
-    if (expandedRows3.includes(row3Data)) {
-      setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
-    } else {
-      setExpandedRows3(expandedRows3.concat(row3Data));
-    }
+    // if (expandedRows3.includes(row3Data)) {
+    //   setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
+    // } else {
+    //   setExpandedRows3(expandedRows3.concat(row3Data));
+    // }
   };
   const handleExpandAllRows = (rowdata) => {
     // console.log("");
-     setExpandedRows1(rowdata.EMPID)
-     rowdata.EMPID.map((record)=>{
-      // const { label, columns, ...rest } = record;
-      // const newArr = Object.values(rest).map((arr) => arr[0]);
-       setExpandedRows2(record)
-
-     })
-    // let rowsExpand=rowdata.EMPID.map((obj)=>{
-    //   if(expandRows.includes(obj.label)){
-    //     setExpandedRows(expandedRows.filter((item)=> item !== obj.label));
-    //   }else{
-    //     setExpandedRows(expandRows.concat(obj.label))
-    //   }
-
-    // })
+    if (isRowsExpanded) {
+      setisRowsExpanded(!isRowsExpanded);
+      setExpandedRows1([]);
+      setExpandedRows2([]);
+    } else {
+      setisRowsExpanded(!isRowsExpanded);
+      setExpandedRows1(rowdata.EMPID)
+      let records = [];
+      rowdata.EMPID.map((record) => {
+        const { label, columns, ...rest } = record;
+        const newArr = Object.values(rest).map((arr) => arr[0]);
+        newArr.map((obj) => {
+          records.push(obj);
+        })
+        setExpandedRows2(records);
+      })
+    }
+  }
+  const handleExpandAllColumns = (coldata) => {
+    if (isColumnsExpanded) {
+      setisColumnsExpanded(!isColumnsExpanded);
+      setExpandedColumns1([]);
+      setExpandedColumns2([]);
+    } else {
+      setisColumnsExpanded(!isColumnsExpanded);
+      setExpandedColumns1(coldata.YEAR)
+      // let records = [];
+      // rowdata.EMPID.map((record) => {
+      //   const { label, columns, ...rest } = record;
+      //   const newArr = Object.values(rest).map((arr) => arr[0]);
+      //   newArr.map((obj) => {
+      //     records.push(obj);
+      //   })
+      //   setExpandedRows2(records);
+      // })
+    }
   };
   const handleNumFormater = (num) => {
     var num_parts = num.toString().split(".");
@@ -513,9 +537,8 @@ function App() {
                     />
                   ))}
                 <span
-                  className={`${
-                    Object.keys(record).length > 2 ? "" : "marginleft"
-                  }`}>
+                  className={`${Object.keys(record).length > 2 ? "" : "marginleft"
+                    }`}>
                   {record.label}
                 </span>
               </div>
@@ -630,12 +653,11 @@ function App() {
                 // ${i == column2Array.length - 1 ? "" : "border-right"}
                 <div className="sub-column-th border-right">
                   <div
-                    className={`columns-flex ${
-                      expandedColumns2.length != 0 &&
+                    className={`columns-flex ${expandedColumns2.length != 0 &&
                       !expandedColumns2.includes(col2val)
-                        ? "height-60"
-                        : "height-30"
-                    }`}>
+                      ? "height-60"
+                      : "height-30"
+                      }`}>
                     <ArrowRightIcon
                       onClick={() => {
                         handleColumn2Click(col2val);
@@ -648,9 +670,8 @@ function App() {
             </>
           ))}
           <div
-            className={`sub-column-th columns-flex ${
-              expandedColumns2.length != 0 ? "height-60" : "height-30"
-            }`}>
+            className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"
+              }`}>
             <span className="expanded-year marginleft">Total</span>
           </div>
         </div>
@@ -671,14 +692,13 @@ function App() {
               ) : (
                 <th>
                   <div
-                    className={`columns-flex ${
-                      expandedColumns1.length != 0 &&
+                    className={`columns-flex ${expandedColumns1.length != 0 &&
                       !expandedColumns1.includes(col1)
-                        ? expandedColumns2.length != 0
-                          ? "height-90"
-                          : "height-60"
-                        : "height-30"
-                    }`}>
+                      ? expandedColumns2.length != 0
+                        ? "height-90"
+                        : "height-60"
+                      : "height-30"
+                      }`}>
                     <ArrowRightIcon
                       onClick={() => {
                         handleColumn1Click(col1);
@@ -707,9 +727,8 @@ function App() {
                   <thead>
                     <tr className="freezeTr">
                       <th className="freezeTh">
-                        <ArrowRightIcon
-                          onClick={() => handleExpandAllRows(rowdata)}
-                        />
+                        <KeyboardDoubleArrowDownIcon onClick={() => handleExpandAllRows(rowdata)} color={`${isRowsExpanded ? "primary" : ""}`} />
+                        <KeyboardDoubleArrowRightIcon onClick={() => handleExpandAllColumns(columndata)} color={`${isColumnsExpanded ? "primary" : ""}`} />
                         {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
                       </th>
                       {isSwapped
@@ -803,5 +822,4 @@ function App() {
     </>
   );
 }
-
 export default App;
