@@ -303,7 +303,6 @@ function App() {
   };
 
   const handleRow2Click = (row2Data) => {
-    // console.log(1234, row2Data);
     if (expandedRows2.includes(row2Data)) {
       setExpandedRows2(expandedRows2.filter((item) => item !== row2Data));
     } else {
@@ -476,7 +475,6 @@ function App() {
   const renderRow3 = (row3Array) => {
     const { label, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    // console.log(row3Array);
     return newArr?.map((record) => {
       return (
         <>
@@ -510,7 +508,6 @@ function App() {
   const renderRow2 = (row2Array) => {
     const { label, columns, ...rest } = row2Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    // console.log("12345", rest, newArr);
     return newArr.map((record) => {
       return (
         <>
@@ -709,7 +706,6 @@ function App() {
       </>
     );
   };
-console.log('12345',rowdata)
   return (
     <>
       <div className="App">
