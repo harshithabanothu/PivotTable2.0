@@ -724,12 +724,12 @@ console.log('12345',rowdata)
                       <th className="freezeTh">
                         <div className="icons-resize">
                         <KeyboardDoubleArrowDownIcon 
-                        className={`${isRowsExpanded ?"row-all-expand":" "}`} 
+                        color={`${isRowsExpanded ?"primary":" "}`} 
                         onClick={() => handleExpandAllRows(rowdata)}
                          />
                         <KeyboardDoubleArrowRightIcon  
                         onClick={() => handleExpandAllColumns(columndata)} 
-                        className={`${isColumnsExpanded ? "column-all-expand" : ""}`} />
+                        color={`${isColumnsExpanded ? "primary" : ""}`} />
                         {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
                         </div>
                       </th>

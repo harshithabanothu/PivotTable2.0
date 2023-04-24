@@ -276,11 +276,15 @@ td:first-child {
   bottom:0px;
   margin-right:5px;
 }
-.row-all-expand{
+.icons-resize svg{
+  font-size:15px;
+}
+
+/* .row-all-expand svg{
   font-size:15px;
   color:primary;
 }
-.column-all-expand{
+.column-all-expand svg{
   font-size:15px;
   color:primary;
-}
+} */
