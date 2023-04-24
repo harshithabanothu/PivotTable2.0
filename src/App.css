@@ -269,3 +269,18 @@ td:first-child {
 .td-cells-padding{
   padding-right:6px
 }
+.icons-resize{
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  bottom:0px;
+  margin-right:5px;
+}
+.row-all-expand{
+  font-size:15px;
+  color:primary;
+}
+.column-all-expand{
+  font-size:15px;
+  color:primary;
+}

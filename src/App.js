@@ -32,7 +32,7 @@ function App() {
       let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
       let data = JSON.parse(response.d.results[0].Data);
       let summaryData = prepareSummaryData(data, heirarchy);
-      console.log(summaryData);
+      console.log('123',summaryData);
       setData(summaryData);
       // setData(JSON.parse(response.d.results[0].Data));
     });
@@ -709,7 +709,7 @@ function App() {
       </>
     );
   };
-
+console.log('12345',rowdata)
   return (
     <>
       <div className="App">
@@ -722,9 +722,16 @@ function App() {
                   <thead>
                     <tr className="freezeTr">
                       <th className="freezeTh">
-                        <KeyboardDoubleArrowDownIcon onClick={() => handleExpandAllRows(rowdata)} color={`${isRowsExpanded ? "primary" : ""}`} />
-                        <KeyboardDoubleArrowRightIcon onClick={() => handleExpandAllColumns(columndata)} color={`${isColumnsExpanded ? "primary" : ""}`} />
+                        <div className="icons-resize">
+                        <KeyboardDoubleArrowDownIcon 
+                        className={`${isRowsExpanded ?"row-all-expand":" "}`} 
+                        onClick={() => handleExpandAllRows(rowdata)}
+                         />
+                        <KeyboardDoubleArrowRightIcon  
+                        onClick={() => handleExpandAllColumns(columndata)} 
+                        className={`${isColumnsExpanded ? "column-all-expand" : ""}`} />
                         {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
+                        </div>
                       </th>
                       {isSwapped
                         ? prepareThead(rowdata)
@@ -759,7 +766,7 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {rowdata?.EMPID.map((record, i) => {
+                    {rowdata && rowdata[Object.keys(rowdata)[0]].map((record, i) => {
                       return (
                         <>
                           <tr className="row-tr">
