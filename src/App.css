@@ -15,7 +15,7 @@ table {
   table-layout: fixed;
   border: 0.5px solid rgb(9, 8, 8);
   color: rgba(0, 0, 0, 0.6);
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 600;
 }
 
@@ -27,7 +27,7 @@ thead {
 }
 
 .row-tr {
-  border: 0.5px solid rgb(9, 8, 8);
+  /* border: 0.5px solid rgb(9, 8, 8); */
   border-collapse: collapse;
   height: 20px;
 }
@@ -41,9 +41,11 @@ th,
 .sub-column-th {
   background-color: #f5f5f5;
   text-align: center;
-  min-width: 160px;
   /* outline: 0.5px solid rgb(137, 131, 131); */
+}
 
+.sub-column-th {
+  min-width: 90px;
 }
 
 th:first-child,
@@ -56,7 +58,8 @@ td:first-child {
 }
 
 .td:first-child {
-  outline: 0.5px solid rgba(137, 131, 131, 0.4);
+  /* outline: 0.5px solid rgba(137, 131, 131, 0.4); */
+  min-width: 180px;
 }
 
 .freezeTh {
@@ -70,7 +73,7 @@ td:first-child {
 .sub-column-heading {
   display: flex;
   font-family: sans-serif;
-  font-size: 13px;
+  font-size: 10px;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.6);
   height: 30px;
@@ -87,6 +90,12 @@ td:first-child {
 .display-flex {
   display: flex;
   align-items: center;
+}
+
+.displayFlex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .department-td {
@@ -238,10 +247,14 @@ td:first-child {
   animation: spinner 1.5s linear infinite;
 }
 
+th{
+  min-width: 90px;
+}
+
 .td {
-  min-width: 160px;
+  min-width: 90px;
   height: 20px;
-  border: 0.5px solid rgb(137, 131, 131);
+  /* border: 0.5px solid rgb(137, 131, 131); */
   padding: 0;
   text-align: right;
 
@@ -258,3 +271,33 @@ td:first-child {
 .marginleft {
   margin-left: 24px;
 }
+
+.td-cells-padding {
+  padding-right: 6px
+}
+
+.icons-resize {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  bottom: 0px;
+  margin-right: 5px;
+}
+
+.icons-resize svg {
+  font-size: 15px;
+}
+
+.icons-resize svg:hover {
+  /* font-size: 20px; */
+  color: #1976d2;
+}
+
+/* .row-all-expand svg{
+  font-size:15px;
+  color:primary;
+}
+.column-all-expand svg{
+  font-size:15px;
+  color:primary;
+} */
