@@ -1,5 +1,11 @@
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from "react";
+import  "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
+import  "@ui5/webcomponents-icons/dist/navigation-down-arrow";
+import  "@ui5/webcomponents-icons/dist/share";
+import  "@ui5/webcomponents-icons/dist/drill-down";
+import  "@ui5/webcomponents-icons/dist/process";
+import { Icon } from '@ui5/webcomponents-react'
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
@@ -244,17 +250,18 @@ function PivotTable(props) {
               <div className="class-items-flex">
                 {Object.keys(record).length > 2 &&
                   (expandedRows2.includes(record) ? (
-                    <ArrowDropDownIcon
+                    <Icon name="navigation-down-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                    />
+                    ></Icon>
                   ) : (
-                    <ArrowRightIcon
+                    <Icon
+                      name="navigation-right-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                    />
+                    ></Icon>
                   ))}
                 <span
                   className={`${Object.keys(record).length > 2 ? "" : "marginleft"
@@ -317,11 +324,11 @@ function PivotTable(props) {
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
       <div className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
-          <ArrowDropDownIcon
+          <Icon name="navigation-down-arrow"
             onClick={() => {
               handleColumn2Click(col2Data[i]);
             }}
-          />
+          ></Icon>
           <span>{col2}</span>
         </div>
         <div className="display-flex">
@@ -357,11 +364,12 @@ function PivotTable(props) {
         }
         className="th-colspan">
         <div className="display-flex height-30 border-bottom">
-          <ArrowDropDownIcon
+          <Icon
+            name="navigation-down-arrow"
             onClick={() => {
               handleColumn1Click(col1);
             }}
-          />
+          ></Icon>
           <span className="expanded-year">{column1}</span>
         </div>
         <div className="flex">
@@ -378,11 +386,12 @@ function PivotTable(props) {
                       ? "height-60"
                       : "height-30"
                       }`}>
-                    <ArrowRightIcon
+                    <Icon
+                    name="navigation-right-arrow"
                       onClick={() => {
                         handleColumn2Click(col2val);
                       }}
-                    />
+                    ></Icon>
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
@@ -419,11 +428,12 @@ function PivotTable(props) {
                         : "height-60"
                       : "height-30"
                       }`}>
-                    <ArrowRightIcon
+                    <Icon 
+                      name="navigation-right-arrow"
                       onClick={() => {
                         handleColumn1Click(col1);
                       }}
-                    />
+                     ></Icon>
                     <span>{col1.value ?? col1.label}</span>
                   </div>
                 </th>
@@ -446,16 +456,17 @@ function PivotTable(props) {
                     <tr className="freezeTr">
                       <th className="freezeTh">
                         <div className="icons-resize">
-                        <KeyboardDoubleArrowDownIcon 
+                        <Icon 
+                        name="drill-down"
                         color={`${isRowsExpanded ?"primary":" "}`} 
                         onClick={() => handleExpandAllRows(rowdata)}
-                         />
-                        <KeyboardDoubleArrowRightIcon  
+                         ></Icon>
+                        <Icon
+                        name="process"  
                         onClick={() => handleExpandAllColumns(columndata)} 
-                        color={`${isColumnsExpanded ? "primary" : ""}`} />
-                        <SwapHorizSharpIcon onClick={()=>{handleSwap()}} />
-
-                        {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
+                        color={`${isColumnsExpanded ? "primary" : ""}`} >
+                        </Icon>
+                        <Icon name="share" onClick={()=>{handleSwap()}} ></Icon>
                         </div>
                       </th>
                       {isSwapped
@@ -498,17 +509,18 @@ function PivotTable(props) {
                             <td className="td">
                               <div className="department-td">
                                 {expandedRows1.includes(record) ? (
-                                  <ArrowDropDownIcon
+                                  <Icon name="navigation-down-arrow"
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
-                                  />
+                                  ></Icon>
                                 ) : (
-                                  <ArrowRightIcon
+                                  <Icon
+                                    name="navigation-right-arrow"
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
-                                  />
+                                  ></Icon>
                                 )}
                                 <span>{record.label}</span>
                               </div>

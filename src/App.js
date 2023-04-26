@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import SwappedPivotTable from "./SwappedPivotTable";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
+import  "@ui5/webcomponents-icons/dist/lateness.js";
+import { Icon } from '@ui5/webcomponents-react'
 import PivotTable from "./PivotTable";
 import $ from "jquery";
 import {prepareSummaryData,prepareSwappedSummaryData} from './script.js'
@@ -32,7 +34,7 @@ function App() {
      <PivotTable data={data} handleSwap={()=>{setSwapped(!isSwapped)}}/>
      ): (
           <div className="spinner-container">
-            <HourglassFullIcon className="loading-spinner" />
+            <Icon name="lateness" className="loading-spinner"></Icon>
           </div>
         )}
      </>

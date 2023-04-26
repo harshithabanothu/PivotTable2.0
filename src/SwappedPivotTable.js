@@ -2,6 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import  "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
+import  "@ui5/webcomponents-icons/dist/navigation-down-arrow";
+import  "@ui5/webcomponents-icons/dist/share";
+import  "@ui5/webcomponents-icons/dist/drill-down";
+import  "@ui5/webcomponents-icons/dist/process";
+import { Icon } from '@ui5/webcomponents-react'
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import SwapHorizSharpIcon from '@mui/icons-material/SwapHorizSharp';
@@ -236,17 +242,18 @@ function SwappedPivotTable(props) {
               <div className="class-items-flex">
                 {newArr.length > 3 &&
                   (expandedRows2.includes(record) ? (
-                    <ArrowDropDownIcon
+                    <Icon name="navigation-down-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                    />
+                    ></Icon>
                   ) : (
-                    <ArrowRightIcon
+                    <Icon
+                      name="navigation-right-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                    />
+                    ></Icon>
                   ))}
                   <span
                   className={`${Object.keys(record).length > 2 ? "" : "marginleft"
@@ -278,10 +285,14 @@ function SwappedPivotTable(props) {
 
   //onclicks for columns section
   const handleColumn1Click = (column1Value) => {
+    let { key,label,aggrValue, ...rest } = column1Value;
+    const column2Array = Object.values(rest).map((arr) => arr[0]); 
+    
     if (expandedColumns1.includes(column1Value)) {
       setExpandedColumns1(
         expandedColumns1.filter((item) => item !== column1Value)
       );
+    setExpandedColumns2(expandedColumns2.filter((item)=>!column2Array.includes(item)))
       
     } else {
       setExpandedColumns1(expandedColumns1.concat(column1Value));
@@ -308,11 +319,12 @@ function SwappedPivotTable(props) {
       // 
      <div className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
         <div className="display-flex border-bottom height-30">
-        <ArrowDropDownIcon
+        <Icon
+            name="navigation-down-arrow"
             onClick={() => {
               handleColumn2Click(col2Data[i]);
             }}
-          />
+          ></Icon>
           <span>{col2}</span> 
         </div>
         <div className="display-flex">
@@ -356,17 +368,17 @@ function SwappedPivotTable(props) {
         }
         className="th-colspan">
         <div className="display-flex height-30 border-bottom">
-          <ArrowDropDownIcon
+          <Icon
+            name="navigation-down-arrow"
             onClick={() => {
               handleColumn1Click(col1);
             }}
-          />
+          ></Icon>
           <span className="expanded-year">{column1}</span>
         </div>
         <div className="flex">
           {column2Array.map((col2val, i) => (
             <>
-            {console.log('1234567',col2val)}
               {expandedColumns2.includes(col2val) ? (
                 renderColumn3(column2Array, i)
               ) : (
@@ -379,11 +391,12 @@ function SwappedPivotTable(props) {
                       : "height-30"
                       }`}>
                     {Object.keys(col2val).length > 3 &&
-                    <ArrowRightIcon
+                    <Icon name="navigation-right-arrow"
                       onClick={() => {
                         handleColumn2Click(col2val);
                       }}
-                    /> }
+                    ></Icon>
+                     }
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
@@ -420,11 +433,11 @@ function SwappedPivotTable(props) {
                         : "height-60"
                       : "height-30"
                       }`}>
-                    <ArrowRightIcon
+                    <Icon name="navigation-right-arrow"
                       onClick={() => {
                         handleColumn1Click(col1);
                       }}
-                    />
+                    ></Icon>
                     <span>{col1.value ?? col1.label}</span>
                   </div>
                 </th>
@@ -447,14 +460,14 @@ function SwappedPivotTable(props) {
                     <tr className="freezeTr">
                       <th className="freezeTh">
                         <div className="icons-resize">
-                        <KeyboardDoubleArrowDownIcon 
+                        <Icon name="drill-down"
                         color={`${isRowsExpanded ?"primary":" "}`} 
                         onClick={() => handleExpandAllRows(rowdata)}
-                         />
-                        <KeyboardDoubleArrowRightIcon  
+                         ></Icon>
+                        <Icon name="process" 
                         onClick={() => handleExpandAllColumns(columndata)} 
-                        color={`${isColumnsExpanded ? "primary" : ""}`} />
-                        <SwapHorizSharpIcon onClick={()=>{handleSwap()}} />
+                        color={`${isColumnsExpanded ? "primary" : ""}`} ></Icon>
+                        <Icon name="share" onClick={()=>{handleSwap()}} ></Icon>
                         </div>
                       </th>
                       {isSwapped
@@ -470,17 +483,19 @@ function SwappedPivotTable(props) {
                             <td className="td">
                               <div className="department-td">
                                 {expandedRows1.includes(record) ? (
-                                  <ArrowDropDownIcon
+                                  <Icon
+                                    name="navigation-down-arrow"
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
-                                  />
+                                  ></Icon>
                                 ) : (
-                                  <ArrowRightIcon
+                                  <Icon
+                                    name="navigation-right-arrow"
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
-                                  />
+                                  ></Icon>
                                 )}
                                 <span>{record.value}</span>
                               </div>
