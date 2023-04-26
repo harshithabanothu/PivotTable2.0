@@ -1,556 +1,26 @@
 /* eslint-disable eqeqeq */
-/* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import SwapHorizSharpIcon from '@mui/icons-material/SwapHorizSharp';
-import $ from "jquery";
+
 import "./App.css";
 
 
 function SwappedPivotTable(props) {
-  const {handleSwap}=props;
+  const {handleSwap,data}=props;
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
   const [isRowsExpanded, setisRowsExpanded] = useState(false);
   const [isColumnsExpanded, setisColumnsExpanded] = useState(false);
   const [expandedColumns1, setExpandedColumns1] = useState([]);
   const [expandedColumns2, setExpandedColumns2] = useState([]);
-  // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const [data, setData] = useState({});
-  const dataFetchRef = useRef(false);
 
-  useEffect(() => {
-    if (dataFetchRef.current) return;
-    dataFetchRef.current = true;
-    $.ajax({
-      url: "http://sergio.vistex.local:8000/sap/opu/odata/sap/ZSYNDATA_SRV/SYNDATASET?$format=json",
-    }).done((response) => {
-      // console.log(JSON.parse(response.d.results[0].Data));
-      // console.log(JSON.parse(response.d.results[0].Heirarchy));
-      let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
-      let data = JSON.parse(response.d.results[0].Data);
-      // let summaryData = prepareSummaryData(data, heirarchy);
-      let summaryData = prepareSwappedSummaryData(data, heirarchy);
-      console.log('123',summaryData);
-      setData(summaryData);
-      // setData(JSON.parse(response.d.results[0].Data));
-    });
-   
-  }, []);
   const rowdata = data.ROWS;
   const columndata = data.COLUMNS;
-  const prepareSummaryData = (dataArray, heirarchy) => {
-    // Prepare column heirarchy
-    const pivotDataColumn = {};
-    dataArray.forEach((record) => {
-      let node = heirarchy.COLUMN.find((c) => c.PARENTKEY === "");
-      if (!pivotDataColumn[node.KEY]) {
-        pivotDataColumn[node.KEY] = [];
-      }
-      prepareColumnChildElement(
-        record,
-        pivotDataColumn[node.KEY],
-        node,
-        heirarchy.COLUMN
-      );
-    });
-    const pivotDataRow = {};
-    dataArray.forEach((record) => {
-      let node = heirarchy.ROW.find((c) => c.PARENTKEY === "");
-      if (!pivotDataRow[node.KEY]) {
-        pivotDataRow[node.KEY] = [];
-      }
-      prepareRowChildElement(
-        record,
-        pivotDataRow[node.KEY],
-        node,
-        heirarchy.ROW,
-        heirarchy.COLUMN,
-        pivotDataColumn
-      );
-    });
-    // console.log(pivotDataRow);
-    return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
-  };
-  const prepareColumnChildElement = (record, obj, node, columnHeir) => {
-    let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
-    if (index > -1) {
-      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          if (!obj[index][child.KEY]) {
-            obj[index][child.KEY] = [];
-          }
-          prepareColumnChildElement(
-            record,
-            obj[index][child.KEY],
-            child,
-            columnHeir
-          );
-        });
-      }
-    } else {
-      obj.push({
-        value: record[node.KEY],
-        aggrValue: 0,
-      });
-      if (node.KEY == "QUTR") {
-        obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
-      } else if (node.KEY == "MONTH") {
-        let monthsArray = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-
-        obj[obj.length - 1].label = monthsArray[obj[obj.length - 1].value - 1];
-      }
-      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          obj[obj.length - 1][child.KEY] = [];
-          prepareColumnChildElement(
-            record,
-            obj[obj.length - 1][child.KEY],
-            child,
-            columnHeir
-          );
-        });
-      }
-    }
-  };
-  const prepareRowChildElement = (
-    record,
-    obj,
-    node,
-    rowHeir,
-    columnHeir,
-    columns
-  ) => {
-    let index;
-    if (node.TYPE == "characteristic") {
-      index = obj.findIndex((obj) => obj.label == record[node.KEY]);
-    } else {
-      index = obj.findIndex((obj) => obj.label == node.LABEL);
-    }
-    if (index > -1) {
-      if (node.TYPE == "metric") {
-        prepareAggregation(
-          record,
-          obj[index],
-          node,
-          rowHeir,
-          columnHeir,
-          columns
-        );
-      }
-      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          if (!obj[index][child.KEY]) {
-            obj[index][child.KEY] = [];
-          }
-          prepareRowChildElement(
-            record,
-            obj[index][child.KEY],
-            child,
-            rowHeir,
-            columnHeir,
-            columns
-          );
-        });
-      }
-    } else {
-      if (node.TYPE == "characteristic") {
-        obj.push({
-          label: record[node.KEY],
-          columns: JSON.parse(JSON.stringify(columns)),
-        });
-      } else {
-        obj.push({
-          label: node.LABEL,
-        });
-        prepareAggregation(
-          record,
-          obj[obj.length - 1],
-          node,
-          rowHeir,
-          columnHeir,
-          columns
-        );
-      }
-      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          obj[obj.length - 1][child.KEY] = [];
-          prepareRowChildElement(
-            record,
-            obj[obj.length - 1][child.KEY],
-            child,
-            rowHeir,
-            columnHeir,
-            columns
-          );
-        });
-      }
-    }
-  };
-  const prepareAggregation = (
-    record,
-    obj,
-    valueNode,
-    rowHeir,
-    columnHeir,
-    columns
-  ) => {
-    let columnsData = JSON.parse(JSON.stringify(columns));
-    if (!obj["columns"]) {
-      obj["columns"] = columnsData;
-    }
-    let node = columnHeir.find((c) => c.PARENTKEY === "");
-    prepareRowsColumnAggr(
-      record,
-      obj["columns"][node.KEY],
-      node,
-      rowHeir,
-      columnHeir,
-      valueNode
-    );
-  };
-  const prepareRowsColumnAggr = (
-    record,
-    obj,
-    node,
-    rowHeir,
-    columnHeir,
-    valueNode
-  ) => {
-    let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
-    if (index > -1) {
-      let value = 0;
-      if (valueNode.FIELD.includes("SUM(")) {
-        let fieldArray = valueNode.FIELD.split("SUM(")[1]
-          .split(")")[0]
-          .split(",");
-        fieldArray.forEach((f) => {
-          value = value + record[f.trim()];
-        });
-      } else if (valueNode.FIELD.includes("CALC(")) {
-        let fieldArray = valueNode.FIELD.split("CALC(")[1]
-          .split(")")[0]
-          .split("-");
-        fieldArray.forEach((f, i) => {
-          let row = rowHeir.find((c) => c.KEY === f.trim());
-          if (row && row.FIELD.includes("SUM(")) {
-            let fieldArray1 = row.FIELD.split("SUM(")[1]
-              .split(")")[0]
-              .split(",");
-            fieldArray1.forEach((f1) => {
-              if (i == 0) {
-                value = value + record[f1.trim()];
-              } else {
-                value = value - record[f1.trim()];
-              }
-            });
-          } else {
-            if (i == 0) {
-              value = record[f.trim()];
-            } else {
-              value = value - record[f.trim()];
-            }
-          }
-        });
-      } else {
-        value = record[valueNode.KEY];
-      }
-      if (obj[index].value !== undefined) {
-        obj[index].aggrValue = obj[index].aggrValue + value;
-      } else {
-        obj[index].aggrValue = value;
-      }
-      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          prepareRowsColumnAggr(
-            record,
-            obj[index][child.KEY],
-            child,
-            rowHeir,
-            columnHeir,
-            valueNode
-          );
-        });
-      }
-    }
-  };
-
-  const prepareSwappedSummaryData = (dataArray, heirarchy) => {
-    // Prepare column heirarchy
-    const pivotDataColumn = {};
-    dataArray.forEach((record) => {
-      let node = heirarchy.ROW.find((c) => c.PARENTKEY === "");
-      if (!pivotDataColumn[node.KEY]) {
-        pivotDataColumn[node.KEY] = [];
-      }
-      prepareSwappedColumnChildElement(
-        record,
-        pivotDataColumn[node.KEY],
-        node,
-        heirarchy.ROW
-      );
-    });
-
-    const pivotDataRow = {};
-    dataArray.forEach((record) => {
-      let node = heirarchy.COLUMN.find((c) => c.PARENTKEY === "");
-      if (!pivotDataRow[node.KEY]) {
-        pivotDataRow[node.KEY] = [];
-      }
-      prepareSwappedRowChildElement(
-        record,
-        pivotDataRow[node.KEY],
-        node,
-        heirarchy.ROW,
-        heirarchy.COLUMN,
-        pivotDataColumn
-      );
-    });
-    // console.log(pivotDataRow);
-    return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
-
-  };
-  const prepareSwappedColumnChildElement = (record, obj, node, rowHeir) => {
-    let index;
-    if (node.TYPE == "characteristic") {
-      index = obj.findIndex((obj) => obj.label == record[node.KEY]);
-    } else {
-      index = obj.findIndex((obj) => obj.label == node.LABEL);
-    }
-    if (index > -1) {      
-      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          if (!obj[index][child.KEY]) {
-            obj[index][child.KEY] = [];
-          }
-          prepareSwappedColumnChildElement(
-            record,
-            obj[index][child.KEY],
-            child,
-            rowHeir
-          );
-        });
-      }
-    } else {
-      if (node.TYPE == "characteristic") {
-        obj.push({
-          key: node.KEY,
-          label: record[node.KEY],
-          aggrValue: 0,
-        });
-      } else {
-        obj.push({
-          key: node.KEY,
-          label: node.LABEL,
-          aggrValue: 0,
-        });
-      }
-      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          obj[obj.length - 1][child.KEY] = [];
-          prepareSwappedColumnChildElement(
-            record,
-            obj[obj.length - 1][child.KEY],
-            child,
-            rowHeir
-          );
-        });
-      }
-    }
-  };
-  const prepareSwappedRowChildElement = (record, obj, node, rowHeir, columnHeir, columns) => {
-    let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
-    if (index > -1) {
-      prepareSwappedAggregation(
-        record,
-        obj[index],
-        node,
-        rowHeir,
-        columnHeir,
-        columns
-      );
-      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          if (!obj[index][child.KEY]) {
-            obj[index][child.KEY] = [];
-          }
-          prepareSwappedRowChildElement(
-            record,
-            obj[index][child.KEY],
-            child,
-            rowHeir, columnHeir, columns
-          );
-        });
-      }
-    } else {
-      obj.push({
-        value: record[node.KEY]
-      });
-      if (node.KEY == "QUTR") {
-        obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
-      } else if (node.KEY == "MONTH") {
-        let monthsArray = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-
-        obj[obj.length - 1].label = monthsArray[obj[obj.length - 1].value - 1];
-      }
-      prepareSwappedAggregation(
-        record,
-        obj[obj.length - 1],
-        node,
-        rowHeir,
-        columnHeir,
-        columns
-      );
-      let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          obj[obj.length - 1][child.KEY] = [];
-          prepareSwappedRowChildElement(
-            record,
-            obj[obj.length - 1][child.KEY],
-            child,
-            rowHeir, columnHeir, columns
-          );
-        });
-      }
-    }
-  };
-  const prepareSwappedAggregation = (
-    record,
-    obj,
-    valueNode,
-    rowHeir,
-    columnHeir,
-    columns
-  ) => {
-    let columnsData = JSON.parse(JSON.stringify(columns));
-    if (!obj["columns"]) {
-      obj["columns"] = columnsData;
-    }
-    let node = rowHeir.find((c) => c.PARENTKEY === "");
-    prepareSwappedRowsColumnAggr(
-      record,
-      obj["columns"][node.KEY],
-      node,
-      rowHeir,
-      columnHeir,
-      valueNode
-    );
-  };
-  const prepareSwappedRowsColumnAggr = (
-    record,
-    obj,
-    node,
-    rowHeir,
-    columnHeir,
-    valueNode
-  ) => {
-    let index;
-    if (node.TYPE == "characteristic") {
-      index = obj.findIndex((obj) => obj.label == record[node.KEY]);
-    }else{
-      index = 0;
-    }
-    if (index > -1) {
-      if (node.TYPE !== "characteristic") {
-        let value = 0;
-        if (node.FIELD.includes("SUM(")) {
-          let fieldArray = node.FIELD.split("SUM(")[1]
-            .split(")")[0]
-            .split(",");
-          fieldArray.forEach((f) => {
-            value = value + record[f.trim()];
-          });
-        } else if (node.FIELD.includes("CALC(")) {
-          let fieldArray = node.FIELD.split("CALC(")[1]
-            .split(")")[0]
-            .split("-");
-          fieldArray.forEach((f, i) => {
-            let row = rowHeir.find((c) => c.KEY === f.trim());
-            if (row && row.FIELD.includes("SUM(")) {
-              let fieldArray1 = row.FIELD.split("SUM(")[1]
-                .split(")")[0]
-                .split(",");
-              fieldArray1.forEach((f1) => {
-                if (i == 0) {
-                  value = value + record[f1.trim()];
-                } else {
-                  value = value - record[f1.trim()];
-                }
-              });
-            } else {
-              if (i == 0) {
-                value = record[f.trim()];
-              } else {
-                value = value - record[f.trim()];
-              }
-            }
-          });
-        } else {
-          value = record[node.KEY];
-        }
-        if (obj[index].aggrValue !== undefined) {
-          obj[index].aggrValue = obj[index].aggrValue + value;
-        } else {
-          obj[index].aggrValue = value;
-        }
-      }
-      let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
-      if (childNodes.length > 0) {
-        childNodes.forEach((child) => {
-          prepareSwappedRowsColumnAggr(
-            record,
-            obj[index][child.KEY],
-            child,
-            rowHeir,
-            columnHeir,
-            valueNode
-          );
-        });
-      }
-    }
-  };
   //onclick functions for rows display
   const handleRow1Click = (row1Data) => {
     if (expandedRows1.includes(row1Data)) {
@@ -568,13 +38,13 @@ function SwappedPivotTable(props) {
     }
   };
 
-  const handleRow3Click = (row3Data) => {
-    // if (expandedRows3.includes(row3Data)) {
-    //   setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
-    // } else {
-    //   setExpandedRows3(expandedRows3.concat(row3Data));
-    // }
-  };
+  // const handleRow3Click = (row3Data) => {
+  //   if (expandedRows3.includes(row3Data)) {
+  //     setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
+  //   } else {
+  //     setExpandedRows3(expandedRows3.concat(row3Data));
+  //   }
+  // };
   const handleExpandAllRows = (rowdata) => {
     if (isRowsExpanded) {
       setisRowsExpanded(!isRowsExpanded);
@@ -839,11 +309,7 @@ function SwappedPivotTable(props) {
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`
      <div className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
-          <ArrowDropDownIcon
-            onClick={() => {
-              handleColumn2Click(col2Data[i]);
-            }}
-          />
+          
           <span>{col2}</span> 
         </div>
         <div className="display-flex">
@@ -969,7 +435,6 @@ function SwappedPivotTable(props) {
   return (
     <>
       <div className="App">
-      {dataFetchRef.current ? (
           <>
             <h1>Pivot Table</h1>
             <div className="table-container">
@@ -1044,12 +509,6 @@ function SwappedPivotTable(props) {
               </div>
             </div>
           </>
-        
-         ) : (
-          <div className="spinner-container">
-            <HourglassFullIcon className="loading-spinner" />
-          </div>
-        )}
          </div>
     </>
   );

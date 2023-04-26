@@ -1,293 +1,508 @@
 
-export  function dataFunction() {
-    // Your task goes here
-    //code for generating the array of objects
-    let department = [
-      "Department 1",
-      "Department 2",
-      "Department 3",
-      "Department 4",
-      "Department 5"
-    ]
-    let classes = ["Class A","Class B"];
-    let subjects = ["Subject 1", "Subject 2", "Subject 3"];
-    let batches = [
-      "Batch 1", // 1 to 15
-      "Batch 2", // 16 to 30
-      "Batch 3", // 31 to 45
-      "Batch 4" // 46 to 60
-    ];
-    let Semester = ["Summer" , "Winter"];
-    let dataArray = [];          
-    // for (let i = 0; i < 100000; i++) {
-    //   let bIndex = Math.floor(Math.random() * batches.length);
-    //   let batch = batches[bIndex];
-    //   let studentID ="Student " + (Math.floor(Math.random() * 14) + 1 + 15 * bIndex);
-
-    //   let newObj = {
-    //     Student: studentID,
-    //     Department:
-    //       department[Math.floor(Math.random() * department.length)],
-    //     Year: Math.floor(Math.random() * 4) + 2000,
-    //     Semester: Semester[Math.floor(Math.random() * Semester.length)],
-    //     Class: classes[Math.floor(Math.random() * classes.length)],
-    //     Batch: batch,
-    //     Subject: subjects[Math.floor(Math.random() * subjects.length)],
-    //     Written: Math.floor(Math.random() * 40) + 10,
-    //     Practical: Math.floor(Math.random() * 40) + 10,
-    //     Oral: Math.floor(Math.random() * 40) + 10,
-    //   };
-    //   dataArray.push(newObj);
-    // }
-    for (var dp = 0; dp < department.length; dp++) {
-      for (var c = 0; c < classes.length; c++) {
-        for (var b = 0; b < batches.length; b++) {
-          for (var s = 1; s < 16; s++) {
-            for (var year = 2000; year < 2005; year++) {
-              for (var sm = 0; sm < Semester.length; sm++) {
-                for (var sb = 0; sb < subjects.length; sb++) {
-                  let studentID = "Student " + (s + 15 * b);
-                  let newObj = {
-                    Student: studentID,
-                    Department: department[dp],
-                    Year: year,
-                    Semester: Semester[sm],
-                    Class: classes[c],
-                    Batch: batches[b],
-                    Subject: subjects[sb],
-                    Written: Math.floor(Math.random() * 40) + 10,
-                    Practical: Math.floor(Math.random() * 40) + 10,
-                    // Oral: Math.floor(Math.random() * 40) + 10,
-                  };
-                  dataArray.push(newObj);
-                }
-              }
-            }
-          }
-        }
-      }
+export const prepareSummaryData = (dataArray, heirarchy) => {
+  // Prepare column heirarchy
+  const pivotDataColumn = {};
+  dataArray.forEach((record) => {
+    let node = heirarchy.COLUMN.find((c) => c.PARENTKEY === "");
+    if (!pivotDataColumn[node.KEY]) {
+      pivotDataColumn[node.KEY] = [];
     }
-    // dataArray.sort((a,b)=>{return a.Year-b.Year});
-    const pivotDataRow = {};
-    const rows = ["Department", "Class", "Batch", "Student"];
-    const columns = ["Year", "Semester", "Subject"];
-    const values = ["Written", "Practical"];
-
-    const pivotDataColumn = {};
-
-    // let dA = dataArray.sort((a,b)=>{
-    //   if(a.Year == b.Year){
-    //     if(a.Semester == b.Semester){
-    //       return a.Subject < b.Subject ? -1 : 1;
-    //     }else{
-    //       return a.Semester < b.Semester ? -1 : 1;
-    //     }
-    //   }else{
-    //     return a.Year-b.Year;
-    //   }
-    // })
-    let d = new Date();  
-    dataArray.forEach((record) => {
-      
-      if (!pivotDataColumn[columns[0]]) {
-        pivotDataColumn[columns[0]] = [];
-      }
-      let dIndex = pivotDataColumn[columns[0]].findIndex((obj) => obj.value == record[columns[0]]);
-      if (dIndex > -1) {
-        if (!pivotDataColumn[columns[0]][dIndex][columns[1]]) {
-          pivotDataColumn[columns[0]][dIndex][columns[1]] = [];
+    prepareColumnChildElement(
+      record,
+      pivotDataColumn[node.KEY],
+      node,
+      heirarchy.COLUMN
+    );
+  });
+  const pivotDataRow = {};
+  dataArray.forEach((record) => {
+    let node = heirarchy.ROW.find((c) => c.PARENTKEY === "");
+    if (!pivotDataRow[node.KEY]) {
+      pivotDataRow[node.KEY] = [];
+    }
+    prepareRowChildElement(
+      record,
+      pivotDataRow[node.KEY],
+      node,
+      heirarchy.ROW,
+      heirarchy.COLUMN,
+      pivotDataColumn
+    );
+  });
+  // console.log(pivotDataRow);
+  return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
+};
+const prepareColumnChildElement = (record, obj, node, columnHeir) => {
+  let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
+  if (index > -1) {
+    let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        if (!obj[index][child.KEY]) {
+          obj[index][child.KEY] = [];
         }
-        let cIndex = pivotDataColumn[columns[0]][dIndex][columns[1]].findIndex((obj) => obj.value == record[columns[1]]);
-        if (cIndex > -1) {
-          if (!pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]]) {
-            pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]] = [];
-          }
-          let bIndex = pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]].findIndex((obj) => obj.value == record[columns[2]]);
-          if (bIndex > -1) {
-            // if (!pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][bIndex][columns[3]]) {
-            //   pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][bIndex][columns[3]] = [];
-            // }
-            // let sIndex = pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][bIndex][columns[3]].findIndex((obj) => obj.value == record[columns[3]]);
-            // if (sIndex > -1) {
-            //   // last row reached
-            // } else {
-            //   pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][bIndex][columns[3]].push({
-            //     value: record[columns[3]]
-            //   });
-            // }
-          } else {
-            pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]].push({
-              value: record[columns[2]]
-            });
-            // pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][0][columns[3]] = [];
-            // pivotDataColumn[columns[0]][dIndex][columns[1]][cIndex][columns[2]][0][columns[3]].push({
-            //   value: record[columns[3]]
-            // });
-          }
-        } else {
-          pivotDataColumn[columns[0]][dIndex][columns[1]].push({
-            value: record[columns[1]]
-          });
-          pivotDataColumn[columns[0]][dIndex][columns[1]][0][columns[2]] = [];
-          pivotDataColumn[columns[0]][dIndex][columns[1]][0][columns[2]].push({
-            value: record[columns[2]]
-          });
-          // pivotDataColumn[columns[0]][dIndex][columns[1]][0][columns[2]][0][columns[3]] = [];
-          // pivotDataColumn[columns[0]][dIndex][columns[1]][0][columns[2]][0][columns[3]].push({
-          //   value: record[columns[3]]
-          // });
-        }
-      } else {
-        pivotDataColumn[columns[0]].push({
-          value: record[columns[0]]
-        });
-        pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]] = [];
-        pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]].push({
-          value: record[columns[1]]
-        });
-        pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]][0][columns[2]] = [];
-        pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]][0][columns[2]].push({
-          value: record[columns[2]]
-        });
-        // pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]][0][columns[2]][0][columns[3]] = [];
-        // pivotDataColumn[columns[0]][pivotDataColumn[columns[0]].length - 1][columns[1]][0][columns[2]][0][columns[3]].push({
-        //   value: record[columns[3]]
-        // });
-      }
+        prepareColumnChildElement(
+          record,
+          obj[index][child.KEY],
+          child,
+          columnHeir
+        );
+      });
+    }
+  } else {
+    obj.push({
+      value: record[node.KEY],
+      aggrValue: 0,
     });
-    dataArray.forEach((record) => {        
-      if (!pivotDataRow[rows[0]]) {
-        pivotDataRow[rows[0]] = [];
-      }
-      let dIndex = pivotDataRow[rows[0]].findIndex((obj) => obj.value == record[rows[0]]);
-      if (dIndex > -1) {
-        pivotDataRow[rows[0]][dIndex]["columns"] = prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex]);
-        if (!pivotDataRow[rows[0]][dIndex][rows[1]]) {
-          pivotDataRow[rows[0]][dIndex][rows[1]] = [];
+    if (node.KEY == "QUTR") {
+      obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
+    } else if (node.KEY == "MONTH") {
+      let monthsArray = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      obj[obj.length - 1].label = monthsArray[obj[obj.length - 1].value - 1];
+    }
+    let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        obj[obj.length - 1][child.KEY] = [];
+        prepareColumnChildElement(
+          record,
+          obj[obj.length - 1][child.KEY],
+          child,
+          columnHeir
+        );
+      });
+    }
+  }
+};
+const prepareRowChildElement = (
+  record,
+  obj,
+  node,
+  rowHeir,
+  columnHeir,
+  columns
+) => {
+  let index;
+  if (node.TYPE == "characteristic") {
+    index = obj.findIndex((obj) => obj.label == record[node.KEY]);
+  } else {
+    index = obj.findIndex((obj) => obj.label == node.LABEL);
+  }
+  if (index > -1) {
+    if (node.TYPE == "metric") {
+      prepareAggregation(
+        record,
+        obj[index],
+        node,
+        rowHeir,
+        columnHeir,
+        columns
+      );
+    }
+    let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        if (!obj[index][child.KEY]) {
+          obj[index][child.KEY] = [];
         }
-        let cIndex = pivotDataRow[rows[0]][dIndex][rows[1]].findIndex((obj) => obj.value == record[rows[1]]);
-        if (cIndex > -1) {
-          pivotDataRow[rows[0]][dIndex][rows[1]][cIndex]["columns"] = 
-          prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex]);
-          if (!pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]]) {
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]] = [];
-          }
-          let bIndex = pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]].findIndex((obj) => obj.value == record[rows[2]]);
-          if (bIndex > -1) {
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex]["columns"] = 
-            prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex]);
-            if (!pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]]) {
-              pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]] = [];
-            }
-            let sIndex = pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]].findIndex((obj) => obj.value == record[rows[3]]);
-            if (sIndex > -1) {
-              pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]][sIndex]["columns"] =
-              prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]][sIndex]);
-              // last row reached
+        prepareRowChildElement(
+          record,
+          obj[index][child.KEY],
+          child,
+          rowHeir,
+          columnHeir,
+          columns
+        );
+      });
+    }
+  } else {
+    if (node.TYPE == "characteristic") {
+      obj.push({
+        label: record[node.KEY],
+        columns: JSON.parse(JSON.stringify(columns)),
+      });
+    } else {
+      obj.push({
+        label: node.LABEL,
+      });
+      prepareAggregation(
+        record,
+        obj[obj.length - 1],
+        node,
+        rowHeir,
+        columnHeir,
+        columns
+      );
+    }
+    let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        obj[obj.length - 1][child.KEY] = [];
+        prepareRowChildElement(
+          record,
+          obj[obj.length - 1][child.KEY],
+          child,
+          rowHeir,
+          columnHeir,
+          columns
+        );
+      });
+    }
+  }
+};
+const prepareAggregation = (
+  record,
+  obj,
+  valueNode,
+  rowHeir,
+  columnHeir,
+  columns
+) => {
+  let columnsData = JSON.parse(JSON.stringify(columns));
+  if (!obj["columns"]) {
+    obj["columns"] = columnsData;
+  }
+  let node = columnHeir.find((c) => c.PARENTKEY === "");
+  prepareRowsColumnAggr(
+    record,
+    obj["columns"][node.KEY],
+    node,
+    rowHeir,
+    columnHeir,
+    valueNode
+  );
+};
+const prepareRowsColumnAggr = (
+  record,
+  obj,
+  node,
+  rowHeir,
+  columnHeir,
+  valueNode
+) => {
+  let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
+  if (index > -1) {
+    let value = 0;
+    if (valueNode.FIELD.includes("SUM(")) {
+      let fieldArray = valueNode.FIELD.split("SUM(")[1]
+        .split(")")[0]
+        .split(",");
+      fieldArray.forEach((f) => {
+        value = value + record[f.trim()];
+      });
+    } else if (valueNode.FIELD.includes("CALC(")) {
+      let fieldArray = valueNode.FIELD.split("CALC(")[1]
+        .split(")")[0]
+        .split("-");
+      fieldArray.forEach((f, i) => {
+        let row = rowHeir.find((c) => c.KEY === f.trim());
+        if (row && row.FIELD.includes("SUM(")) {
+          let fieldArray1 = row.FIELD.split("SUM(")[1]
+            .split(")")[0]
+            .split(",");
+          fieldArray1.forEach((f1) => {
+            if (i == 0) {
+              value = value + record[f1.trim()];
             } else {
-              pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]].push({
-                value: record[rows[3]]
-              });
-              let length = pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]].length;
-              pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]][length - 1]["columns"] = 
-              prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][bIndex][rows[3]][length - 1]);
+              value = value - record[f1.trim()];
             }
-          } else {
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]].push({
-              value: record[rows[2]]
-            });
-            let length = pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]].length;
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1]["columns"] =
-            prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1]);
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1][rows[3]] = [];
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1][rows[3]].push({
-              value: record[rows[3]]
-            });
-            pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1][rows[3]][0]["columns"] =
-            prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][cIndex][rows[2]][length - 1][rows[3]][0]);
-          }
+          });
         } else {
-          pivotDataRow[rows[0]][dIndex][rows[1]].push({
-            value: record[rows[1]]
-          });
-          let length = pivotDataRow[rows[0]][dIndex][rows[1]].length;
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1]["columns"] =
-          prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][length - 1]);
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]] = [];
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]].push({
-            value: record[rows[2]]
-          });
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0]["columns"] =
-          prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0]);
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0][rows[3]] = [];
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0][rows[3]].push({
-            value: record[rows[3]]
-          });
-          pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0][rows[3]][0]["columns"] =
-          prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][dIndex][rows[1]][length - 1][rows[2]][0][rows[3]][0]);
-        }
-      } else {
-        pivotDataRow[rows[0]].push({
-          value: record[rows[0]]
-        });
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1]["columns"] =
-        prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1]);          
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]] = [];
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]].push({
-          value: record[rows[1]]
-        });
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0]["columns"] =
-        prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0]);
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]] = [];
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]].push({
-          value: record[rows[2]]
-        });
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0]["columns"] =
-        prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0]);
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0][rows[3]] = [];
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0][rows[3]].push({
-          value: record[rows[3]]
-        });
-        pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0][rows[3]][0]["columns"] =
-        prepareAggregation(record, pivotDataColumn, pivotDataRow[rows[0]][pivotDataRow[rows[0]].length - 1][rows[1]][0][rows[2]][0][rows[3]][0]);
-      }
-    });
-    pivotDataRow.Department = pivotDataRow.Department.sort((a,b)=> (parseInt(a.value.split(" ")[1])) - (parseInt(b.value.split(" ")[1])));
-    let d1 = new Date();
-    let sec = d1.getTime() - d.getTime();
-    console.log("Actual Time taken:" + sec);   
-    return( {...pivotDataRow,...pivotDataColumn});      
-  }
-  function prepareAggregation(record, columnsData1, obj){
-    const columns = ["Year", "Semester", "Subject"];
-    let columnsData = JSON.parse(JSON.stringify(columnsData1));      
-    if(!obj["columns"]){
-      obj["columns"] = columnsData;
-    }
-    let dIndex = obj["columns"][columns[0]].findIndex((obj) => obj.value == record[columns[0]]);
-      if (dIndex > -1) {
-        addValues(obj["columns"][columns[0]][dIndex], record);
-        let cIndex = obj["columns"][columns[0]][dIndex][columns[1]].findIndex((obj) => obj.value == record[columns[1]]);
-        if (cIndex > -1) {
-          addValues(obj["columns"][columns[0]][dIndex][columns[1]][cIndex], record);
-          let bIndex = obj["columns"][columns[0]][dIndex][columns[1]][cIndex][columns[2]].findIndex((obj) => obj.value == record[columns[2]]);
-          if (bIndex > -1) {
-            addValues(obj["columns"][columns[0]][dIndex][columns[1]][cIndex][columns[2]][bIndex], record);
+          if (i == 0) {
+            value = record[f.trim()];
+          } else {
+            value = value - record[f.trim()];
           }
         }
-      } 
-      return obj["columns"];     
-  }
-  function addValues(obj , record){
-    const values = ["Written", "Practical"];
-    if(!obj.values){
-      obj.values = {};
+      });
+    } else {
+      value = record[valueNode.KEY];
     }
-    for(var i=0; i<values.length; i++){
-      if(obj.values[values[i]] !== undefined){
-        obj.values[values[i]] = obj.values[values[i]] + record[values[i]]
-      }else{
-        obj.values[values[i]] = record[values[i]];
+    if (obj[index].value !== undefined) {
+      obj[index].aggrValue = obj[index].aggrValue + value;
+    } else {
+      obj[index].aggrValue = value;
+    }
+    let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        prepareRowsColumnAggr(
+          record,
+          obj[index][child.KEY],
+          child,
+          rowHeir,
+          columnHeir,
+          valueNode
+        );
+      });
+    }
+  }
+};
+
+export const prepareSwappedSummaryData = (dataArray, heirarchy) => {
+  // Prepare column heirarchy
+  const pivotDataColumn = {};
+  dataArray.forEach((record) => {
+    let node = heirarchy.ROW.find((c) => c.PARENTKEY === "");
+    if (!pivotDataColumn[node.KEY]) {
+      pivotDataColumn[node.KEY] = [];
+    }
+    prepareSwappedColumnChildElement(
+      record,
+      pivotDataColumn[node.KEY],
+      node,
+      heirarchy.ROW
+    );
+  });
+
+  const pivotDataRow = {};
+  dataArray.forEach((record) => {
+    let node = heirarchy.COLUMN.find((c) => c.PARENTKEY === "");
+    if (!pivotDataRow[node.KEY]) {
+      pivotDataRow[node.KEY] = [];
+    }
+    prepareSwappedRowChildElement(
+      record,
+      pivotDataRow[node.KEY],
+      node,
+      heirarchy.ROW,
+      heirarchy.COLUMN,
+      pivotDataColumn
+    );
+  });
+  // console.log(pivotDataRow);
+  return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
+
+};
+const prepareSwappedColumnChildElement = (record, obj, node, rowHeir) => {
+  let index;
+  if (node.TYPE == "characteristic") {
+    index = obj.findIndex((obj) => obj.label == record[node.KEY]);
+  } else {
+    index = obj.findIndex((obj) => obj.label == node.LABEL);
+  }
+  if (index > -1) {      
+    let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        if (!obj[index][child.KEY]) {
+          obj[index][child.KEY] = [];
+        }
+        prepareSwappedColumnChildElement(
+          record,
+          obj[index][child.KEY],
+          child,
+          rowHeir
+        );
+      });
+    }
+  } else {
+    if (node.TYPE == "characteristic") {
+      obj.push({
+        key: node.KEY,
+        label: record[node.KEY],
+        aggrValue: 0,
+      });
+    } else {
+      obj.push({
+        key: node.KEY,
+        label: node.LABEL,
+        aggrValue: 0,
+      });
+    }
+    let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        obj[obj.length - 1][child.KEY] = [];
+        prepareSwappedColumnChildElement(
+          record,
+          obj[obj.length - 1][child.KEY],
+          child,
+          rowHeir
+        );
+      });
+    }
+  }
+};
+const prepareSwappedRowChildElement = (record, obj, node, rowHeir, columnHeir, columns) => {
+  let index = obj.findIndex((obj) => obj.value == record[node.KEY]);
+  if (index > -1) {
+    prepareSwappedAggregation(
+      record,
+      obj[index],
+      node,
+      rowHeir,
+      columnHeir,
+      columns
+    );
+    let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        if (!obj[index][child.KEY]) {
+          obj[index][child.KEY] = [];
+        }
+        prepareSwappedRowChildElement(
+          record,
+          obj[index][child.KEY],
+          child,
+          rowHeir, columnHeir, columns
+        );
+      });
+    }
+  } else {
+    obj.push({
+      value: record[node.KEY]
+    });
+    if (node.KEY == "QUTR") {
+      obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
+    } else if (node.KEY == "MONTH") {
+      let monthsArray = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      obj[obj.length - 1].label = monthsArray[obj[obj.length - 1].value - 1];
+    }
+    prepareSwappedAggregation(
+      record,
+      obj[obj.length - 1],
+      node,
+      rowHeir,
+      columnHeir,
+      columns
+    );
+    let childNodes = columnHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        obj[obj.length - 1][child.KEY] = [];
+        prepareSwappedRowChildElement(
+          record,
+          obj[obj.length - 1][child.KEY],
+          child,
+          rowHeir, columnHeir, columns
+        );
+      });
+    }
+  }
+};
+const prepareSwappedAggregation = (
+  record,
+  obj,
+  valueNode,
+  rowHeir,
+  columnHeir,
+  columns
+) => {
+  let columnsData = JSON.parse(JSON.stringify(columns));
+  if (!obj["columns"]) {
+    obj["columns"] = columnsData;
+  }
+  let node = rowHeir.find((c) => c.PARENTKEY === "");
+  prepareSwappedRowsColumnAggr(
+    record,
+    obj["columns"][node.KEY],
+    node,
+    rowHeir,
+    columnHeir,
+    valueNode
+  );
+};
+const prepareSwappedRowsColumnAggr = (
+  record,
+  obj,
+  node,
+  rowHeir,
+  columnHeir,
+  valueNode
+) => {
+  let index;
+  if (node.TYPE == "characteristic") {
+    index = obj.findIndex((obj) => obj.label == record[node.KEY]);
+  }else{
+    index = 0;
+  }
+  if (index > -1) {
+    if (node.TYPE !== "characteristic") {
+      let value = 0;
+      if (node.FIELD.includes("SUM(")) {
+        let fieldArray = node.FIELD.split("SUM(")[1]
+          .split(")")[0]
+          .split(",");
+        fieldArray.forEach((f) => {
+          value = value + record[f.trim()];
+        });
+      } else if (node.FIELD.includes("CALC(")) {
+        let fieldArray = node.FIELD.split("CALC(")[1]
+          .split(")")[0]
+          .split("-");
+        fieldArray.forEach((f, i) => {
+          let row = rowHeir.find((c) => c.KEY === f.trim());
+          if (row && row.FIELD.includes("SUM(")) {
+            let fieldArray1 = row.FIELD.split("SUM(")[1]
+              .split(")")[0]
+              .split(",");
+            fieldArray1.forEach((f1) => {
+              if (i == 0) {
+                value = value + record[f1.trim()];
+              } else {
+                value = value - record[f1.trim()];
+              }
+            });
+          } else {
+            if (i == 0) {
+              value = record[f.trim()];
+            } else {
+              value = value - record[f.trim()];
+            }
+          }
+        });
+      } else {
+        value = record[node.KEY];
+      }
+      if (obj[index].aggrValue !== undefined) {
+        obj[index].aggrValue = obj[index].aggrValue + value;
+      } else {
+        obj[index].aggrValue = value;
       }
     }
+    let childNodes = rowHeir.filter((c) => c.PARENTKEY === node.KEY);
+    if (childNodes.length > 0) {
+      childNodes.forEach((child) => {
+        prepareSwappedRowsColumnAggr(
+          record,
+          obj[index][child.KEY],
+          child,
+          rowHeir,
+          columnHeir,
+          valueNode
+        );
+      });
+    }
   }
+};
