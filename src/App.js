@@ -415,7 +415,14 @@ function App() {
   };
 
   const renderColumn2Rows = (column1) => {
-    const columns2 = column1.QUTR;
+    let columns2;
+    if(isSwapped){
+      const { label, columns, ...rest } = column1;
+      columns2 = Object.values(rest).map((arr) => arr[0]);
+    }else{
+      columns2 = column1.QUTR;
+    }
+     
     let totalValue = 0;
     return (
       <>
@@ -508,7 +515,7 @@ function App() {
     });
   };
 
-  const renderRow2 = (row2Array) => {
+  const renderRow2 = (row2Array, i) => {
     let newArr
     if (isSwapped) {
       newArr = row2Array.QUTR
@@ -545,21 +552,32 @@ function App() {
                 </span>
               </div>
             </td>
-            {(isSwapped ? rowdata.EMPID : record.columns.YEAR).map((col1) => (
-              <>
-                {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? (
-                  renderColumn2Rows(col1)
-                ) : (
-                  <td className="td">
-                    <span className="td-cells-padding">
-                      {handleNumFormater(col1.aggrValue)}
-                    </span>
-                  </td>
-                )}
-              </>
-            ))}
+            {/* rowdata.EMPID[i].NSAL[0].columns.YEAR */}
+            {(isSwapped ? rowdata.EMPID : record.columns.YEAR).map((col1) => {
+              let value;
+              // let { label, columns, ...rest } = col1
+              if (isSwapped) {
+                // value = col1.NSAL[0].columns.YEAR.find(obj => obj.value == record.value).aggrValue;
+                value = col1.NSAL[0].columns.YEAR.find(obj => obj.value == row2Array.value).QUTR.find(obj1 => obj1.value == record.value).aggrValue;
+              }
+
+              return (
+                <>
+                  {expandedColumns1
+                    .map((col) => col.value)
+                    .includes(col1.value) ? (
+                    renderColumn2Rows(col1,value)
+                  ) : (
+                    <td className="td">
+                      <span className="td-cells-padding">
+                        {handleNumFormater(col1.aggrValue ?? "")}
+                      </span>
+                    </td>
+                  )}
+                </>
+              );
+            }
+            )}
           </tr>
           {expandedRows2.includes(record) && renderRow3(record)}
         </>
@@ -740,7 +758,7 @@ function App() {
     if (!tableData) return
     let key = Object.keys(tableData)[0];
     return (
-      tableData[key].map((record) => {
+      tableData[key].map((record, i) => {
         return (
           <>
             <tr className="row-tr">
@@ -761,7 +779,7 @@ function App() {
                 );
               })} */}
             </tr>
-            {expandedRows1.includes(record) && renderRow2(record)}
+            {expandedRows1.includes(record) && renderRow2(record, i)}
           </>
         );
       })
