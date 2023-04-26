@@ -248,11 +248,9 @@ function SwappedPivotTable(props) {
                       }}
                     />
                   ))}
-                <span
-                  // className={`${Object.keys(record).length > 2 ? "" : "marginleft"
-                  //   }`}
-                >
-                  {record.label}
+                  <span
+                  className={`${Object.keys(record).length > 2 ? "" : "marginleft"
+                    }`}>  {record.label}
                 </span>
               </div>
             </td>
@@ -307,16 +305,20 @@ function SwappedPivotTable(props) {
     const column3Array = Object.values(rest).map((arr) => arr[0]); 
     const col2 = col2Data[i].label;
     return (
-      // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`
-     <div className="sub-column-th border-right">
+      // 
+     <div className={`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}>
         <div className="display-flex border-bottom height-30">
-          
+        <ArrowDropDownIcon
+            onClick={() => {
+              handleColumn2Click(col2Data[i]);
+            }}
+          />
           <span>{col2}</span> 
         </div>
         <div className="display-flex">
           {column3Array?.map((col3val, i) => (
             // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
-            <div className="sub-column-th border-right">
+            <div className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}>
               <div className=" height-30 displayFlex">{col3val.label}</div> 
             </div>
           ))}
@@ -369,7 +371,7 @@ function SwappedPivotTable(props) {
                 renderColumn3(column2Array, i)
               ) : (
                 // ${i == column2Array.length - 1 ? "" : "border-right"}
-                <div className="sub-column-th border-right">
+                <div className={`sub-column-th ${i == column2Array.length - 1 ? "" : "border-right"}`}>
                   <div
                     className={`columns-flex ${expandedColumns2.length != 0 &&
                       !expandedColumns2.includes(col2val)
