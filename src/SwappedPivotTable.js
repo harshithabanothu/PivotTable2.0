@@ -77,9 +77,10 @@ function SwappedPivotTable(props) {
       setExpandedColumns1(coldata.EMPID)
       let records = [];
       coldata.EMPID.map((record) =>{
-        const { label, columns, ...rest } = record;
+        const { label,aggrValue,key, ...rest } = record;
         const newArr = Object.values(rest).map((arr) => arr[0]);
         newArr.map((obj) => {
+          if(Object.keys(obj).length>3)
           records.push(obj);
         })
         setExpandedColumns2(records);
