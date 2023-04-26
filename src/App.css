@@ -132,6 +132,7 @@ td:first-child {
 .columns-flex {
   display: flex;
   align-items: center;
+  justify-content: center;
   /* border-bottom: 0.5px solid grey; */
   height: 30px;
   /* margin-top:18px; */
@@ -275,6 +276,8 @@ td:first-child {
   align-items: flex-end;
   bottom:0px;
   margin-right:5px;
+  position:absolute;
+  left: 70%;
 }
 .icons-resize svg{
   font-size:15px;

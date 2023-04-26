@@ -1,5 +1,5 @@
 
-export  function myFunction() {
+export  function dataFunction() {
     // Your task goes here
     //code for generating the array of objects
     let department = [

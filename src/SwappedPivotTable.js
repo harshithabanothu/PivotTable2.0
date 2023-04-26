@@ -1,14 +1,18 @@
 /* eslint-disable eqeqeq */
+/* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from "react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import HourglassFullIcon from "@mui/icons-material/HourglassFull";
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import SwapHorizSharpIcon from '@mui/icons-material/SwapHorizSharp';
 import $ from "jquery";
 import "./App.css";
 
-function App() {
+
+function SwappedPivotTable(props) {
+  const {handleSwap}=props;
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
   const [isRowsExpanded, setisRowsExpanded] = useState(false);
@@ -36,6 +40,7 @@ function App() {
       setData(summaryData);
       // setData(JSON.parse(response.d.results[0].Data));
     });
+   
   }, []);
   const rowdata = data.ROWS;
   const columndata = data.COLUMNS;
@@ -577,16 +582,19 @@ function App() {
       setExpandedRows2([]);
     } else {
       setisRowsExpanded(!isRowsExpanded);
-      setExpandedRows1(rowdata.EMPID)
+      setExpandedRows1(rowdata.YEAR)
       let records = [];
-      rowdata.EMPID.map((record) => {
-        const { label, columns, ...rest } = record;
-        const newArr = Object.values(rest).map((arr) => arr[0]);
-        newArr.map((obj) => {
-          records.push(obj);
-        })
-        setExpandedRows2(records);
+      rowdata.YEAR.map((obj) => {
+        records=records.concat(obj.QUTR)
       })
+      setExpandedRows2(records)
+      //   const { label, columns, ...rest } = record;
+      //   const newArr = Object.values(rest).map((arr) => arr[0]);
+      //   newArr.map((obj) => {
+      //     records.push(obj);
+      //   })
+      //   setExpandedRows2(records);
+      // })
     }
   }
   const handleExpandAllColumns = (coldata) => {
@@ -596,12 +604,20 @@ function App() {
       setExpandedColumns2([]);
     } else {
       setisColumnsExpanded(!isColumnsExpanded);
-      setExpandedColumns1(coldata.YEAR)
+      setExpandedColumns1(coldata.EMPID)
       let records = [];
-      coldata.YEAR.map((obj) =>{
-          records=records.concat(obj.QUTR)
+      coldata.EMPID.map((record) =>{
+        const { label, columns, ...rest } = record;
+        const newArr = Object.values(rest).map((arr) => arr[0]);
+        newArr.map((obj) => {
+          records.push(obj);
         })
-      setExpandedColumns2(records)
+        setExpandedColumns2(records);
+      })
+    //       records=records.concat(obj.QUTR)
+    //     })
+    //   setExpandedColumns2(records)
+    // }
     }
   };
   const handleNumFormater = (num) => {
@@ -631,10 +647,13 @@ function App() {
 
   //render functions for expanded rows display
   const renderColumn3Rows = (column3) => {
+    const { key,label,aggrValue, ...rest } = column3;
+    const newArr = Object.values(rest).map((arr) => arr[0]);
+   
     let totalValue = 0;
     return (
       <>
-        {column3.map((col3) => {
+        {newArr.map((col3) => {
           totalValue = totalValue + col3.aggrValue;
           return (
             <td className="td">
@@ -644,41 +663,41 @@ function App() {
             </td>
           );
         })}
-        <td className="td">
+        {/* <td className="td">
           <span className="td-cells-padding">
             {totalValue == 0 ? " " : handleNumFormater(totalValue)}
           </span>
-        </td>
+        </td> */}
       </>
     );
   };
 
   const checkColumn3Condition = (column2, column1) => {
-    const filteredYear = expandedColumns1.filter(
-      (col1) => col1.value === column1
-    )[0].QUTR;
+    const filteredEmpid = expandedColumns1.filter(
+      (col1) => col1.label === column1
+      )[0];
+      if(!filteredEmpid) return false
+    const { key,label,aggrValue, ...rest } = filteredEmpid;
+    const newArr = Object.values(rest).map((arr) => arr[0]);
     const filteredArray = expandedColumns2.filter((value) =>
-      filteredYear.includes(value)
+    newArr.includes(value)
     );
     return filteredArray
-      .map((col2val) => col2val.value)
-      .includes(column2.value);
+      .map((col2val) => col2val.label)
+      .includes(column2.label);
   };
-
   const renderColumn2Rows = (column1) => {
     const {key,label,aggrValue,...rest}=column1
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log(newArr)
     let totalValue = 0;
     return (
       <>
         {newArr.map((column2) => {
-          console.log(column2)
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
-              {checkColumn3Condition(column2, column1.value) ? (
-                renderColumn3Rows(column2.MONTH)
+              {checkColumn3Condition(column2,column1.label) ? (
+                renderColumn3Rows(column2)
               ) : (
                 <td className="td">
                   <span className="td-cells-padding">
@@ -691,42 +710,14 @@ function App() {
             </>
           );
         })}
-        <td className="td">
+        {/* <td className="td">
           <span className="td-cells-padding">
             {totalValue == 0 ? "" : handleNumFormater(totalValue)}
           </span>
-        </td>
+        </td> */}
       </>
     );
   };
-
-  // const renderRow4 = (row4Array) => {
-  //   return row4Array?.map((record) => {
-  //     return (
-  //       <>
-  //         <tr className="row-tr">
-  //           <td className="td">
-  //             <div className="student-items-flex">{record.label}</div>
-  //           </td>
-  //           {record.columns.YEAR.map((col1) => (
-  //             <>
-  //               {expandedColumns1
-  //                 .map((col) => col.value)
-  //                 .includes(col1.value) && renderColumn2Rows(col1)}
-  //               {expandedColumns1
-  //                 .map((col) => col.value)
-  //                 .includes(col1.value) ? null : (
-  //                 <td className="td">
-  //                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
-  //                 </td>
-  //               )}
-  //             </>
-  //           ))}
-  //         </tr>
-  //       </>
-  //     );
-  //   });
-  // };
 
   const renderRow3 = (row3Array) => {
     const newArr=row3Array.MONTH
@@ -744,8 +735,8 @@ function App() {
             {record.columns.EMPID.map((col1) => (
               <>
                 {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? (
+                  .map((col) => col.label)
+                  .includes(col1.label) ? (
                   renderColumn2Rows(col1)
                 ) : (
                   <td className="td">
@@ -763,14 +754,10 @@ function App() {
   };
 
   const renderRow2 = (row2Array) => {
-    console.log(row2Array)
     const newArr=row2Array.QUTR;
-    console.log(newArr)
     const {value, columns, ...rest } = row2Array;
-    console.log(row2Array,rest)
     // const newArr1 = Object.values(rest).map((arr) => arr[0]);
     return newArr.map((record) => {
-      console.log(record)
       return (
         <>
           <tr className="row-tr">
@@ -801,8 +788,8 @@ function App() {
             {record.columns.EMPID.map((col1) => (
               <>
                 {expandedColumns1
-                  .map((col) => col.value)
-                  .includes(col1.value) ? (
+                  .map((col) => col.label)
+                  .includes(col1.label) ? (
                   renderColumn2Rows(col1)
                 ) : (
                   <td className="td">
@@ -826,9 +813,7 @@ function App() {
       setExpandedColumns1(
         expandedColumns1.filter((item) => item !== column1Value)
       );
-      setExpandedColumns2(
-        expandedColumns2.filter((item) => !column1Value.QUTR.includes(item))
-      );
+      
     } else {
       setExpandedColumns1(expandedColumns1.concat(column1Value));
     }
@@ -845,59 +830,60 @@ function App() {
 
   //render functions for columns section
 
-  const renderColumn3 = (col2Data) => {
-    console.log("1234",col2Data);
-    const { key,label,aggrValue, ...rest } = col2Data;
-    const column3Array = Object.values(rest).map((arr) => arr[0]);
-    console.log(column3Array);
-    const col2 = col2Data.label;
-    console.log(col2)
+  const renderColumn3 = (col2Data,i) => {
+    const column3Obj = col2Data[i];
+    let { key,label,aggrValue, ...rest } = column3Obj;
+    const column3Array = Object.values(rest).map((arr) => arr[0]); 
+    const col2 = col2Data[i].label;
     return (
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`
      <div className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
           <ArrowDropDownIcon
             onClick={() => {
-              handleColumn2Click(col2Data);
+              handleColumn2Click(col2Data[i]);
             }}
           />
-          {/* <span>{col2}</span> */}
+          <span>{col2}</span> 
         </div>
         <div className="display-flex">
-          {column3Array?.map((col3val) => (
+          {column3Array?.map((col3val, i) => (
             // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
             <div className="sub-column-th border-right">
-              {/* <div className=" height-30 displayFlex">{col3val.label}</div> */}
+              <div className=" height-30 displayFlex">{col3val.label}</div> 
             </div>
           ))}
-          <div className="sub-column-th">
+          {/* <div className="sub-column-th">
             <div className=" height-30 displayFlex">Total</div>
-          </div>
+          </div> */}
         </div>
       </div>
     );
   };
   const renderColumn2 = (col1) => {
-    console.log(col1)
-    const { key,label,aggrValue, ...rest } = col1;
-    const column2Array = Object.values(rest).map((arr) => arr[0]);
-    console.log(column2Array,rest);
-    
+    let { key,label,aggrValue, ...rest } = col1;
+    const column2Array = Object.values(rest).map((arr) => arr[0]); 
     const column1 = col1.label;
     const column2InCurrentColumn1 = expandedColumns1.find(
       (col1) => col1.label === column1
     );
-    console.log(column2InCurrentColumn1)
+     const { key:k,label:l,aggrValue:a, ...r } = column2InCurrentColumn1;
+
+    const column2InCurrentColArr = Object.values(r).map((arr) => arr[0]); 
     const filteredArray = expandedColumns2.filter((value) =>
-      column2InCurrentColumn1.includes(value)
+    column2InCurrentColArr.includes(value)
     );
+    let col3ExpandLength = 0;
+    filteredArray.map((item)=>{
+    let { key,label,aggrValue, ...res } = item;
+    const itemArray = Object.values(res).map((arr) => arr[0]); 
+    col3ExpandLength+=itemArray.length-1
+
+    })
     return (
       <th
         colSpan={
-          column2Array.length +
-          1 +
-          filteredArray.length * 4 -
-          filteredArray.length
+          column2Array.length+col3ExpandLength
         }
         className="th-colspan">
         <div className="display-flex height-30 border-bottom">
@@ -911,8 +897,9 @@ function App() {
         <div className="flex">
           {column2Array.map((col2val, i) => (
             <>
+            {console.log('1234567',col2val)}
               {expandedColumns2.includes(col2val) ? (
-                renderColumn3(column2Array,i)
+                renderColumn3(column2Array, i)
               ) : (
                 // ${i == column2Array.length - 1 ? "" : "border-right"}
                 <div className="sub-column-th border-right">
@@ -922,36 +909,34 @@ function App() {
                       ? "height-60"
                       : "height-30"
                       }`}>
+                    {Object.keys(col2val).length > 3 &&
                     <ArrowRightIcon
                       onClick={() => {
                         handleColumn2Click(col2val);
                       }}
-                    />
+                    /> }
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
                 </div>
               )}
             </>
           ))}
-          <div
+          {/* <div
             className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"
               }`}>
             <span className="expanded-year marginleft">Total</span>
-          </div>
+          </div> */}
         </div>
       </th>
     );
   };
 
   const prepareThead = (tableData) => {
-    console.log(tableData);
     if (!tableData) return;
     let key = Object.keys(tableData)[0];
-    console.log(key)
     return (
       <>
         {tableData[key].map((col1) => {
-          console.log(col1)
           return (
             <>
               {expandedColumns1.includes(col1) ? (
@@ -984,7 +969,7 @@ function App() {
   return (
     <>
       <div className="App">
-        {dataFetchRef.current ? (
+      {dataFetchRef.current ? (
           <>
             <h1>Pivot Table</h1>
             <div className="table-container">
@@ -1001,39 +986,12 @@ function App() {
                         <KeyboardDoubleArrowRightIcon  
                         onClick={() => handleExpandAllColumns(columndata)} 
                         color={`${isColumnsExpanded ? "primary" : ""}`} />
-                        {/* <ArrowDropDownIcon onClick={() => { setisSwapped(!isSwapped) }} /> */}
+                        <SwapHorizSharpIcon onClick={()=>{handleSwap()}} />
                         </div>
                       </th>
                       {isSwapped
                         ? prepareThead(rowdata)
                         : prepareThead(columndata)}
-                      {/* {columndata?.YEAR.map((col1) => {
-                        return (
-                          <>
-                            {expandedColumns1.includes(col1) ? (
-                              renderColumn2(col1)
-                            ) : (
-                              <th>
-                                <div
-                                  className={`columns-flex ${expandedColumns1.length != 0 &&
-                                    !expandedColumns1.includes(col1)
-                                    ? expandedColumns2.length != 0
-                                      ? "height-90"
-                                      : "height-60"
-                                    : "height-30"
-                                    }`}>
-                                  <ArrowRightIcon
-                                    onClick={() => {
-                                      handleColumn1Click(col1);
-                                    }}
-                                  />
-                                  <span>{col1.value}</span>
-                                </div>
-                              </th>
-                            )}
-                          </>
-                        );
-                      })} */}
                     </tr>
                   </thead>
                   <tbody>
@@ -1064,13 +1022,13 @@ function App() {
                               return (
                                 <>
                                   {expandedColumns1
-                                    .map((col) => col.value)
-                                    .includes(col1.value) &&
+                                    .map((col) => col.label)
+                                    .includes(col1.label) &&
                                     renderColumn2Rows(col1)}
 
                                   {expandedColumns1
-                                    .map((col) => col.value)
-                                    .includes(col1.value) ? null : (
+                                    .map((col) => col.label)
+                                    .includes(col1.label) ? null : (
                                     <td className="td">{col1.aggrValue}</td>
                                   )}
                                 </>
@@ -1086,13 +1044,14 @@ function App() {
               </div>
             </div>
           </>
-        ) : (
+        
+         ) : (
           <div className="spinner-container">
             <HourglassFullIcon className="loading-spinner" />
           </div>
         )}
-      </div>
+         </div>
     </>
   );
 }
-export default App;
+export default SwappedPivotTable;
