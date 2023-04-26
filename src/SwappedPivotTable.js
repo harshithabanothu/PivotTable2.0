@@ -212,7 +212,7 @@ function SwappedPivotTable(props) {
                 ) : (
                   <td className="td">
                     <span className="td-cells-padding">
-                      {handleNumFormater(col1.aggrValue)}
+                      {/* {handleNumFormater(col1.aggrValue)} */}
                     </span>
                   </td>
                 )}
@@ -263,7 +263,7 @@ function SwappedPivotTable(props) {
                 ) : (
                   <td className="td">
                     <span className="td-cells-padding">
-                      {handleNumFormater(col1.aggrValue)}
+                      {/* {handleNumFormater(col1.aggrValue)} */}
                     </span>
                   </td>
                 )}
@@ -497,7 +497,9 @@ function SwappedPivotTable(props) {
                                   {expandedColumns1
                                     .map((col) => col.label)
                                     .includes(col1.label) ? null : (
-                                    <td className="td">{col1.aggrValue}</td>
+                                    <td className="td">
+                                    {/* {col1.aggrValue} */}
+                                    </td>
                                   )}
                                 </>
                               );
