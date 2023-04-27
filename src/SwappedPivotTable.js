@@ -246,6 +246,7 @@ function SwappedPivotTable(props) {
                       onClick={() => {
                         handleRow2Click(record);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                   ) : (
                     <Icon
@@ -253,6 +254,7 @@ function SwappedPivotTable(props) {
                       onClick={() => {
                         handleRow2Click(record);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                   ))}
                   <span
@@ -324,6 +326,7 @@ function SwappedPivotTable(props) {
             onClick={() => {
               handleColumn2Click(col2Data[i]);
             }}
+            className="ui5-icon-styles"
           ></Icon>
           <span>{col2}</span> 
         </div>
@@ -373,6 +376,7 @@ function SwappedPivotTable(props) {
             onClick={() => {
               handleColumn1Click(col1);
             }}
+            className="ui5-icon-styles"
           ></Icon>
           <span className="expanded-year">{column1}</span>
         </div>
@@ -395,6 +399,7 @@ function SwappedPivotTable(props) {
                       onClick={() => {
                         handleColumn2Click(col2val);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                      }
                     <span className="expanded-year">{col2val.label}</span>
@@ -437,6 +442,7 @@ function SwappedPivotTable(props) {
                       onClick={() => {
                         handleColumn1Click(col1);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                     <span>{col1.value ?? col1.label}</span>
                   </div>
@@ -462,12 +468,14 @@ function SwappedPivotTable(props) {
                         <div className="icons-resize">
                         <Icon name="drill-down"
                         color={`${isRowsExpanded ?"primary":" "}`} 
+                        className="ui5-icon-styles"
                         onClick={() => handleExpandAllRows(rowdata)}
                          ></Icon>
                         <Icon name="process" 
+                        className="ui5-icon-styles"
                         onClick={() => handleExpandAllColumns(columndata)} 
                         color={`${isColumnsExpanded ? "primary" : ""}`} ></Icon>
-                        <Icon name="share" onClick={()=>{handleSwap()}} ></Icon>
+                        <Icon name="share" className="ui5-icon-styles" onClick={()=>{handleSwap()}} ></Icon>
                         </div>
                       </th>
                       {isSwapped
@@ -488,6 +496,7 @@ function SwappedPivotTable(props) {
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
+                                    className="ui5-icon-styles"
                                   ></Icon>
                                 ) : (
                                   <Icon
@@ -495,6 +504,7 @@ function SwappedPivotTable(props) {
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
+                                    className="ui5-icon-styles"
                                   ></Icon>
                                 )}
                                 <span>{record.value}</span>

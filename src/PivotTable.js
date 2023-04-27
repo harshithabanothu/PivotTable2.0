@@ -254,6 +254,7 @@ function PivotTable(props) {
                       onClick={() => {
                         handleRow2Click(record);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                   ) : (
                     <Icon
@@ -261,6 +262,7 @@ function PivotTable(props) {
                       onClick={() => {
                         handleRow2Click(record);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                   ))}
                 <span
@@ -328,6 +330,7 @@ function PivotTable(props) {
             onClick={() => {
               handleColumn2Click(col2Data[i]);
             }}
+            className="ui5-icon-styles"
           ></Icon>
           <span>{col2}</span>
         </div>
@@ -369,6 +372,7 @@ function PivotTable(props) {
             onClick={() => {
               handleColumn1Click(col1);
             }}
+            className="ui5-icon-styles"
           ></Icon>
           <span className="expanded-year">{column1}</span>
         </div>
@@ -391,6 +395,7 @@ function PivotTable(props) {
                       onClick={() => {
                         handleColumn2Click(col2val);
                       }}
+                      className="ui5-icon-styles"
                     ></Icon>
                     <span className="expanded-year">{col2val.label}</span>
                   </div>
@@ -433,6 +438,7 @@ function PivotTable(props) {
                       onClick={() => {
                         handleColumn1Click(col1);
                       }}
+                      className="ui5-icon-styles"
                      ></Icon>
                     <span>{col1.value ?? col1.label}</span>
                   </div>
@@ -458,15 +464,17 @@ function PivotTable(props) {
                         <div className="icons-resize">
                         <Icon 
                         name="drill-down"
+                        className="ui5-icon-styles"
                         color={`${isRowsExpanded ?"primary":" "}`} 
                         onClick={() => handleExpandAllRows(rowdata)}
                          ></Icon>
                         <Icon
-                        name="process"  
+                        name="process" 
+                        className="ui5-icon-styles" 
                         onClick={() => handleExpandAllColumns(columndata)} 
                         color={`${isColumnsExpanded ? "primary" : ""}`} >
                         </Icon>
-                        <Icon name="share" onClick={()=>{handleSwap()}} ></Icon>
+                        <Icon name="share" className="ui5-icon-styles" onClick={()=>{handleSwap()}} ></Icon>
                         </div>
                       </th>
                       {isSwapped
@@ -513,6 +521,7 @@ function PivotTable(props) {
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
+                                    className="ui5-icon-styles"
                                   ></Icon>
                                 ) : (
                                   <Icon
@@ -520,6 +529,7 @@ function PivotTable(props) {
                                     onClick={() => {
                                       handleRow1Click(record);
                                     }}
+                                    className="ui5-icon-styles"
                                   ></Icon>
                                 )}
                                 <span>{record.label}</span>
