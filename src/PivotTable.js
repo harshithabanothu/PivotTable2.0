@@ -151,7 +151,7 @@ function PivotTable(props) {
     let totalValue = 0;
     return (
       <>
-        {columns2.map((column2) => {
+        {columns2.map((column2,index) => {
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
@@ -535,7 +535,7 @@ function PivotTable(props) {
                                 <span>{record.label}</span>
                               </div>
                             </td>
-                            {record.columns.YEAR.map((col1) => {
+                            {record.columns.YEAR.map((col1,index) => {
                               // condition that we clicked the correct year
                               return (
                                 <>
