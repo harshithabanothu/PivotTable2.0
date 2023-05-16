@@ -1,20 +1,21 @@
 /* eslint-disable eqeqeq */
 import React, { useState, useEffect, useRef } from "react";
-import  "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
-import  "@ui5/webcomponents-icons/dist/navigation-down-arrow";
-import  "@ui5/webcomponents-icons/dist/share";
-import  "@ui5/webcomponents-icons/dist/drill-down";
-import  "@ui5/webcomponents-icons/dist/process";
-import { Icon } from '@ui5/webcomponents-react'
+import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
+import "@ui5/webcomponents-icons/dist/navigation-down-arrow";
+import "@ui5/webcomponents-icons/dist/share";
+import "@ui5/webcomponents-icons/dist/drill-down";
+import "@ui5/webcomponents-icons/dist/process";
+import { Icon } from "@ui5/webcomponents-react";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import SwapHorizSharpIcon from '@mui/icons-material/SwapHorizSharp';
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import SwapHorizSharpIcon from "@mui/icons-material/SwapHorizSharp";
 import "./App.css";
+import hireData from "./hirarchydata.json";
 
 function PivotTable(props) {
-  const {handleSwap,data}=props;
+  const { handleSwap, data } = props;
   const [expandedRows1, setExpandedRows1] = useState([]);
   const [expandedRows2, setExpandedRows2] = useState([]);
   const [isRowsExpanded, setisRowsExpanded] = useState(false);
@@ -23,10 +24,13 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
- 
+  const stylesRef = useRef(hireData);
+
   const rowdata = data.ROWS;
+  console.log(rowdata)
   const columndata = data.COLUMNS;
-  
+  // const styles=hireData.columns.find((obj)=>obj.name).style
+
   //onclick functions for rows display
   const handleRow1Click = (row1Data) => {
     if (expandedRows1.includes(row1Data)) {
@@ -58,18 +62,18 @@ function PivotTable(props) {
       setExpandedRows2([]);
     } else {
       setisRowsExpanded(!isRowsExpanded);
-      setExpandedRows1(rowdata.EMPID)
+      setExpandedRows1(rowdata.EMPID);
       let records = [];
       rowdata.EMPID.map((record) => {
         const { label, columns, ...rest } = record;
         const newArr = Object.values(rest).map((arr) => arr[0]);
         newArr.map((obj) => {
           records.push(obj);
-        })
+        });
         setExpandedRows2(records);
-      })
+      });
     }
-  }
+  };
   const handleExpandAllColumns = (coldata) => {
     if (isColumnsExpanded) {
       setisColumnsExpanded(!isColumnsExpanded);
@@ -77,12 +81,12 @@ function PivotTable(props) {
       setExpandedColumns2([]);
     } else {
       setisColumnsExpanded(!isColumnsExpanded);
-      setExpandedColumns1(coldata.YEAR)
+      setExpandedColumns1(coldata.YEAR);
       let records = [];
-      coldata.YEAR.map((obj) =>{
-          records=records.concat(obj.QUTR)
-        })
-      setExpandedColumns2(records)
+      coldata.YEAR.map((obj) => {
+        records = records.concat(obj.QUTR);
+      });
+      setExpandedColumns2(records);
     }
   };
   const handleNumFormater = (num) => {
@@ -151,7 +155,7 @@ function PivotTable(props) {
     let totalValue = 0;
     return (
       <>
-        {columns2.map((column2,index) => {
+        {columns2.map((column2, index) => {
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
@@ -250,24 +254,24 @@ function PivotTable(props) {
               <div className="class-items-flex">
                 {Object.keys(record).length > 2 &&
                   (expandedRows2.includes(record) ? (
-                    <Icon name="navigation-down-arrow"
+                    <Icon
+                      name="navigation-down-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                      className="ui5-icon-styles"
-                    ></Icon>
+                      className="ui5-icon-styles"></Icon>
                   ) : (
                     <Icon
                       name="navigation-right-arrow"
                       onClick={() => {
                         handleRow2Click(record);
                       }}
-                      className="ui5-icon-styles"
-                    ></Icon>
+                      className="ui5-icon-styles"></Icon>
                   ))}
                 <span
-                  className={`${Object.keys(record).length > 2 ? "" : "marginleft"
-                    }`}>
+                  className={`${
+                    Object.keys(record).length > 2 ? "" : "marginleft"
+                  }`}>
                   {record.label}
                 </span>
               </div>
@@ -319,37 +323,45 @@ function PivotTable(props) {
 
   //render functions for columns section
 
-  const renderColumn3 = (col2Data, i) => {
+  const renderColumn3 = (col2Data, st2, i) => {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
+    let st3 = stylesRef.current?.columns.find(
+      (obj) => obj.name === column3Array[0].key
+    ).style;
     return (
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
-      <div className="sub-column-th border-right">
+      <div style={st2} className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
-          <Icon name="navigation-down-arrow"
+          <Icon
+            name="navigation-down-arrow"
             onClick={() => {
               handleColumn2Click(col2Data[i]);
             }}
-            className="ui5-icon-styles"
-          ></Icon>
+            className="ui5-icon-styles"></Icon>
           <span>{col2}</span>
         </div>
         <div className="display-flex">
-          {column3Array.map((col3val, i) => (
-            // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
-            <div className="sub-column-th border-right">
-              <div className=" height-30 displayFlex">{col3val.label}</div>
-            </div>
-          ))}
-          <div className="sub-column-th">
+          {column3Array.map((col3val, i) => {
+            //  let style3=stylesRef.current?.columns.find((obj)=>obj.name=== col3val.key).style
+            return (
+              // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
+              <div style={st3} className="sub-column-th border-right">
+                <div className=" height-30 displayFlex">{col3val.label}</div>
+              </div>
+            );
+          })}
+          <div style={st3} className="sub-column-th">
             <div className=" height-30 displayFlex">Total</div>
           </div>
         </div>
       </div>
     );
   };
-  const renderColumn2 = (col1) => {
+  const renderColumn2 = (col1, styles) => {
     const column2Array = col1.QUTR;
+    console.log(col1);
+    console.log(column2Array);
     const column1 = col1.value;
     const column2InCurrentColumn1 = expandedColumns1.find(
       (col1) => col1.value === column1
@@ -357,10 +369,14 @@ function PivotTable(props) {
     const filteredArray = expandedColumns2.filter((value) =>
       column2InCurrentColumn1.includes(value)
     );
+    let st2 = stylesRef.current?.columns.find(
+      (obj) => obj.name === column2Array[0].key
+    ).style;
     return (
       <th
+        style={styles}
         colSpan={
-          column2Array.length + 
+          column2Array.length +
           1 +
           filteredArray.length * 4 -
           filteredArray.length
@@ -372,40 +388,59 @@ function PivotTable(props) {
             onClick={() => {
               handleColumn1Click(col1);
             }}
-            className="ui5-icon-styles"
-          ></Icon>
-          <span className="expanded-year">{column1}</span>
+            className="ui5-icon-styles"></Icon>
+          <div 
+           style={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            alignItems: `${styles.textVerticalAlignment}`,
+            justifyContent: `${styles.textAlignment}`,
+          }}
+          className="expanded-year">{column1}</div>
         </div>
         <div className="flex">
-          {column2Array.map((col2val, i) => (
-            <>
-              {expandedColumns2.includes(col2val) ? (
-                renderColumn3(column2Array, i)
-              ) : (
-                // ${i == column2Array.length - 1 ? "" : "border-right"}
-                <div className="sub-column-th border-right">
-                  <div
-                    className={`columns-flex ${expandedColumns2.length != 0 &&
-                      !expandedColumns2.includes(col2val)
-                      ? "height-60"
-                      : "height-30"
+          {column2Array.map((col2val, i) => {
+            return (
+              <>
+                {expandedColumns2.includes(col2val) ? (
+                  renderColumn3(column2Array, st2, i)
+                ) : (
+                  // ${i == column2Array.length - 1 ? "" : "border-right"}
+                  <div style={st2} className="sub-column-th border-right">
+                    <div
+                      className={`columns-flex ${
+                        expandedColumns2.length != 0 &&
+                        !expandedColumns2.includes(col2val)
+                          ? "height-60"
+                          : "height-30"
                       }`}>
-                    <Icon
-                    name="navigation-right-arrow"
-                      onClick={() => {
-                        handleColumn2Click(col2val);
-                      }}
-                      className="ui5-icon-styles"
-                    ></Icon>
-                    <span className="expanded-year">{col2val.label}</span>
+                      <Icon
+                        name="navigation-right-arrow"
+                        onClick={() => {
+                          handleColumn2Click(col2val);
+                        }}
+                        className="ui5-icon-styles"></Icon>
+                      <div  
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        alignItems: `${st2.textVerticalAlignment}`,
+                        justifyContent: `${st2.textAlignment}`,
+                      }} 
+                      className="expanded-year">{col2val.label}</div>
+                    </div>
                   </div>
-                </div>
-              )}
-            </>
-          ))}
+                )}
+              </>
+            );
+          })}
           <div
-            className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"
-              }`}>
+            style={st2}
+            className={`sub-column-th columns-flex ${
+              expandedColumns2.length != 0 ? "height-60" : "height-30"
+            }`}>
             <span className="expanded-year marginleft">Total</span>
           </div>
         </div>
@@ -416,31 +451,43 @@ function PivotTable(props) {
   const prepareThead = (tableData) => {
     if (!tableData) return;
     let key = Object.keys(tableData)[0];
+    let styles = stylesRef.current?.columns.find(
+      (obj) => obj.name === key
+    ).style;
     return (
       <>
         {tableData[key].map((col1) => {
           return (
             <>
               {expandedColumns1.includes(col1) ? (
-                renderColumn2(col1)
+                renderColumn2(col1, styles)
               ) : (
-                <th>
+                <th style={styles}>
                   <div
-                    className={`columns-flex ${expandedColumns1.length != 0 &&
+                    className={`columns-flex ${
+                      expandedColumns1.length != 0 &&
                       !expandedColumns1.includes(col1)
-                      ? expandedColumns2.length != 0
-                        ? "height-90"
-                        : "height-60"
-                      : "height-30"
-                      }`}>
-                    <Icon 
+                        ? expandedColumns2.length != 0
+                          ? "height-90"
+                          : "height-60"
+                        : "height-30"
+                    }`}>
+                    <Icon
                       name="navigation-right-arrow"
                       onClick={() => {
                         handleColumn1Click(col1);
                       }}
-                      className="ui5-icon-styles"
-                     ></Icon>
-                    <span>{col1.value ?? col1.label}</span>
+                      className="ui5-icon-styles"></Icon>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: "100%",
+                        display: "flex",
+                        alignItems: `${styles.textVerticalAlignment}`,
+                        justifyContent: `${styles.textAlignment}`,
+                      }}>
+                      {col1.value ?? col1.label}
+                    </div>
                   </div>
                 </th>
               )}
@@ -453,34 +500,34 @@ function PivotTable(props) {
   return (
     <>
       <div className="App">
-        
-            <h1>Pivot Table</h1>
-            <div className="table-container">
-              <div className="table-scrollbar-container">
-                <table>
-                  <thead>
-                    <tr className="freezeTr">
-                      <th className="freezeTh">
-                        <div className="icons-resize">
-                        <Icon 
+        <h1>Pivot Table</h1>
+        <div className="table-container">
+          <div className="table-scrollbar-container">
+            <table>
+              <thead>
+                <tr className="freezeTr">
+                  <th className="freezeTh">
+                    <div className="icons-resize">
+                      <Icon
                         name="drill-down"
                         className="ui5-icon-styles"
-                        color={`${isRowsExpanded ?"primary":" "}`} 
-                        onClick={() => handleExpandAllRows(rowdata)}
-                         ></Icon>
-                        <Icon
-                        name="process" 
-                        className="ui5-icon-styles" 
-                        onClick={() => handleExpandAllColumns(columndata)} 
-                        color={`${isColumnsExpanded ? "primary" : ""}`} >
-                        </Icon>
-                        <Icon name="share" className="ui5-icon-styles" onClick={()=>{handleSwap()}} ></Icon>
-                        </div>
-                      </th>
-                      {isSwapped
-                        ? prepareThead(rowdata)
-                        : prepareThead(columndata)}
-                      {/* {columndata?.YEAR.map((col1) => {
+                        color={`${isRowsExpanded ? "primary" : " "}`}
+                        onClick={() => handleExpandAllRows(rowdata)}></Icon>
+                      <Icon
+                        name="process"
+                        className="ui5-icon-styles"
+                        onClick={() => handleExpandAllColumns(columndata)}
+                        color={`${isColumnsExpanded ? "primary" : ""}`}></Icon>
+                      <Icon
+                        name="share"
+                        className="ui5-icon-styles"
+                        onClick={() => {
+                          handleSwap();
+                        }}></Icon>
+                    </div>
+                  </th>
+                  {isSwapped ? prepareThead(rowdata) : prepareThead(columndata)}
+                  {/* {columndata?.YEAR.map((col1) => {
                         return (
                           <>
                             {expandedColumns1.includes(col1) ? (
@@ -507,60 +554,62 @@ function PivotTable(props) {
                           </>
                         );
                       })} */}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rowdata && rowdata[Object.keys(rowdata)[0]].map((record, i) => {
-                      return (
-                        <>
-                          <tr className="row-tr">
-                            <td className="td">
-                              <div className="department-td">
-                                {expandedRows1.includes(record) ? (
-                                  <Icon name="navigation-down-arrow"
-                                    onClick={() => {
-                                      handleRow1Click(record);
-                                    }}
-                                    className="ui5-icon-styles"
-                                  ></Icon>
-                                ) : (
-                                  <Icon
-                                    name="navigation-right-arrow"
-                                    onClick={() => {
-                                      handleRow1Click(record);
-                                    }}
-                                    className="ui5-icon-styles"
-                                  ></Icon>
-                                )}
-                                <span>{record.label}</span>
-                              </div>
-                            </td>
-                            {record.columns.YEAR.map((col1,index) => {
-                              // condition that we clicked the correct year
-                              return (
-                                <>
-                                  {expandedColumns1
-                                    .map((col) => col.value)
-                                    .includes(col1.value) &&
-                                    renderColumn2Rows(col1)}
+                </tr>
+              </thead>
+              <tbody>
+                {rowdata && rowdata[Object.keys(rowdata)[0]].map((record, i) => {
+                    let rowStyles = stylesRef.current?.rows.find(
+                      (obj) => obj.name === Object.keys(rowdata)[0]
+                    ).style;
+                    return (
+                      <>
+                        <tr style={rowStyles} className="row-tr">
+                          <td  style={{...rowStyles,border:"none !important"}} className="td">
+                            <div style={{...rowStyles,border:"none !important"}} className="department-td">
+                              {expandedRows1.includes(record) ? (
+                                <Icon
+                                  name="navigation-down-arrow"
+                                  onClick={() => {
+                                    handleRow1Click(record);
+                                  }}
+                                  className="ui5-icon-styles"></Icon>
+                              ) : (
+                                <Icon
+                                  name="navigation-right-arrow"
+                                  onClick={() => {
+                                    handleRow1Click(record);
+                                  }}
+                                  className="ui5-icon-styles"></Icon>
+                              )}
+                              <span>{record.label}</span>
+                            </div>
+                          </td>
+                          {record.columns.YEAR.map((col1, index) => {
+                            // condition that we clicked the correct year
+                            return (
+                              <>
+                                {expandedColumns1
+                                  .map((col) => col.value)
+                                  .includes(col1.value) &&
+                                  renderColumn2Rows(col1)}
 
-                                  {expandedColumns1
-                                    .map((col) => col.value)
-                                    .includes(col1.value) ? null : (
-                                    <td className="td"></td>
-                                  )}
-                                </>
-                              );
-                            })}
-                          </tr>
-                          {expandedRows1.includes(record) && renderRow2(record)}
-                        </>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                                {expandedColumns1
+                                  .map((col) => col.value)
+                                  .includes(col1.value) ? null : (
+                                  <td className="td"></td>
+                                )}
+                              </>
+                            );
+                          })}
+                        </tr>
+                        {expandedRows1.includes(record) && renderRow2(record)}
+                      </>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </>
   );

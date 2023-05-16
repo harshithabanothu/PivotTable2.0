@@ -70,7 +70,7 @@ tr:nth-child(odd) {
 
 tr:nth-child(even) {
  
-  background-color: #BACDDB;
+  background-color: #F5F5F5;
 }
 /* th{
   outline: 0.2px solid rgba(137, 131, 131, 0.4);
@@ -161,7 +161,7 @@ tr:nth-child(even) {
 .columns-flex {
   display: flex;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   /* border-bottom: 0.5px solid grey; */
   height: 30px;
   /* margin-top:18px; */

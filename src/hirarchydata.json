@@ -1,0 +1,106 @@
+{
+    "rows": [
+        {
+            "name": "EMPID",
+            "style": {
+                "fontFamily": "Cursive",
+                "fontSize": "11px",
+                "fontWeight": "bold",
+                "fontStyle": "",
+                "textDecoration": "",
+                "textVerticalAlignment": "",
+                "textalign": "",
+                "color": "#0a0909",
+                "backgroundColor": "#A9A9A9",
+                "borderWidth": "1px",
+                "borderStyle": "solid",
+                "borderColor": "#6bcfd5",
+                "cellPadding": "",
+                "textAlignment": "end",
+                "borders": [
+                    "horizontal"
+                ],
+                "borderTop": "1px solid #6bcfd5",
+                "borderBottom": "1px solid #6bcfd5"
+            }
+        }
+    ],
+    "columns": [
+        {
+            "name": "YEAR",
+            "style": {
+                "fontFamily": "Charcoal",
+                "fontSize": "13px",
+                "fontWeight": "bold",
+                "fontStyle": "italic",
+                "textDecoration": "",
+                "textVerticalAlignment": "center",
+                "textalign": "",
+                "color": "#130000",
+                "backgroundColor": "#807973",
+                "borderLeft": "1px solid #000000",
+                "borderRight": "1px solid #000000",
+                "borderWidth": "1px",
+                "borderStyle": "solid",
+                "borderColor": "#000000",
+                "cellPadding": "",
+                "textAlignment": "center",
+                "borders": [
+                    "vertical",
+                    "horizontal"
+                ],
+                "borderTop": "1px solid #000000",
+                "borderBottom": "1px solid #000000"
+            }
+        },
+        {
+            "name": "QUTR",
+            "style": {
+                "fontFamily": "Cursive",
+                "fontSize": "11px",
+                "fontWeight": "bold",
+                "fontStyle": "",
+                "textDecoration": "",
+                "textVerticalAlignment": "",
+                "textalign": "",
+                "color": "#0a0909",
+                "backgroundColor": "#948e8e",
+                "borderWidth": "1px",
+                "borderStyle": "solid",
+                "borderColor": "#6bcfd5",
+                "cellPadding": "",
+                "textAlignment": "end",
+                "borders": [
+                    "horizontal"
+                ],
+                "borderTop": "1px solid #6bcfd5",
+                "borderBottom": "1px solid #6bcfd5"
+            }
+        },
+        {
+            "name": "MONTH",
+            "style": {
+                "fontFamily": "Helvetica",
+                "fontSize": "9px",
+                "fontWeight": "bold",
+                "fontStyle": "",
+                "textDecoration": "",
+                "textVerticalAlignment": "",
+                "textalign": "",
+                "color": "#131010",
+                "backgroundColor": "#e1d9e0",
+                "borderLeft": "1px solid #2f2d3d",
+                "borderRight": "1px solid #2f2d3d",
+                "borderWidth": "1px",
+                "borderStyle": "solid",
+                "borderColor": "#2f2d3d",
+                "cellPadding": "",
+                "textAlignment": "end",
+                "borders": [
+                    "vertical"
+                ]
+            }
+        }
+    ],
+    "cells": []
+}

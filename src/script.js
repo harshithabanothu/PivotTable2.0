@@ -53,6 +53,7 @@ const prepareColumnChildElement = (record, obj, node, columnHeir) => {
     obj.push({
       value: record[node.KEY],
       aggrValue: 0,
+      key : node.KEY,
     });
     if (node.KEY == "QUTR") {
       obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
