@@ -216,9 +216,9 @@ function PivotTable(props) {
     return newArr?.map((record) => {
       return (
         <>
-          <tr className="row-tr">
-            <td className="td">
-              <div className="batch-items-flex">
+          <tr  className="row-tr">
+            <td  className="td">
+              <div  className="batch-items-flex">
                 <span className="marginleft">{record.label}</span>
               </div>
             </td>
@@ -245,13 +245,18 @@ function PivotTable(props) {
 
   const renderRow2 = (row2Array) => {
     const { label, columns, ...rest } = row2Array;
+    console.log(row2Array,rest)
     const newArr = Object.values(rest).map((arr) => arr[0]);
+    console.log(newArr)
     return newArr.map((record) => {
+      let rowchildstyles= stylesRef.current?.rows.find(
+        (obj) => obj.name === record.key
+      ).style;
       return (
         <>
-          <tr className="row-tr">
-            <td className="td">
-              <div className="class-items-flex">
+          <tr style={rowchildstyles} className="row-tr">
+            <td  style={rowchildstyles} className="td">
+              <div  style={rowchildstyles} className="class-items-flex">
                 {Object.keys(record).length > 2 &&
                   (expandedRows2.includes(record) ? (
                     <Icon
@@ -268,7 +273,7 @@ function PivotTable(props) {
                       }}
                       className="ui5-icon-styles"></Icon>
                   ))}
-                <span
+                <span   style={rowchildstyles}
                   className={`${
                     Object.keys(record).length > 2 ? "" : "marginleft"
                   }`}>
