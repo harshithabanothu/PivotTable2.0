@@ -136,7 +136,6 @@ const prepareRowChildElement = (
       obj.push({
         label: record[node.KEY],
         columns: JSON.parse(JSON.stringify(columns)),
-        // key :node.KEY
       });
     } else {
       obj.push({

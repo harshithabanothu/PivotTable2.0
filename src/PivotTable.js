@@ -27,7 +27,7 @@ function PivotTable(props) {
   const stylesRef = useRef(hireData);
 
   const rowdata = data.ROWS;
-  console.log(rowdata)
+  console.log(rowdata);
   const columndata = data.COLUMNS;
   // const styles=hireData.columns.find((obj)=>obj.name).style
 
@@ -115,21 +115,25 @@ function PivotTable(props) {
   // };
 
   //render functions for expanded rows display
-  const renderColumn3Rows = (column3) => {
+  const renderColumn3Rows = (column3,selectedrow) => {
     let totalValue = 0;
+    let columnMonthcellstyles
     return (
       <>
         {column3.map((col3) => {
+            columnMonthcellstyles = stylesRef.current?.cells.find(
+            (obj) => (obj.column === col3.key && obj.row=== selectedrow)
+          )?.style;
           totalValue = totalValue + col3.aggrValue;
           return (
-            <td className="td">
+            <td className="td" style={columnMonthcellstyles}>
               <span className="td-cells-padding">
                 {col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}
               </span>
             </td>
           );
         })}
-        <td className="td">
+        <td className="td" style={columnMonthcellstyles}>
           <span className="td-cells-padding">
             {totalValue == 0 ? " " : handleNumFormater(totalValue)}
           </span>
@@ -150,19 +154,29 @@ function PivotTable(props) {
       .includes(column2.value);
   };
 
-  const renderColumn2Rows = (column1) => {
+  const renderColumn2Rows = (column1,selectedrow) => {
+    // console.log(column1)
+    // const {value,aggrValue,key,...rest}=column1
+    // const newArr = Object.values(rest).map((arr) => arr[0]);
+    // console.log(newArr)
     const columns2 = column1.QUTR;
+    console.log(columns2)
     let totalValue = 0;
+    let columnQutrcellstyles
     return (
       <>
         {columns2.map((column2, index) => {
+           columnQutrcellstyles = stylesRef.current?.cells.find(
+            (obj) => (obj.column === column2.key && obj.row=== selectedrow)
+          )?.style;
+          console.log(column2)
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
               {checkColumn3Condition(column2, column1.value) ? (
-                renderColumn3Rows(column2.MONTH)
+                renderColumn3Rows(column2.MONTH,selectedrow)
               ) : (
-                <td className="td">
+                <td className="td" style={columnQutrcellstyles}>
                   <span className="td-cells-padding">
                     {column2.aggrValue == 0
                       ? ""
@@ -173,7 +187,7 @@ function PivotTable(props) {
             </>
           );
         })}
-        <td className="td">
+        <td className="td" style={columnQutrcellstyles}>
           <span className="td-cells-padding">
             {totalValue == 0 ? "" : handleNumFormater(totalValue)}
           </span>
@@ -211,32 +225,50 @@ function PivotTable(props) {
   // };
 
   const renderRow3 = (row3Array) => {
-    const { label, columns, ...rest } = row3Array;
+    const { label, key, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
     return newArr?.map((record) => {
+      let rowsubchildstyles = stylesRef.current?.rows.find(
+        (obj) => obj.name === record.key
+      )?.style;
+
       return (
         <>
-          <tr  className="row-tr">
-            <td  className="td">
-              <div  className="batch-items-flex">
-                <span className="marginleft">{record.label}</span>
+          <tr style={rowsubchildstyles} className="row-tr">
+            <td style={rowsubchildstyles} className="td batch-items-flex ">
+              <div
+                style={{
+                  ...rowsubchildstyles,
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: `${rowsubchildstyles?.textVerticalAlignment}`,
+                  justifyContent: `${rowsubchildstyles?.textAlignment}`,
+                }}
+                className="paddingleft">
+                {record.label}
               </div>
             </td>
-            {record.columns.YEAR.map((col1) => (
+            {record.columns[Object.keys(record.columns)[0]].map((col1) => {
+              let rowcellstyles = stylesRef.current?.cells.find(
+                (obj) => (obj.row===record.key && obj.column === col1.key)
+              )?.style;
+              return(
               <>
                 {expandedColumns1
                   .map((col) => col.value)
                   .includes(col1.value) ? (
-                  renderColumn2Rows(col1)
+                  renderColumn2Rows(col1,record.key)
                 ) : (
-                  <td className="td">
+                  <td className="td" style={rowcellstyles}>
                     <span className="td-cells-padding">
                       {handleNumFormater(col1.aggrValue)}
                     </span>
                   </td>
                 )}
               </>
-            ))}
+              )
+            })}
           </tr>
         </>
       );
@@ -244,58 +276,69 @@ function PivotTable(props) {
   };
 
   const renderRow2 = (row2Array) => {
-    const { label, columns, ...rest } = row2Array;
-    console.log(row2Array,rest)
+    const { label, columns, key, ...rest } = row2Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log(newArr)
+    console.log(newArr);
     return newArr.map((record) => {
-      let rowchildstyles= stylesRef.current?.rows.find(
+      let rowchildstyles = stylesRef.current?.rows.find(
         (obj) => obj.name === record.key
-      ).style;
+      )?.style;
       return (
         <>
           <tr style={rowchildstyles} className="row-tr">
-            <td  style={rowchildstyles} className="td">
-              <div  style={rowchildstyles} className="class-items-flex">
-                {Object.keys(record).length > 2 &&
-                  (expandedRows2.includes(record) ? (
-                    <Icon
-                      name="navigation-down-arrow"
-                      onClick={() => {
-                        handleRow2Click(record);
-                      }}
-                      className="ui5-icon-styles"></Icon>
-                  ) : (
-                    <Icon
-                      name="navigation-right-arrow"
-                      onClick={() => {
-                        handleRow2Click(record);
-                      }}
-                      className="ui5-icon-styles"></Icon>
-                  ))}
-                <span   style={rowchildstyles}
-                  className={`${
-                    Object.keys(record).length > 2 ? "" : "marginleft"
-                  }`}>
-                  {record.label}
-                </span>
+            <td className="td class-items-flex">
+              {Object.keys(record).length > 2 &&
+                (expandedRows2.includes(record) ? (
+                  <Icon
+                    name="navigation-down-arrow"
+                    onClick={() => {
+                      handleRow2Click(record);
+                    }}
+                    className="ui5-icon-styles"></Icon>
+                ) : (
+                  <Icon
+                    name="navigation-right-arrow"
+                    onClick={() => {
+                      handleRow2Click(record);
+                    }}
+                    className="ui5-icon-styles"></Icon>
+                ))}
+              <div
+                style={{
+                  ...rowchildstyles,
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: `${rowchildstyles?.textVerticalAlignment}`,
+                  justifyContent: `${rowchildstyles?.textAlignment}`,
+                }}
+                className={`${
+                  Object.keys(record).length > 2 ? "" : "marginleft"
+                }`}>
+                {record.label}
               </div>
             </td>
-            {record.columns.YEAR.map((col1) => (
+            {record.columns[Object.keys(record.columns)[0]].map((col1) => {
+              console.log(col1)
+                 let rowcellstyles = stylesRef.current?.cells.find(
+                  (obj) => (obj.row===record.key && obj.column === col1.key)
+                )?.style;
+              return(
               <>
                 {expandedColumns1
                   .map((col) => col.value)
                   .includes(col1.value) ? (
-                  renderColumn2Rows(col1)
+                  renderColumn2Rows(col1,record.key)
                 ) : (
-                  <td className="td">
+                  <td className="td" style={rowcellstyles}>
                     <span className="td-cells-padding">
                       {handleNumFormater(col1.aggrValue)}
                     </span>
                   </td>
                 )}
               </>
-            ))}
+              )
+    })}
           </tr>
           {expandedRows2.includes(record) && renderRow3(record)}
         </>
@@ -333,7 +376,7 @@ function PivotTable(props) {
     const col2 = col2Data[i].label;
     let st3 = stylesRef.current?.columns.find(
       (obj) => obj.name === column3Array[0].key
-    ).style;
+    )?.style;
     return (
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
       <div style={st2} className="sub-column-th border-right">
@@ -376,7 +419,7 @@ function PivotTable(props) {
     );
     let st2 = stylesRef.current?.columns.find(
       (obj) => obj.name === column2Array[0].key
-    ).style;
+    )?.style;
     return (
       <th
         style={styles}
@@ -394,15 +437,17 @@ function PivotTable(props) {
               handleColumn1Click(col1);
             }}
             className="ui5-icon-styles"></Icon>
-          <div 
-           style={{
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            alignItems: `${styles.textVerticalAlignment}`,
-            justifyContent: `${styles.textAlignment}`,
-          }}
-          className="expanded-year">{column1}</div>
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              alignItems: `${styles.textVerticalAlignment}`,
+              justifyContent: `${styles.textAlignment}`,
+            }}
+            className="expanded-year">
+            {column1}
+          </div>
         </div>
         <div className="flex">
           {column2Array.map((col2val, i) => {
@@ -426,15 +471,17 @@ function PivotTable(props) {
                           handleColumn2Click(col2val);
                         }}
                         className="ui5-icon-styles"></Icon>
-                      <div  
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        display: "flex",
-                        alignItems: `${st2.textVerticalAlignment}`,
-                        justifyContent: `${st2.textAlignment}`,
-                      }} 
-                      className="expanded-year">{col2val.label}</div>
+                      <div
+                        style={{
+                          height: "100%",
+                          width: "100%",
+                          display: "flex",
+                          alignItems: `${st2?.textVerticalAlignment}`,
+                          justifyContent: `${st2?.textAlignment}`,
+                        }}
+                        className="expanded-year">
+                        {col2val.label}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -458,7 +505,7 @@ function PivotTable(props) {
     let key = Object.keys(tableData)[0];
     let styles = stylesRef.current?.columns.find(
       (obj) => obj.name === key
-    ).style;
+    )?.style;
     return (
       <>
         {tableData[key].map((col1) => {
@@ -562,50 +609,62 @@ function PivotTable(props) {
                 </tr>
               </thead>
               <tbody>
-                {rowdata && rowdata[Object.keys(rowdata)[0]].map((record, i) => {
-                    let rowStyles = stylesRef.current?.rows.find(
+                {rowdata &&
+                  rowdata[Object.keys(rowdata)[0]].map((record, i) => {
+                     let rowStyles = stylesRef.current?.rows.find(
                       (obj) => obj.name === Object.keys(rowdata)[0]
-                    ).style;
+                    )?.style;
                     return (
                       <>
                         <tr style={rowStyles} className="row-tr">
-                          <td  style={{...rowStyles,border:"none !important"}} className="td">
-                            <div style={{...rowStyles,border:"none !important"}} className="department-td">
-                              {expandedRows1.includes(record) ? (
-                                <Icon
-                                  name="navigation-down-arrow"
-                                  onClick={() => {
-                                    handleRow1Click(record);
-                                  }}
-                                  className="ui5-icon-styles"></Icon>
-                              ) : (
-                                <Icon
-                                  name="navigation-right-arrow"
-                                  onClick={() => {
-                                    handleRow1Click(record);
-                                  }}
-                                  className="ui5-icon-styles"></Icon>
-                              )}
-                              <span>{record.label}</span>
+                          <td
+                            style={{ ...rowStyles, border: "none !important" }}
+                            className="td department-td">
+                            {expandedRows1.includes(record) ? (
+                              <Icon
+                                name="navigation-down-arrow"
+                                onClick={() => {
+                                  handleRow1Click(record);
+                                }}
+                                className="ui5-icon-styles"></Icon>
+                            ) : (
+                              <Icon
+                                name="navigation-right-arrow"
+                                onClick={() => {
+                                  handleRow1Click(record);
+                                }}
+                                className="ui5-icon-styles"></Icon>
+                            )}
+                            <div
+                              style={{
+                                height: "100%",
+                                width: "100%",
+                                display: "flex",
+                                alignItems: `${rowStyles?.textVerticalAlignment}`,
+                                justifyContent: `${rowStyles?.textAlignment}`,
+                              }}>
+                              {record.label}
                             </div>
                           </td>
-                          {record.columns.YEAR.map((col1, index) => {
-                            // condition that we clicked the correct year
-                            return (
-                              <>
-                                {expandedColumns1
-                                  .map((col) => col.value)
-                                  .includes(col1.value) &&
-                                  renderColumn2Rows(col1)}
+                          {record.columns[Object.keys(record.columns)[0]].map(
+                            (col1, index) => {
+                              // condition that we clicked the correct year
+                              return (
+                                <>
+                                  {expandedColumns1
+                                    .map((col) => col.value)
+                                    .includes(col1.value) &&
+                                    renderColumn2Rows(col1)}
 
-                                {expandedColumns1
-                                  .map((col) => col.value)
-                                  .includes(col1.value) ? null : (
-                                  <td className="td"></td>
-                                )}
-                              </>
-                            );
-                          })}
+                                  {expandedColumns1
+                                    .map((col) => col.value)
+                                    .includes(col1.value) ? null : (
+                                    <td className="td"></td>
+                                  )}
+                                </>
+                              );
+                            }
+                          )}
                         </tr>
                         {expandedRows1.includes(record) && renderRow2(record)}
                       </>
