@@ -155,10 +155,6 @@ function PivotTable(props) {
   };
 
   const renderColumn2Rows = (column1, selectedrow) => {
-    // console.log(column1)
-    // const {value,aggrValue,key,...rest}=column1
-    // const newArr = Object.values(rest).map((arr) => arr[0]);
-    // console.log(newArr)
     const columns2 = column1.QUTR;
     console.log(columns2);
     let totalValue = 0;
@@ -390,15 +386,18 @@ function PivotTable(props) {
 
   //render functions for columns section
 
-  const renderColumn3 = (col2Data, st2, i) => {
+  const renderColumn3 = (col2Data,i,styles) => {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     let st3 = stylesRef.current?.columns.find(
       (obj) => obj.name === column3Array[0].key
     )?.style;
+    let cellStyles3 = stylesRef.current?.cells.find(
+      (obj) =>(obj.row ==="" && obj.column === column3Array[0].key)
+    )?.style;
     return (
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
-      <div style={st2} className="sub-column-th border-right">
+      <div style={styles} className="sub-column-th border-right">
         <div className="display-flex border-bottom height-30">
           <Icon
             name="navigation-down-arrow"
@@ -413,19 +412,19 @@ function PivotTable(props) {
             //  let style3=stylesRef.current?.columns.find((obj)=>obj.name=== col3val.key).style
             return (
               // className={`sub-column-th  ${i == column3Array.length - 1 ? "" : "border-right"}`}
-              <div style={st3} className="sub-column-th border-right">
+              <div style={cellStyles3 === undefined ? st3 : cellStyles3} className="sub-column-th border-right">
                 <div className=" height-30 displayFlex">{col3val.label}</div>
               </div>
             );
           })}
-          <div style={st3} className="sub-column-th">
+          <div style={cellStyles3 === undefined ? st3 : cellStyles3} className="sub-column-th">
             <div className=" height-30 displayFlex">Total</div>
           </div>
         </div>
       </div>
     );
   };
-  const renderColumn2 = (col1, styles) => {
+  const renderColumn2 = (col1,styles) => {
     const column2Array = col1.QUTR;
     console.log(col1);
     console.log(column2Array);
@@ -438,6 +437,9 @@ function PivotTable(props) {
     );
     let st2 = stylesRef.current?.columns.find(
       (obj) => obj.name === column2Array[0].key
+    )?.style;
+    let cellStyles2 = stylesRef.current?.cells.find(
+      (obj) => (obj.row === "" && obj.column === column2Array[0].key)
     )?.style;
     return (
       <th
@@ -473,10 +475,10 @@ function PivotTable(props) {
             return (
               <>
                 {expandedColumns2.includes(col2val) ? (
-                  renderColumn3(column2Array, st2, i)
+                  renderColumn3(column2Array,i,cellStyles2==undefined ?st2:cellStyles2)
                 ) : (
                   // ${i == column2Array.length - 1 ? "" : "border-right"}
-                  <div style={st2} className="sub-column-th border-right">
+                  <div style={cellStyles2==undefined ?st2:cellStyles2} className="sub-column-th border-right">
                     <div
                       className={`columns-flex ${
                         expandedColumns2.length != 0 &&
@@ -508,7 +510,7 @@ function PivotTable(props) {
             );
           })}
           <div
-            style={st2}
+            style={cellStyles2==undefined ?st2:cellStyles2}
             className={`sub-column-th columns-flex ${
               expandedColumns2.length != 0 ? "height-60" : "height-30"
             }`}>
@@ -534,7 +536,7 @@ function PivotTable(props) {
           return (
             <>
               {expandedColumns1.includes(col1) ? (
-                renderColumn2(col1, styles)
+                renderColumn2(col1,cellStyles==undefined ? styles:cellStyles)
               ) : (
                 <th style={cellStyles == undefined ? styles : cellStyles}>
                   <div
