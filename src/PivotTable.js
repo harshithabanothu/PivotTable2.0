@@ -295,7 +295,7 @@ function PivotTable(props) {
             style={rowcellStyles == undefined ? rowchildstyles : rowcellStyles}
             className="row-tr">
             <td style={rowcellStyles} className="td class-items-flex">
-              {Object.keys(record).length > 2 &&
+              {Object.keys(record).length > 3 &&
                 (expandedRows2.includes(record) ? (
                   <Icon
                     name="navigation-down-arrow"
