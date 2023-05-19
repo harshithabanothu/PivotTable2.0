@@ -155,20 +155,15 @@ function PivotTable(props) {
       .includes(column2.value);
   };
 
-  const renderColumn2Rows = (column1, selectedrow) => {
+  const renderColumn2Rows = (column1, selectedrow, parentColStyles) => {
     const columns2 = column1.QUTR;
-    console.log(columns2);
     let totalValue = 0;
-    let columnQutrcellstyles;
-    let colStyles;
+    let columnQutrcellstyles, colStyles;
     return (
       <>
         {columns2.map((column2, index) => {
-          columnQutrcellstyles = stylesRef.current?.cells.find(
-            (obj) => obj.column === column2.key && obj.row === selectedrow
-          )?.style;
+          columnQutrcellstyles = stylesRef.current?.cells.find((obj) => obj.column === column2.key && obj.row === selectedrow)?.style;
           colStyles = stylesRef.current?.columns.find((obj) => obj.name === column2.key)?.style;
-          console.log(column2);
           totalValue = totalValue + parseInt(column2.aggrValue);
           return (
             <>
@@ -255,6 +250,9 @@ function PivotTable(props) {
               let rowcellstyles = stylesRef.current?.cells.find(
                 (obj) => obj.row === record.key && obj.column === col1.key
               )?.style;
+              let colstyles = stylesRef.current?.columns.find(
+                (obj) => obj.name === col1.key
+              )?.style;
               return (
                 <>
                   {expandedColumns1
@@ -262,7 +260,7 @@ function PivotTable(props) {
                     .includes(col1.value) ? (
                     renderColumn2Rows(col1, record.key)
                   ) : (
-                    <td className="td" style={rowcellstyles}>
+                    <td className="td" style={rowcellstyles == undefined ? colstyles : rowcellstyles}>
                       <span className="td-cells-padding">
                         {handleNumFormater(col1.aggrValue)}
                       </span>
@@ -282,17 +280,14 @@ function PivotTable(props) {
     const newArr = Object.values(rest).map((arr) => arr[0]);
     console.log(newArr);
     return newArr.map((record) => {
-      let rowchildstyles = stylesRef.current?.rows.find(
-        (obj) => obj.name === record.key
-      )?.style;
-      let rowcellStyles = stylesRef.current?.cells.find(
-        (obj) => ((obj.row === record.key) && (obj.column === "")))?.style;
+      let rowchildstyles = stylesRef.current?.rows.find((obj) => obj.name === record.key)?.style;
+      let rowcellStyles = stylesRef.current?.cells.find((obj) => ((obj.row === record.key) && (obj.column === "")))?.style;
       return (
         <>
           <tr
-            style={rowcellStyles == undefined ? rowchildstyles : rowcellStyles}
+            style={rowchildstyles}
             className="row-tr">
-            <td style={rowcellStyles == undefined ? rowchildstyles : rowcellStyles} className="td class-items-flex">
+            <td style={(rowcellStyles == undefined ? rowchildstyles : rowcellStyles)} className="td class-items-flex">
               {Object.keys(record).length > 3 &&
                 (expandedRows2.includes(record) ? (
                   <Icon
@@ -327,6 +322,7 @@ function PivotTable(props) {
                     : rowcellStyles
                   )?.textAlignment
                     }`,
+                  paddingLeft: `${Object.keys(record).length > 3 ? "" : "15px"}`
                 }}
                 className={`${Object.keys(record).length > 2 ? "" : "marginleft"
                   }`}>
@@ -334,10 +330,8 @@ function PivotTable(props) {
               </div>
             </td>
             {record.columns[Object.keys(record.columns)[0]].map((col1) => {
-              console.log(col1);
-              let rowcellstyles = stylesRef.current?.cells.find(
-                (obj) => obj.row === record.key && obj.column === col1.key
-              )?.style;
+              let rowcellstyles = stylesRef.current?.cells.find((obj) => obj.row === record.key && obj.column === col1.key)?.style;
+              let colstyles = stylesRef.current?.columns.find((obj) => obj.name === col1.key)?.style;
               return (
                 <>
                   {expandedColumns1
@@ -345,7 +339,7 @@ function PivotTable(props) {
                     .includes(col1.value) ? (
                     renderColumn2Rows(col1, record.key)
                   ) : (
-                    <td className="td" style={rowcellstyles}>
+                    <td className="td" style={rowcellstyles == undefined ? colstyles : rowcellstyles}>
                       <span className="td-cells-padding">
                         {handleNumFormater(col1.aggrValue)}
                       </span>
@@ -386,14 +380,14 @@ function PivotTable(props) {
 
   //render functions for columns section
 
-  const renderColumn3 = (col2Data,i,styles) => {
+  const renderColumn3 = (col2Data, i, styles) => {
     const column3Array = col2Data[i].MONTH;
     const col2 = col2Data[i].label;
     let st3 = stylesRef.current?.columns.find(
       (obj) => obj.name === column3Array[0].key
     )?.style;
     let cellStyles3 = stylesRef.current?.cells.find(
-      (obj) =>(obj.row ==="" && obj.column === column3Array[0].key)
+      (obj) => (obj.row === "" && obj.column === column3Array[0].key)
     )?.style;
     return (
       // {`sub-column-th ${i == col2Data.length - 1 ? "" : "border-right"}`}
@@ -424,7 +418,7 @@ function PivotTable(props) {
       </div>
     );
   };
-  const renderColumn2 = (col1,styles) => {
+  const renderColumn2 = (col1, styles) => {
     const column2Array = col1.QUTR;
     console.log(col1);
     console.log(column2Array);
@@ -475,10 +469,10 @@ function PivotTable(props) {
             return (
               <>
                 {expandedColumns2.includes(col2val) ? (
-                  renderColumn3(column2Array,i,cellStyles2==undefined ?st2:cellStyles2)
+                  renderColumn3(column2Array, i, cellStyles2 == undefined ? st2 : cellStyles2)
                 ) : (
                   // ${i == column2Array.length - 1 ? "" : "border-right"}
-                  <div style={cellStyles2==undefined ?st2:cellStyles2} className="sub-column-th border-right">
+                  <div style={cellStyles2 == undefined ? st2 : cellStyles2} className="sub-column-th border-right">
                     <div
                       className={`columns-flex ${expandedColumns2.length != 0 &&
                         !expandedColumns2.includes(col2val)
@@ -496,8 +490,8 @@ function PivotTable(props) {
                           height: "100%",
                           width: "100%",
                           display: "flex",
-                          alignItems: `${st2?.textVerticalAlignment}`,
-                          justifyContent: `${st2?.textAlignment}`,
+                          alignItems: `${cellStyles2?.textVerticalAlignment}`,
+                          justifyContent: `${cellStyles2?.textAlignment}`,
                         }}
                         className="expanded-year">
                         {col2val.label}
@@ -509,10 +503,9 @@ function PivotTable(props) {
             );
           })}
           <div
-            style={cellStyles2==undefined ?st2:cellStyles2}
-            className={`sub-column-th columns-flex ${
-              expandedColumns2.length != 0 ? "height-60" : "height-30"
-            }`}>
+            style={cellStyles2 == undefined ? st2 : cellStyles2}
+            className={`sub-column-th columns-flex ${expandedColumns2.length != 0 ? "height-60" : "height-30"
+              }`}>
             <span className="expanded-year marginleft">Total</span>
           </div>
         </div>
@@ -535,7 +528,7 @@ function PivotTable(props) {
           return (
             <>
               {expandedColumns1.includes(col1) ? (
-                renderColumn2(col1,cellStyles==undefined ? styles:cellStyles)
+                renderColumn2(col1, cellStyles == undefined ? styles : cellStyles)
               ) : (
                 <th style={cellStyles == undefined ? styles : cellStyles}>
                   <div
@@ -683,12 +676,7 @@ function PivotTable(props) {
                                 <>
                                   {expandedColumns1
                                     .map((col) => col.value)
-                                    .includes(col1.value) &&
-                                    renderColumn2Rows(col1)}
-
-                                  {expandedColumns1
-                                    .map((col) => col.value)
-                                    .includes(col1.value) ? null : (
+                                    .includes(col1.value) ? renderColumn2Rows(col1,) : (
                                     <td style={columnStyles} className="td"></td>
                                   )}
                                 </>

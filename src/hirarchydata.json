@@ -1,318 +1,214 @@
 {
   "rows": [
     {
-      "name": "HRA",
-
+      "name": "BPAY",
       "style": {
-        "fontFamily": "Calibri",
-
+        "fontFamily": "",
         "fontSize": "",
-
         "fontWeight": "",
-
         "fontStyle": "",
-
         "textDecoration": "",
-
-        "textAlignment": "",
-
-        "textVerticalAlignment": "",
-
-        "color": "#191919",
-
-        "backgroundColor": "#9edbb3",
-
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "#e5b2b2",
         "marginTop": "",
-
         "marginLeft": "",
-
         "marginRight": "",
-
         "marginBottom": "",
-
         "paddingTop": "",
-
         "paddingLeft": "",
-
         "paddingRight": "",
-
         "paddingBottom": "",
-
         "borderTop": "",
-
         "borderLeft": "",
-
         "borderRight": "",
-
         "borderBottom": "",
-
         "borderWidth": "",
-
         "borderStyle": "",
-
         "borderColor": ""
       }
     }
   ],
-
   "columns": [
     {
       "name": "YEAR",
-
       "style": {
         "fontFamily": "",
-
         "fontSize": "",
-
         "fontWeight": "",
-
         "fontStyle": "",
-
         "textDecoration": "",
-
-        "textAlignment": "",
-
-        "textVerticalAlignment": "",
-
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
         "color": "",
-
-        "backgroundColor": "#fcc4c4",
-
+        "backgroundColor": "#aedae9",
         "marginTop": "",
-
         "marginLeft": "",
-
         "marginRight": "",
-
         "marginBottom": "",
-
         "paddingTop": "",
-
         "paddingLeft": "",
-
         "paddingRight": "",
-
         "paddingBottom": "",
-
         "borderTop": "",
-
         "borderLeft": "",
-
         "borderRight": "",
-
         "borderBottom": "",
-
         "borderWidth": "",
-
         "borderStyle": "",
-
+        "borderColor": ""
+      }
+    },
+    {
+      "name": "QUTR",
+      "style": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textDecoration": "",
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "#778899",
+        "marginTop": "",
+        "marginLeft": "",
+        "marginRight": "",
+        "marginBottom": "",
+        "paddingTop": "",
+        "paddingLeft": "",
+        "paddingRight": "",
+        "paddingBottom": "",
+        "borderTop": "",
+        "borderLeft": "",
+        "borderRight": "",
+        "borderBottom": "",
+        "borderWidth": "",
+        "borderStyle": "",
+        "borderColor": ""
+      }
+    },
+    {
+      "name": "MONTH",
+      "style": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textDecoration": "",
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "green",
+        "marginTop": "",
+        "marginLeft": "",
+        "marginRight": "",
+        "marginBottom": "",
+        "paddingTop": "",
+        "paddingLeft": "",
+        "paddingRight": "",
+        "paddingBottom": "",
+        "borderTop": "",
+        "borderLeft": "",
+        "borderRight": "",
+        "borderBottom": "",
+        "borderWidth": "",
+        "borderStyle": "",
         "borderColor": ""
       }
     }
   ],
-
   "cells": [
-
     {
-      "row": "PRFTAX",
-
-      "column": "",
-
-      "style": {
-        "fontFamily": "Courier",
-
-        "fontSize": "11px",
-
-        "fontWeight": "",
-
-        "fontStyle": "italic",
-
-        "textDecoration": "",
-
-        "textAlignment": "",
-
-        "textVerticalAlignment": "",
-
-        "color": "#141313",
-
-        "backgroundColor": "#ccf1f9",
-
-        "marginTop": "",
-
-        "marginLeft": "",
-
-        "marginRight": "",
-
-        "marginBottom": "",
-
-        "paddingTop": "",
-
-        "paddingLeft": "",
-
-        "paddingRight": "",
-
-        "paddingBottom": "",
-
-        "borderTop": "",
-
-        "borderLeft": "",
-
-        "borderRight": "",
-
-        "borderBottom": "",
-
-        "borderWidth": "",
-
-        "borderStyle": "",
-
-        "borderColor": ""
-      }
-    },
-
-    {
-      "row": "LTA",
-
+      "row": "",
       "column": "QUTR",
-
       "style": {
-        "fontFamily": "Cursive",
-
+        "fontFamily": "",
         "fontSize": "",
-
         "fontWeight": "",
-
         "fontStyle": "",
-
         "textDecoration": "",
-
-        "textAlignment": "",
-
-        "textVerticalAlignment": "",
-
-        "color": "#bb3e45",
-
-        "backgroundColor": "#d5db04",
-
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "#85d2df",
         "marginTop": "",
-
         "marginLeft": "",
-
         "marginRight": "",
-
         "marginBottom": "",
-
         "paddingTop": "",
-
         "paddingLeft": "",
-
         "paddingRight": "",
-
         "paddingBottom": "",
-
         "borderTop": "",
-
         "borderLeft": "",
-
         "borderRight": "",
-
         "borderBottom": "",
-
         "borderWidth": "",
-
         "borderStyle": "",
-
         "borderColor": ""
       }
     },
     {
-        "row": "",
-        "column": "YEAR",
-        "style": {
-            "fontFamily": "Book Antiqua",
-            "fontSize": "",
-            "fontWeight": "",
-            "fontStyle": "italic",
-            "textDecoration": "",
-            "textAlignment": "end",
-            "textVerticalAlignment": "center",
-            "color": "",
-            "backgroundColor": "#bed7e8",
-            "marginTop": "",
-            "marginLeft": "",
-            "marginRight": "",
-            "marginBottom": "",
-            "paddingTop": "",
-            "paddingLeft": "",
-            "paddingRight": "",
-            "paddingBottom": "",
-            "borderTop": "",
-            "borderLeft": "",
-            "borderRight": "",
-            "borderBottom": "",
-            "borderWidth": "",
-            "borderStyle": "",
-            "borderColor": ""
-        }
+      "row": "",
+      "column": "MONTH",
+      "style": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textDecoration": "",
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "blue",
+        "marginTop": "",
+        "marginLeft": "",
+        "marginRight": "",
+        "marginBottom": "",
+        "paddingTop": "",
+        "paddingLeft": "",
+        "paddingRight": "",
+        "paddingBottom": "",
+        "borderTop": "",
+        "borderLeft": "",
+        "borderRight": "",
+        "borderBottom": "",
+        "borderWidth": "",
+        "borderStyle": "",
+        "borderColor": ""
+      }
     },
     {
-        "row": "",
-        "column": "QUTR",
-        "style": {
-            "fontFamily": "Charcoal",
-            "fontSize": "",
-            "fontWeight": "",
-            "fontStyle": "italic",
-            "textDecoration": "",
-            "textAlignment": "end",
-            "textVerticalAlignment": "center",
-            "color": "",
-            "backgroundColor": "#f7b4e3",
-            "marginTop": "",
-            "marginLeft": "",
-            "marginRight": "",
-            "marginBottom": "",
-            "paddingTop": "",
-            "paddingLeft": "",
-            "paddingRight": "",
-            "paddingBottom": "",
-            "borderTop": "",
-            "borderLeft": "",
-            "borderRight": "",
-            "borderBottom": "",
-            "borderWidth": "",
-            "borderStyle": "",
-            "borderColor": ""
-        }
-    },
-    {
-        "row": "",
-        "column": "MONTH",
-        "style": {
-            "fontFamily": "Cursive",
-            "fontSize": "",
-            "fontWeight": "bold",
-            "fontStyle": "",
-            "textDecoration": "",
-            "textAlignment": "start",
-            "textVerticalAlignment": "center",
-            "color": "",
-            "backgroundColor": "#a4eebe",
-            "marginTop": "",
-            "marginLeft": "",
-            "marginRight": "",
-            "marginBottom": "",
-            "paddingTop": "",
-            "paddingLeft": "",
-            "paddingRight": "",
-            "paddingBottom": "",
-            "borderTop": "",
-            "borderLeft": "",
-            "borderRight": "",
-            "borderBottom": "",
-            "borderWidth": "",
-            "borderStyle": "",
-            "borderColor": ""
-        }
+      "row": "FCOUP",
+      "column": "MONTH",
+      "style": {
+        "fontFamily": "",
+        "fontSize": "",
+        "fontWeight": "",
+        "fontStyle": "",
+        "textDecoration": "",
+        "textAlignment": "start",
+        "textVerticalAlignment": "center",
+        "color": "",
+        "backgroundColor": "#cec4c4",
+        "marginTop": "",
+        "marginLeft": "",
+        "marginRight": "",
+        "marginBottom": "",
+        "paddingTop": "",
+        "paddingLeft": "",
+        "paddingRight": "",
+        "paddingBottom": "",
+        "borderTop": "",
+        "borderLeft": "",
+        "borderRight": "",
+        "borderBottom": "",
+        "borderWidth": "",
+        "borderStyle": "",
+        "borderColor": ""
+      }
     }
   ]
 }
