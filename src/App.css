@@ -197,7 +197,7 @@ tr:nth-child(even) {
 .class-items-flex {
   display: flex;
   align-items: center;
-  margin-left: 15px;
+  padding-left: 15px;
 }
 .class-items-flex .ui5-icon-styles{
   color:black !important;

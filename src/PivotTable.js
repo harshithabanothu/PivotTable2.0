@@ -232,7 +232,7 @@ function PivotTable(props) {
         (obj) => obj.name === record.key
       )?.style;
       let rowcellStyles = stylesRef.current?.cells.find(
-        (obj) => obj.row === record.key
+        (obj) => (obj.row === record.key && obj.column == "")
       )?.style;
 
       return (
@@ -245,8 +245,8 @@ function PivotTable(props) {
                   height: "100%",
                   width: "100%",
                   display: "flex",
-                  alignItems: `${rowcellStyles ==undefined ? rowsubchildstyles?.textVerticalAlignment:rowcellStyles?.textVerticalAlignment}`,
-                  justifyContent: `${rowcellStyles ==undefined ? rowsubchildstyles?.textAlignment : rowcellStyles?.textAlignment}`,
+                  alignItems: `${rowcellStyles ==undefined ? (rowsubchildstyles?.textVerticalAlignment == "" ? "center":rowsubchildstyles?.textVerticalAlignment):(rowcellStyles?.textVerticalAlignment==""?"center":rowcellStyles?.textVerticalAlignment)}`,
+                  justifyContent: `${rowcellStyles ==undefined ? (rowsubchildstyles?.textAlignment==""? "start":rowsubchildstyles?.textAlignment) : (rowcellStyles?.textAlignment==""?"start":rowcellStyles?.textAlignment)}`,
                 }}
                 className="paddingleft">
                 {record.label}
@@ -287,14 +287,13 @@ function PivotTable(props) {
         (obj) => obj.name === record.key
       )?.style;
       let rowcellStyles = stylesRef.current?.cells.find(
-        (obj) => obj.row === record.key
-      )?.style;
+        (obj) => ((obj.row === record.key)&& (obj.column === "")))?.style;
       return (
         <>
           <tr
             style={rowcellStyles == undefined ? rowchildstyles : rowcellStyles}
             className="row-tr">
-            <td style={rowcellStyles} className="td class-items-flex">
+            <td style={rowcellStyles == undefined ? rowchildstyles : rowcellStyles} className="td class-items-flex">
               {Object.keys(record).length > 3 &&
                 (expandedRows2.includes(record) ? (
                   <Icon
@@ -526,6 +525,9 @@ function PivotTable(props) {
     let styles = stylesRef.current?.columns.find(
       (obj) => obj.name === key
     )?.style;
+    let cellStyles = stylesRef.current?.cells.find(
+      (obj) => (obj.row === "" && obj.column === key)
+    )?.style;
     return (
       <>
         {tableData[key].map((col1) => {
@@ -534,7 +536,7 @@ function PivotTable(props) {
               {expandedColumns1.includes(col1) ? (
                 renderColumn2(col1, styles)
               ) : (
-                <th style={styles}>
+                <th style={cellStyles == undefined ? styles : cellStyles}>
                   <div
                     className={`columns-flex ${
                       expandedColumns1.length != 0 &&
@@ -635,7 +637,7 @@ function PivotTable(props) {
                       (obj) => obj.name === Object.keys(rowdata)[0]
                     )?.style;
                     let rowcellStyles = stylesRef.current?.cells.find(
-                      (obj) => obj.row === Object.keys(rowdata)[0]
+                      (obj) => (obj.row === Object.keys(rowdata)[0] && obj.column === "" )
                     )?.style;
                     return (
                       <>
