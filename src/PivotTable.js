@@ -116,6 +116,7 @@ function PivotTable(props) {
 
   //render functions for expanded rows display
   const renderColumn3Rows = (column3, selectedrow) => {
+    
     let totalValue = 0;
     let columnMonthcellstyles, colStyles;
     return (
@@ -155,7 +156,7 @@ function PivotTable(props) {
       .includes(column2.value);
   };
 
-  const renderColumn2Rows = (column1, selectedrow, parentColStyles) => {
+  const renderColumn2Rows = (column1, selectedrow) => {
     const columns2 = column1.QUTR;
     let totalValue = 0;
     let columnQutrcellstyles, colStyles;
@@ -676,7 +677,7 @@ function PivotTable(props) {
                                 <>
                                   {expandedColumns1
                                     .map((col) => col.value)
-                                    .includes(col1.value) ? renderColumn2Rows(col1,) : (
+                                    .includes(col1.value) ? renderColumn2Rows(col1) : (
                                     <td style={columnStyles} className="td"></td>
                                   )}
                                 </>

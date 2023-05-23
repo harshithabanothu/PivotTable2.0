@@ -368,7 +368,8 @@ const prepareSwappedRowChildElement = (record, obj, node, rowHeir, columnHeir, c
     }
   } else {
     obj.push({
-      value: record[node.KEY]
+      value: record[node.KEY],
+      key:node.KEY
     });
     if (node.KEY == "QUTR") {
       obj[obj.length - 1].label = "Quarter " + obj[obj.length - 1].value;
