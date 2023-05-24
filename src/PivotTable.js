@@ -24,7 +24,7 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const stylesRef = useRef(hireData);
+  const stylesRef = useRef();
 
   const rowdata = data.ROWS;
   console.log(rowdata);
@@ -116,7 +116,7 @@ function PivotTable(props) {
 
   //render functions for expanded rows display
   const renderColumn3Rows = (column3, selectedrow) => {
-    
+
     let totalValue = 0;
     let columnMonthcellstyles, colStyles;
     return (
@@ -458,8 +458,8 @@ function PivotTable(props) {
               height: "100%",
               width: "100%",
               display: "flex",
-              alignItems: `${styles?.textVerticalAlignment}`,
-              justifyContent: `${styles?.textAlignment}`,
+              alignItems: `${styles?.textVerticalAlignment ? styles?.textVerticalAlignment : "center"}`,
+              justifyContent: `${styles?.textAlignment ? styles?.textAlignment : "start"}`,
             }}
             className="expanded-year">
             {column1}
@@ -551,8 +551,8 @@ function PivotTable(props) {
                         height: "100%",
                         width: "100%",
                         display: "flex",
-                        alignItems: `${styles?.textVerticalAlignment}`,
-                        justifyContent: `${styles?.textAlignment}`,
+                        alignItems: `${styles?.textVerticalAlignment ? styles?.textVerticalAlignment : "center"} `,
+                        justifyContent: `${styles?.textAlignment ? styles?.textAlignment : "start"}`,
                       }}>
                       {col1.value ?? col1.label}
                     </div>
