@@ -35,7 +35,7 @@ function SwappedPivotTable(props) {
     if (stylesRef && stylesRef.current && stylesRef.current[props]) {
       if (props == "cells") {
         if (key && key2) {
-          styles = stylesRef.current[props].find((obj) => obj.row === key && obj.column === key)?.style;
+          styles = stylesRef.current[props].find((obj) => obj.row === key && obj.column === key2)?.style;
 
         } else if (key) {
           styles = stylesRef.current[props].find((obj) => obj.row === key && obj.column === "")?.style;
