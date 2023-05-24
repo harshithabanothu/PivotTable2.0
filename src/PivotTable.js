@@ -446,7 +446,7 @@ function PivotTable(props) {
           filteredArray.length
         }
         className="th-colspan">
-        <div className="display-flex height-30 border-bottom">
+        <div className="display-flex height-30 border-bottom borderTop">
           <Icon
             name="navigation-down-arrow"
             onClick={() => {
@@ -475,7 +475,7 @@ function PivotTable(props) {
                   // ${i == column2Array.length - 1 ? "" : "border-right"}
                   <div style={cellStyles2 == undefined ? st2 : cellStyles2} className="sub-column-th border-right">
                     <div
-                      className={`columns-flex ${expandedColumns2.length != 0 &&
+                      className={`columns-flex  ${expandedColumns2.length != 0 &&
                         !expandedColumns2.includes(col2val)
                         ? "height-60"
                         : "height-30"
@@ -533,7 +533,7 @@ function PivotTable(props) {
               ) : (
                 <th style={cellStyles == undefined ? styles : cellStyles}>
                   <div
-                    className={`columns-flex ${expandedColumns1.length != 0 &&
+                    className={`columns-flex borderTop ${expandedColumns1.length != 0 &&
                       !expandedColumns1.includes(col1)
                       ? expandedColumns2.length != 0
                         ? "height-90"

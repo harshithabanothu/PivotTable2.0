@@ -423,7 +423,7 @@ function SwappedPivotTable(props) {
           column2Array.length + col3ExpandLength
         }
         className="th-colspan">
-        <div style={parentStyles} className="display-flex height-30 border-bottom">
+        <div style={parentStyles} className="display-flex height-30 border-bottom borderTop">
           <Icon
             name="navigation-down-arrow"
             onClick={() => {
@@ -466,7 +466,7 @@ function SwappedPivotTable(props) {
                           className="ui5-icon-styles"
                         ></Icon>
                       }
-                      <span className={`expanded-year ${Object.keys(col2val).length > 3 ? "" : "paddingleft"}`}>{col2val.label}</span>
+                      <span className={`expanded-year ${Object.keys(col2val).length > 3 ? "" : "iconPadding"}`}>{col2val.label}</span>
                     </div>
                   </div>
                 )}
@@ -500,7 +500,7 @@ function SwappedPivotTable(props) {
                   style={columncellStyles ?? prepareStyles(col1.key, "rows")}
                 >
                   <div
-                    className={`columns-flex ${expandedColumns1.length != 0 &&
+                    className={`columns-flex borderTop ${expandedColumns1.length != 0 &&
                       !expandedColumns1.includes(col1)
                       ? expandedColumns2.length != 0
                         ? "height-90"
