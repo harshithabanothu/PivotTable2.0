@@ -24,7 +24,7 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const stylesRef = useRef();
+  const stylesRef = useRef(hireData);
 
   const rowdata = data.ROWS;
   console.log(rowdata);
@@ -46,14 +46,6 @@ function PivotTable(props) {
     } else {
       setExpandedRows2(expandedRows2.concat(row2Data));
     }
-  };
-
-  const handleRow3Click = (row3Data) => {
-    // if (expandedRows3.includes(row3Data)) {
-    //   setExpandedRows3(expandedRows3.filter((item) => item !== row3Data));
-    // } else {
-    //   setExpandedRows3(expandedRows3.concat(row3Data));
-    // }
   };
   const handleExpandAllRows = (rowdata) => {
     if (isRowsExpanded) {
@@ -171,7 +163,7 @@ function PivotTable(props) {
               {checkColumn3Condition(column2, column1.value) ? (
                 renderColumn3Rows(column2.MONTH, selectedrow)
               ) : (
-                <td className="td" style={columnQutrcellstyles == undefined ? colStyles : columnQutrcellstyles}>
+                <td className="td" style={columnQutrcellstyles ?? colStyles}>
                   <span className="td-cells-padding">
                     {column2.aggrValue == 0
                       ? ""
@@ -568,7 +560,7 @@ function PivotTable(props) {
   return (
     <>
       <div className="App">
-        <h1>Pivot Table</h1>
+        <h1>Synopsis Table</h1>
         <div className="table-container">
           <div className="table-scrollbar-container">
             <table>
@@ -673,12 +665,13 @@ function PivotTable(props) {
                             (col1, index) => {
                               // condition that we clicked the correct year
                               let columnStyles = stylesRef.current?.columns.find((obj) => obj.name === Object.keys(record.columns)[0])?.style;
+                              let cellStyles = stylesRef.current?.cells.find((obj) => (obj.row === Object.keys(rowdata)[0] && obj.column === col1.key))?.style
                               return (
                                 <>
                                   {expandedColumns1
                                     .map((col) => col.value)
-                                    .includes(col1.value) ? renderColumn2Rows(col1) : (
-                                    <td style={columnStyles} className="td"></td>
+                                    .includes(col1.value) ? renderColumn2Rows(col1, Object.keys(rowdata)[0]) : (
+                                    <td style={cellStyles ?? columnStyles} className="td"></td>
                                   )}
                                 </>
                               );

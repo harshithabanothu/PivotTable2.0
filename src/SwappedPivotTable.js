@@ -25,7 +25,7 @@ function SwappedPivotTable(props) {
   const [expandedColumns1, setExpandedColumns1] = useState([]);
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const stylesRef = useRef();
+  const stylesRef = useRef(hireData);
 
   const rowdata = data.ROWS;
   const columndata = data.COLUMNS;
@@ -536,7 +536,7 @@ function SwappedPivotTable(props) {
     <>
       <div className="App">
         <>
-          <h1>Pivot Table</h1>
+          <h1>Synopsis Table</h1>
           <div className="table-container">
             <div className="table-scrollbar-container">
               <table>
