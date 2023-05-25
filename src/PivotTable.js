@@ -1,16 +1,11 @@
 /* eslint-disable eqeqeq */
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import "@ui5/webcomponents-icons/dist/navigation-right-arrow.js";
 import "@ui5/webcomponents-icons/dist/navigation-down-arrow";
 import "@ui5/webcomponents-icons/dist/share";
 import "@ui5/webcomponents-icons/dist/drill-down";
 import "@ui5/webcomponents-icons/dist/process";
 import { Icon } from "@ui5/webcomponents-react";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
-import SwapHorizSharpIcon from "@mui/icons-material/SwapHorizSharp";
 import "./App.css";
 import hireData from "./hirarchydata.json";
 
@@ -24,7 +19,8 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const stylesRef = useRef(hireData);
+  const stylesRef = useRef();
+  // hireData && hireData !== {} ? hireData : null
 
   const rowdata = data.ROWS;
   console.log(rowdata);
@@ -509,12 +505,20 @@ function PivotTable(props) {
   const prepareThead = (tableData) => {
     if (!tableData) return;
     let key = Object.keys(tableData)[0];
-    let styles = stylesRef.current?.columns.find(
-      (obj) => obj.name === key
-    )?.style;
-    let cellStyles = stylesRef.current?.cells.find(
-      (obj) => (obj.row === "" && obj.column === key)
-    )?.style;
+    let styles, cellStyles;
+    if (stylesRef && stylesRef.current) {
+      if (stylesRef.current.columns) {
+        styles = stylesRef.current.columns.find(
+          (obj) => obj.name === key
+        )?.style;
+      }
+      if (stylesRef.current.cells) {
+        cellStyles = stylesRef.current.cells.find(
+          (obj) => (obj.row === "" && obj.column === key)
+        )?.style;
+      }
+    }
+
     return (
       <>
         {tableData[key].map((col1) => {

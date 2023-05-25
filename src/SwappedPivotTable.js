@@ -50,7 +50,6 @@ function SwappedPivotTable(props) {
       }
       return styles
     }
-
   }
   //onclick functions for rows display
   const handleRow1Click = (row1Data) => {
