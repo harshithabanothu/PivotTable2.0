@@ -136,7 +136,7 @@ tr:nth-child(even) {
 }
 
 .department-td {
-  background-color: #808080;
+  background-color: #A9A9A9;
   display: flex;
   padding-top: 4px;
   align-items: center;
@@ -223,7 +223,7 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   padding-left: 15px;
-  background-color: #A9A9A9
+  background-color: #C0C0C0
 }
 
 .class-items-flex div {
