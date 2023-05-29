@@ -133,25 +133,26 @@ function PivotTable(props) {
       <>
         {column3.map((col3) => {
           columnMonthcellstyles = prepareStyles(selectedrow,"Cells",col3.key);
-          // stylesRef.current?.cells.find(
-          //   (obj) => obj.column === col3.key && obj.row === selectedrow
-          // )?.style;
           colStyles=prepareStyles(col3.key,"columns");
-          // colStyles = stylesRef.current?.columns.find((obj) => obj.name === col3.key)?.style;
           totalValue = totalValue + col3.aggrValue;
           return (
             <td 
-             style={columnMonthcellstyles ?? colStyles}>
-              <span className="td-cells-padding">
+             className="td"
+             style={columnMonthcellstyles ?? colStyles}
+             >
+              <div className="td-cells-padding">
                 {col3.aggrValue == 0 ? " " : handleNumFormater(col3.aggrValue)}
-              </span>
+              </div>
             </td>
           );
         })}
-        <td className="td" style={columnMonthcellstyles ?? colStyles}>
-          <span className="td-cells-padding">
+        <td 
+        className="td" 
+        style={columnMonthcellstyles ?? colStyles}
+        >
+          <div className="td-cells-padding">
             {totalValue == 0 ? " " : handleNumFormater(totalValue)}
-          </span>
+          </div>
         </td>
       </>
     );
@@ -185,19 +186,21 @@ function PivotTable(props) {
                 renderColumn3Rows(column2.MONTH, selectedrow)
               ) : (
                 <td 
-                    style={(columnQutrcellstyles ?? colStyles)}
+                    style={columnQutrcellstyles ?? colStyles}
                     className="td"  >
-                  <span className="td-cells-padding">
+                  <div className="td-cells-padding">
                     {column2.aggrValue == 0
                       ? ""
                       : handleNumFormater(column2.aggrValue)}
-                  </span>
+                  </div>
                 </td>
               )}
             </>
           );
         })}
-        <td className="td" style={columnQutrcellstyles ?? colStyles }>
+        <td className="td" 
+        // style={columnQutrcellstyles ?? colStyles }
+        >
           <span className="td-cells-padding">
             {totalValue == 0 ? "" : handleNumFormater(totalValue)}
           </span>
@@ -648,8 +651,8 @@ function PivotTable(props) {
                                 height: "100%",
                                 width: "100%",
                                 display: "flex",
-                                alignItems: `${rowcellStyles?.textVerticalAlignment ?? "start"}`,
-                                justifyContent: `${rowcellStyles?.textAlignment ?? "center"}`,
+                                alignItems: `${rowcellStyles?.textVerticalAlignment ?? "center"}`,
+                                justifyContent: `${rowcellStyles?.textAlignment ?? "start"}`,
                               }}>
                               {record.label}
                             </div>
