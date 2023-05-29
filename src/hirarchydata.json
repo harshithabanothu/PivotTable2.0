@@ -1,1 +1,96 @@
-{}
+{
+    "rows": [
+        {
+            "name": "GPAY",
+            "style": {
+                "fontFamily": "",
+                "fontSize": "",
+                "fontWeight": "",
+                "fontStyle": "",
+                "textDecoration": "",
+                "textAlignment": "center",
+                "textVerticalAlignment": "start",
+                "color": "",
+                "backgroundColor": "#d1b6cf",
+                "marginTop": "",
+                "marginLeft": "",
+                "marginRight": "",
+                "marginBottom": "",
+                "paddingTop": "",
+                "paddingLeft": "",
+                "paddingRight": "",
+                "paddingBottom": "",
+                "borderTop": "",
+                "borderLeft": "",
+                "borderRight": "",
+                "borderBottom": "",
+                "borderWidth": "",
+                "borderStyle": "",
+                "borderColor": ""
+            }
+        }
+    ],
+    "columns": [
+        {
+            "name": "QUTR",
+            "style": {
+                "fontFamily": "",
+                "fontSize": "",
+                "fontWeight": "",
+                "fontStyle": "",
+                "textDecoration": "",
+                "textAlignment": "center",
+                "textVerticalAlignment": "center",
+                "color": "",
+                "backgroundColor": "#c49eef",
+                "marginTop": "",
+                "marginLeft": "",
+                "marginRight": "",
+                "marginBottom": "",
+                "paddingTop": "",
+                "paddingLeft": "",
+                "paddingRight": "",
+                "paddingBottom": "",
+                "borderTop": "",
+                "borderLeft": "",
+                "borderRight": "",
+                "borderBottom": "",
+                "borderWidth": "",
+                "borderStyle": "",
+                "borderColor": ""
+            }
+        }
+    ],
+    "cells": [
+        {
+            "row": "GPAY",
+            "column": "QUTR",
+            "style": {
+                "fontFamily": "",
+                "fontSize": "",
+                "fontWeight": "bold",
+                "fontStyle": "italic",
+                "textDecoration": "",
+                "textAlignment": "start",
+                "textVerticalAlignment": "start",
+                "color": "",
+                "backgroundColor": "#43d7e9",
+                "marginTop": "",
+                "marginLeft": "",
+                "marginRight": "",
+                "marginBottom": "",
+                "paddingTop": "",
+                "paddingLeft": "",
+                "paddingRight": "",
+                "paddingBottom": "",
+                "borderTop": "",
+                "borderLeft": "",
+                "borderRight": "",
+                "borderBottom": "",
+                "borderWidth": "",
+                "borderStyle": "",
+                "borderColor": ""
+            }
+        }
+    ]
+}
