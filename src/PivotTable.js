@@ -19,7 +19,7 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   // const [expandRows, setExpandedRows] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
-  const stylesRef = useRef(hireData);
+  const stylesRef = useRef();
   // hireData && hireData !== {} ? hireData : null
 
   const rowdata = data.ROWS;
