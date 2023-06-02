@@ -401,7 +401,6 @@ function SwappedPivotTable(props) {
   const renderColumn2 = (col1, parentStyles) => {
     let { key, label, aggrValue, ...rest } = col1;
     const column2Array = Object.values(rest).map((arr) => arr[0]);
-    console.log(column2Array)
     const column1 = col1.label;
     const column2InCurrentColumn1 = expandedColumns1.find(
       (col1) => col1.label === column1

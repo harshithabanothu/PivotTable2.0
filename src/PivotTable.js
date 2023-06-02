@@ -25,7 +25,6 @@ function PivotTable(props) {
   // hireData && hireData !== {} ? hireData : null
 
   const rowdata = data.ROWS;
-  console.log(rowdata);
   const columndata = data.COLUMNS;
   // const styles=hireData.columns.find((obj)=>obj.name).style
   const prepareStyles = (key, props, key2) => {
@@ -311,7 +310,6 @@ function PivotTable(props) {
   const renderRow2 = (row2Array) => {
     const { label, columns, key, ...rest } = row2Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log(newArr);
     return newArr.map((record) => {
       let rowchildstyles = prepareStyles(record.key, "rows");
       let rowcellStyles = prepareStyles(record.key, "cells", "");
@@ -453,8 +451,6 @@ function PivotTable(props) {
   };
   const renderColumn2 = (col1, parentcolstyles) => {
     const column2Array = col1.QUTR;
-    console.log(col1);
-    console.log(column2Array);
     const column1 = col1.value;
     const column2InCurrentColumn1 = expandedColumns1.find(
       (col1) => col1.value === column1
@@ -646,11 +642,11 @@ function PivotTable(props) {
       let height= tableRef.current.offsetHeight;
       // Replace 'table' with the id of your HTML table element
       const opt = {
-      margin: 1.5,
+      margin: 0.5,
       filename: 'table.pdf',
       image: { type: 'jpeg', quality: 1.98},
       html2canvas: { scale: 2 },
-      jsPDF: { unit: 'px', format: [width, height], orientation: 'landscape' },
+      jsPDF: { unit: 'px', format: [width, height], orientation: 'portrait' },
     };
   
     html2pdf().set(opt).from(tableRef.current).save(); 

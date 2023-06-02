@@ -29,7 +29,6 @@ export const prepareSummaryData = (dataArray, heirarchy) => {
       pivotDataColumn
     );
   });
-  // console.log(pivotDataRow);
   return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
 };
 const prepareColumnChildElement = (record, obj, node, columnHeir) => {
@@ -287,7 +286,6 @@ export const prepareSwappedSummaryData = (dataArray, heirarchy) => {
       pivotDataColumn
     );
   });
-  // console.log(pivotDataRow);
   return { COLUMNS: pivotDataColumn, ROWS: pivotDataRow };
 
 };
