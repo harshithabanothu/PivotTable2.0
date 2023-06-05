@@ -535,7 +535,6 @@ function SwappedPivotTable(props) {
     <>
       <div className="App">
         <>
-          <h1>Synopsis Table</h1>
           <div className="table-container">
             <div className="table-scrollbar-container">
               <table>

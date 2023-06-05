@@ -13,16 +13,16 @@ table {
   font-family: sans-serif;
   border-collapse: collapse;
   table-layout: fixed;
-  border-left: 0.2px solid rgba(137, 131, 131, 0.4);
-  border-right: 0.2px solid rgba(137, 131, 131, 0.4);
-  border-bottom: 0.2px solid rgba(137, 131, 131, 0.4);
+  border-left: 0.2px solid #e5e5e5;
+  border-right: 0.2px solid #e5e5e5;
+  border-bottom: 0.2px solid #e5e5e5;
   color: rgba(0, 0, 0, 0.6);
   font-size: 10px;
   font-weight: 600;
 }
 
 .borderTop{
-  border-top: 0.2px solid rgba(137, 131, 131, 0.4);
+  border-top: 0.2px solid #e5e5e5;
 }
 
 thead {
@@ -45,7 +45,7 @@ td {
 th {
   padding: unset;
   /* border-right: 0.5px solid rgba(137, 131, 131, 0.4); */
-  outline: 0.2px solid rgba(137, 131, 131, 0.4);
+  outline: 0.2px solid #e5e5e5;
   /* min-width: 90px; */
 }
 
@@ -92,11 +92,11 @@ tr:nth-child(even) {
   outline: 0.2px solid rgba(137, 131, 131, 0.4);
 } */
 .freezeTh {
-  border: 1px solid rgba(137, 131, 131, 0.4);
+  border: 1px solid #e5e5e5;
 }
 
 .freezeTr {
-  outline: 0.2px solid rgba(137, 131, 131, 0.4);
+  outline: 0.2px solid #e5e5e5;
 }
 
 .sub-column-heading {
@@ -136,7 +136,7 @@ tr:nth-child(even) {
 }
 
 .department-td {
-  background-color: #A9A9A9;
+  background-color: #f5f5f5;
   display: flex;
   padding-top: 4px;
   align-items: center;
@@ -167,7 +167,7 @@ tr:nth-child(even) {
 .columns-container {
   display: flex;
   justify-content: space-between;
-  border: 0.5px solid grey;
+  border: 0.5px solid #e5e5e5;
   padding: 1px;
 }
 
@@ -223,7 +223,7 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   padding-left: 15px;
-  background-color: #C0C0C0
+  background-color: #f5f5f5
 }
 
 .class-items-flex div {
@@ -245,7 +245,7 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   padding-left: 30px;
-  background-color: #D3D3D3;
+  background-color: #f5f5f5;
 }
 
 .student-items-flex {
@@ -257,7 +257,7 @@ tr:nth-child(even) {
 .sub-columns-data {
   display: flex;
   background-color: #f5f5f5;
-  border-right: 0.5px solid rgb(137, 131, 131);
+  border-right: 0.5px solid #e5e5e5;
   border-width: 0.5px;
   width: calc(100% / 2);
   padding: 7px;
@@ -270,7 +270,7 @@ tr:nth-child(even) {
 }
 
 .data-value-cells div {
-  border-right: 0.5px solid rgb(126, 123, 123);
+  border-right: 0.5px solid #e5e5e5;
   width: calc(100% / 2);
   padding: 4px;
   height: 20px;
@@ -284,15 +284,15 @@ tr:nth-child(even) {
 
 
 .border-right {
-  border-right: 0.5px solid gray;
+  border-right: 0.5px solid #e5e5e5;
 }
 
 .border-left {
-  border-left: 0.5px solid gray;
+  border-left: 0.5px solid #e5e5e5;
 }
 
 .border-bottom {
-  border-bottom: 0.5px solid gray;
+  border-bottom: 0.5px solid #e5e5e5;
 }
 
 .border-none {
@@ -300,7 +300,7 @@ tr:nth-child(even) {
 }
 
 .subjects-container {
-  border-bottom: 0.5px solid grey;
+  border-bottom: 0.5px solid #e5e5e5;
   height: 18px;
 }
 
