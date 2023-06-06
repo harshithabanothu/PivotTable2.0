@@ -8,8 +8,9 @@ import "@ui5/webcomponents-icons/dist/process";
 import { Icon } from "@ui5/webcomponents-react";
 import "./App.css";
 import hireData from "./hirarchydata.json";
-import html2pdf from 'html2pdf.js'
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+// import { useDownloadExcel  } from 'react-export-table-to-excel';
 
 function PivotTable(props) {
   const { handleSwap, data } = props;
@@ -21,11 +22,11 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
   const stylesRef = useRef(hireData);
-  const tableRef = useRef();
+  const tableRef = useRef(null);
   // hireData && hireData !== {} ? hireData : null
 
   const rowdata = data.ROWS;
-  console.log(rowdata);
+  // console.log(rowdata);
   const columndata = data.COLUMNS;
   // const styles=hireData.columns.find((obj)=>obj.name).style
   const prepareStyles = (key, props, key2) => {
@@ -114,25 +115,6 @@ function PivotTable(props) {
     return num_parts.join(".");
   };
 
-  // const renderValues = (values) => {
-  //   return (
-  //     <div className="data-value-cells">
-  //       <div>{handleNumFormater(values?.WRITTEN) || 0}</div>
-  //       <div className="border-none">
-  //         {handleNumFormater(values?.PRACTICAL) || 0}
-  //       </div>
-  //     </div>
-  //   );
-  // };
-  // const renderMarksHeadings = () => {
-  //   return (
-  //     <div className="sub-column-heading ">
-  //       <div className="border-right">Written</div>
-  //       <div className="border-none">Practical</div>
-  //     </div>
-  //   );
-  // };
-
   //render functions for expanded rows display
   const renderColumn3Rows = (column3, selectedrow) => {
     let totalValue = 0;
@@ -214,34 +196,6 @@ function PivotTable(props) {
     );
   };
 
-  // const renderRow4 = (row4Array) => {
-  //   return row4Array?.map((record) => {
-  //     return (
-  //       <>
-  //         <tr className="row-tr">
-  //           <td className="td">
-  //             <div className="student-items-flex">{record.label}</div>
-  //           </td>
-  //           {record.columns.YEAR.map((col1) => (
-  //             <>
-  //               {expandedColumns1
-  //                 .map((col) => col.value)
-  //                 .includes(col1.value) && renderColumn2Rows(col1)}
-  //               {expandedColumns1
-  //                 .map((col) => col.value)
-  //                 .includes(col1.value) ? null : (
-  //                 <td className="td">
-  //                   <span className="td-cells-padding">{handleNumFormater(col1.aggrValue)}</span>
-  //                 </td>
-  //               )}
-  //             </>
-  //           ))}
-  //         </tr>
-  //       </>
-  //     );
-  //   });
-  // };
-
   const renderRow3 = (row3Array) => {
     const { label, key, columns, ...rest } = row3Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
@@ -311,7 +265,7 @@ function PivotTable(props) {
   const renderRow2 = (row2Array) => {
     const { label, columns, key, ...rest } = row2Array;
     const newArr = Object.values(rest).map((arr) => arr[0]);
-    console.log(newArr);
+    // console.log(newArr);
     return newArr.map((record) => {
       let rowchildstyles = prepareStyles(record.key, "rows");
       let rowcellStyles = prepareStyles(record.key, "cells", "");
@@ -453,8 +407,8 @@ function PivotTable(props) {
   };
   const renderColumn2 = (col1, parentcolstyles) => {
     const column2Array = col1.QUTR;
-    console.log(col1);
-    console.log(column2Array);
+    // console.log(col1);
+    // console.log(column2Array);
     const column1 = col1.value;
     const column2InCurrentColumn1 = expandedColumns1.find(
       (col1) => col1.value === column1
@@ -636,46 +590,22 @@ function PivotTable(props) {
       </>
     );
   };
-  const handleDownload = () => {
-    if (!isRowsExpanded && !isColumnsExpanded) {
-      handleExpandAllRows(rowdata);
-      handleExpandAllColumns(columndata);
-    }
-    setTimeout(() => {
-      let width= tableRef.current.offsetWidth;
-      let height= tableRef.current.offsetHeight;
-      // Replace 'table' with the id of your HTML table element
-      const opt = {
-      margin: 1.5,
-      filename: 'table.pdf',
-      image: { type: 'jpeg', quality: 1.98},
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'px', format: [width, height], orientation: 'landscape' },
-    };
-  
-    html2pdf().set(opt).from(tableRef.current).save(); 
-    },1000);
-   
-}
-    // if (!isRowsExpanded && !isColumnsExpanded) {
-    //   handleExpandAllRows(rowdata);
-    //   handleExpandAllColumns(columndata);
-    // }
-    // const doc = new jsPDF();
-    // // doc.autoTable({html : tableRef.current})
-    // doc.save("Table")
-
-    // doc.html(tableRef.current, {
-    //   async callback(doc) {
-    //     await doc.save("Table");
-    //   },
-    // });
+  const convertToExcel = (tableRef) => {
+    const worksheet = XLSX.utils.table_to_sheet(tableRef);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx',type:'array' });
+    const excelData = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(excelData, 'pivot_table.xlsx');
+  };
+ 
+ 
   return (
     <>
       <div className="App">
         <div className="display-flex">
         <h1>Synopsis Table</h1>
-        <button onClick={handleDownload}>Download</button>
+        <button onClick={()=>convertToExcel(tableRef.current)}>Download</button>
         </div>
         
         <div  className="table-container">
