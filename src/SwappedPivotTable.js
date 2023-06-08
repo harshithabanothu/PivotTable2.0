@@ -13,7 +13,6 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import SwapHorizSharpIcon from '@mui/icons-material/SwapHorizSharp';
 import "./App.css";
 import hireData from "./hirarchydata.json";
-import html2pdf from 'html2pdf.js'
 
 
 
@@ -533,34 +532,32 @@ function SwappedPivotTable(props) {
       </>
     );
   };
-  const handleDownload = () => {
-    if (!isRowsExpanded && !isColumnsExpanded) {
-      handleExpandAllRows(rowdata);
-      handleExpandAllColumns(columndata);
-    }
-    setTimeout(() => {
-      let width= tableRef.current.offsetWidth;
-      let height= tableRef.current.offsetHeight;
-      // Replace 'table' with the id of your HTML table element
-      const opt = {
-      margin: 0.5,
-      filename: 'table.pdf',
-      image: { type: 'jpeg', quality: 1.98},
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'px', format: [width], orientation: 'landscape' },
-    };
+  // const handleDownload = () => {
+  //   if (!isRowsExpanded && !isColumnsExpanded) {
+  //     handleExpandAllRows(rowdata);
+  //     handleExpandAllColumns(columndata);
+  //   }
+  //   setTimeout(() => {
+  //     let width= tableRef.current.offsetWidth;
+  //     let height= tableRef.current.offsetHeight;
+  //     // Replace 'table' with the id of your HTML table element
+  //     const opt = {
+  //     margin: 0.5,
+  //     filename: 'table.pdf',
+  //     image: { type: 'jpeg', quality: 1.98},
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: { unit: 'px', format: [width], orientation: 'landscape' },
+  //   };
   
-    html2pdf().set(opt).from(tableRef.current).save(); 
-    },2000);
-   
-}
+  //   html2pdf().set(opt).from(tableRef.current).save(); 
+  //   },2000);
   return (
     <>
       <div className="App">
         <>
          <div className="display-flex">
             <h1>Synopsis Table</h1>
-            <button onClick={handleDownload}>Download</button>
+            {/* <button onClick={handleDownload}>Download</button> */}
          </div>
           <div className="table-container">
             <div className="table-scrollbar-container">

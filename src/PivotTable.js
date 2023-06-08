@@ -684,7 +684,10 @@ function PivotTable(props) {
   return (
     <>
       <div className="App">
-      
+         <div className="display-flex">
+            <h1>Synopsis Table</h1>
+            {/* <button onClick={handleDownload}>Download</button> */}
+         </div>
 
         <div className="table-container">
           <div className="table-scrollbar-container">
