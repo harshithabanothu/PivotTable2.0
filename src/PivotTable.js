@@ -8,9 +8,8 @@ import "@ui5/webcomponents-icons/dist/process";
 import { Icon } from "@ui5/webcomponents-react";
 import "./App.css";
 import hireData from "./hirarchydata.json";
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
-// import { useDownloadExcel  } from 'react-export-table-to-excel';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 function PivotTable(props) {
   const { handleSwap, data } = props;
@@ -22,7 +21,7 @@ function PivotTable(props) {
   const [expandedColumns2, setExpandedColumns2] = useState([]);
   const [isSwapped, setisSwapped] = useState(false);
   const stylesRef = useRef(hireData);
-  const tableRef = useRef(null);
+  const pivotViewRef = useRef(null);
   // hireData && hireData !== {} ? hireData : null
 
   const rowdata = data.ROWS;
@@ -590,27 +589,106 @@ function PivotTable(props) {
       </>
     );
   };
-  const convertToExcel = (tableRef) => {
-    const worksheet = XLSX.utils.table_to_sheet(tableRef);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx',type:'array' });
-    const excelData = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(excelData, 'pivot_table.xlsx');
+  const handleDownload = (ref) => {
+    const table = ref.current;
+    const rows = table.querySelectorAll('tr');
+    const csvData = [];
+  
+    // Get header row and cells
+    const headerRow = table.querySelector('thead tr');
+    const headerCells = headerRow.querySelectorAll('th');
+  
+    const headerValues = [];
+    let headerCellIndex = 0;
+  
+    // Process header cells
+    for (let j = 0; j < headerCells.length; j++) {
+      const headerCell = headerCells[j];
+      const headerCellValue = headerCell.innerText;
+      const colspan = headerCell.getAttribute('colSpan') || 1;
+  
+      const quotedHeaderCellValue = `"${headerCellValue}"`.repeat(colspan); // Repeat header cell value with colspan
+  
+      if (colspan > 1) {
+        // Handle header cells with colspan > 1
+        for (let k = 0; k < colspan; k++) {
+          headerValues.push(''); // Add empty cells for each colspan
+        }
+      }
+  
+      headerValues[headerCellIndex] = quotedHeaderCellValue;
+      headerCellIndex += colspan;
+    }
+  
+    csvData.push(headerValues.join(','));
+  
+    // Process data rows
+    for (let i = 0; i < rows.length; i++) {
+      const row = [];
+      const cells = rows[i].querySelectorAll('td, th'); // Include th cells as well
+  
+      let cellIndex = 0;
+      for (let j = 0; j < cells.length; j++) {
+        const cell = cells[j];
+        const cellValue = cell.innerText;
+        const colspan = cell.getAttribute('colSpan') || 1;
+  
+        const quotedCellValue = `"${cellValue}"`.repeat(colspan); // Repeat cell value with colspan
+  
+        if (colspan > 1) {
+          // Handle cells with colspan > 1
+          for (let k = 0; k < colspan; k++) {
+            row.push(''); // Add empty cells for each colspan
+          }
+        }
+  
+        row[cellIndex] = quotedCellValue;
+        cellIndex += colspan;
+      }
+  
+      csvData.push(row.join(','));
+    }
+  
+    // Modify the pivot table structure
+    const modifiedCsvData = [];
+    const numRows = csvData.length;
+    const numCols = 17; // Number of columns in the modified pivot table
+  
+    for (let i = 0; i < numRows; i += 4) {
+      const pivotRow = [];
+  
+      for (let j = 0; j < numCols; j++) {
+        const dataIndex = i + Math.floor(j / 4) + 1;
+  
+        if (dataIndex < numRows) {
+          pivotRow.push(csvData[dataIndex]);
+        } else {
+          pivotRow.push('');
+        }
+      }
+  
+      modifiedCsvData.push(pivotRow.join(','));
+    }
+  
+    const csvContent = 'data:text/csv;charset=utf-8,' + modifiedCsvData.join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'data.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
- 
- 
+  
+  
   return (
     <>
       <div className="App">
-        <div className="display-flex">
-        <h1>Synopsis Table</h1>
-        <button onClick={()=>convertToExcel(tableRef.current)}>Download</button>
-        </div>
-        
-        <div  className="table-container">
+      
+
+        <div className="table-container">
           <div className="table-scrollbar-container">
-            <table ref={tableRef}>
+            <table ref={pivotViewRef}>
               <thead>
                 <tr className="freezeTr">
                   <th className="freezeTh">

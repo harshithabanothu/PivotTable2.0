@@ -19,11 +19,13 @@ function App() {
     $.ajax({
       url: "http://sergio.vistex.local:8000/sap/opu/odata/sap/ZSYNDATA_SRV/SYNDATASET?$format=json",
     }).done((response) => {
+      console.log(response);
       let heirarchy = JSON.parse(response.d.results[0].Heirarchy);
       console.log(heirarchy)
       let data = JSON.parse(response.d.results[0].Data);
       let summaryData = prepareSummaryData(data, heirarchy);
       let swappedSummaryData=prepareSwappedSummaryData(data,heirarchy)
+      console.log(summaryData,swappedSummaryData)
       setData(summaryData);
       setSwappedData(swappedSummaryData);
     });
